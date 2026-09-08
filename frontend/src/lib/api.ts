@@ -97,4 +97,61 @@ export const api = {
 
   deploymentSchedule: () =>
     fetchJSON<any>("/api/police/deployment-schedule", { headers: authHeaders() }),
+
+  // ── AI Assistant & Whisper APIs ──────────────────────────────────────────
+  assistantChat: (message: string, city: string = "Delhi", history: any[] = []) =>
+    fetchJSON<{
+      response: string;
+      action?: string | null;
+      action_data?: any;
+      engine?: string;
+    }>("/api/assistant/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, city, history }),
+    }),
+
+  transcribeAudio: async (audioBlob: Blob): Promise<{ text: string }> => {
+    const formData = new FormData();
+    formData.append("file", audioBlob, "speech.webm");
+    const res = await fetch(`${API_BASE_URL}/api/assistant/transcribe`, {
+      method: "POST",
+      body: formData,
+    });
+    if (!res.ok) throw new Error(`Transcription error ${res.status}`);
+    return res.json();
+  },
+
+  getRouteGuidance: (
+    city: string,
+    coordinates: [number, number][],
+    origin_name: string,
+    dest_name: string,
+    mode: string = "safest"
+  ) =>
+    fetchJSON<{
+      city: string;
+      mode: string;
+      total_distance_steps: number;
+      steps: Array<{
+        step_index: number;
+        lat: number;
+        lon: number;
+        title: string;
+        guidance: string;
+        safety_rating: string;
+        action_prompt: string;
+      }>;
+      overall_summary: string;
+    }>("/api/assistant/route-guidance", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        city,
+        coordinates,
+        origin_name,
+        dest_name,
+        mode,
+      }),
+    }),
 };

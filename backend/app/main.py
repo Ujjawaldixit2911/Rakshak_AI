@@ -19,6 +19,7 @@ from .database import engine, Base, get_db
 from .models import CrimeRecord, SOSAlert, User
 from .routers.public import router as public_router
 from .routers.police import router as police_router
+from .routers.assistant import router as assistant_router
 
 load_dotenv()
 
@@ -43,6 +44,7 @@ app.add_middleware(
 # Mount Routers
 app.include_router(public_router)
 app.include_router(police_router)
+app.include_router(assistant_router)
 
 
 # ─── Startup Event ─────────────────────────────────────────────────────────────

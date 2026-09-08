@@ -11,6 +11,7 @@ import ForecastChart from "@/components/public/ForecastChart";
 import WeeklyPatternGrid from "@/components/public/WeeklyPatternGrid";
 import AIInsightsPanel from "@/components/public/AIInsightsPanel";
 import SafetyRecommendations from "@/components/public/SafetyRecommendations";
+import VoiceInputButton from "@/components/VoiceInputButton";
 
 const CrimeHeatmap = dynamic(() => import("@/components/public/CrimeHeatmap"), {
   ssr: false,
@@ -142,6 +143,14 @@ export default function CrimeSearchPage() {
                 </div>
               )}
             </div>
+            <VoiceInputButton
+              size="md"
+              title="Speak area name with Whisper AI"
+              onResult={(text) => {
+                setQuery(text);
+                doSearch(text);
+              }}
+            />
             <button id="crime-search-btn" className="btn-primary" onClick={() => doSearch(query)} disabled={loading}>
               {loading ? "Analyzing…" : "Analyze"}
             </button>

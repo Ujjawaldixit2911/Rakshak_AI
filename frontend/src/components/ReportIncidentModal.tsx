@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { API_BASE_URL } from "@/lib/api";
+import VoiceInputButton from "./VoiceInputButton";
 
 interface ReportIncidentModalProps {
   isOpen: boolean;
@@ -136,7 +137,14 @@ export default function ReportIncidentModal({
             </div>
 
             <div>
-              <label style={{ fontSize: "0.75rem", color: "#94a3b8", fontWeight: 600 }}>Area / Landmark Name</label>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                <label style={{ fontSize: "0.75rem", color: "#94a3b8", fontWeight: 600 }}>Area / Landmark Name</label>
+                <VoiceInputButton
+                  size="sm"
+                  title="Speak location name with Whisper"
+                  onResult={(text) => setLocationName(text)}
+                />
+              </div>
               <input
                 type="text"
                 className="input-dark"
@@ -179,7 +187,14 @@ export default function ReportIncidentModal({
             </div>
 
             <div>
-              <label style={{ fontSize: "0.75rem", color: "#94a3b8", fontWeight: 600 }}>Description & Details</label>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                <label style={{ fontSize: "0.75rem", color: "#94a3b8", fontWeight: 600 }}>Description & Details</label>
+                <VoiceInputButton
+                  size="sm"
+                  title="Dictate incident details with Whisper"
+                  onResult={(text) => setDescription((prev) => (prev ? `${prev} ${text}` : text))}
+                />
+              </div>
               <textarea
                 className="input-dark"
                 rows={3}
