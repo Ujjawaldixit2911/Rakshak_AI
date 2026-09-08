@@ -6,6 +6,11 @@ import SOSButton from "@/components/SOSButton";
 import ReportIncidentModal from "@/components/ReportIncidentModal";
 import RakshakAICopilot from "@/components/RakshakAICopilot";
 import VoiceInputButton from "@/components/VoiceInputButton";
+import WhatIfSimulator from "@/components/public/WhatIfSimulator";
+import LastMileSafetyCard from "@/components/public/LastMileSafetyCard";
+import FamilySafetyModal from "@/components/FamilySafetyModal";
+import { JourneyLifecycleController } from "@/components/JourneyLifecycleController";
+import { PlatformHealthDrawer } from "@/components/PlatformHealthDrawer";
 import { API_BASE_URL } from "@/lib/api";
 
 // Dynamically import Interactive Leaflet Map to avoid SSR errors
@@ -68,6 +73,7 @@ export default function CitizenPortal() {
 
   const [loadingRoute, setLoadingRoute] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isFamilyModalOpen, setIsFamilyModalOpen] = useState(false);
   const [reportCoords, setReportCoords] = useState<{ lat?: number; lon?: number }>({});
 
   const cityMeta = CITY_OPTIONS.find((c) => c.name === selectedCity) || CITY_OPTIONS[0];
@@ -214,6 +220,25 @@ export default function CitizenPortal() {
                 </button>
               ))}
             </div>
+
+            <button
+              onClick={() => setIsFamilyModalOpen(true)}
+              style={{
+                padding: "8px 14px",
+                borderRadius: "10px",
+                background: "rgba(59, 130, 246, 0.15)",
+                border: "1px solid rgba(59, 130, 246, 0.35)",
+                color: "#93c5fd",
+                fontSize: "0.82rem",
+                fontWeight: 700,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 6
+              }}
+            >
+              🛡️ Family Safety Live
+            </button>
 
             <button
               onClick={() => {
@@ -391,9 +416,9 @@ export default function CitizenPortal() {
               padding: "1.25rem"
             }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
-                <span style={{ fontSize: "1.2rem" }}>🤖</span>
+                <span style={{ fontSize: "1.2rem" }}>🛡️</span>
                 <h3 style={{ fontSize: "1rem", fontWeight: 800, color: "#34d399" }}>
-                  AI Safe Route Recommendation & Trade-off Analysis
+                  Rakshak Safety Score & Route Trade-Off
                 </h3>
               </div>
               <p style={{ fontSize: "0.85rem", color: "#cbd5e1", lineHeight: 1.5, margin: "0 0 12px 0" }}>
@@ -449,7 +474,38 @@ export default function CitizenPortal() {
             </div>
           </div>
         )}
+
+        {/* ── PART 5: COMPLETE SINGLE UNBROKEN USER JOURNEY LIFECYCLE CONTROLLER ──── */}
+        <div style={{ marginTop: "1.5rem" }}>
+          <JourneyLifecycleController
+            selectedOrigin={cityMeta.presets[0]?.label.split(" → ")[0] || "Connaught Place"}
+            selectedDestination={cityMeta.presets[0]?.label.split(" → ")[1] || "Saket"}
+            onRouteHighlight={(type) => {
+              if (type === "Safe") setSafetyMode("safest");
+              else if (type === "Balanced") setSafetyMode("balanced");
+              else setSafetyMode("fastest");
+            }}
+          />
+        </div>
+
+        {/* ── PART 4 ADVANCED MODULES: WHAT-IF SIMULATOR & LAST-MILE SAFETY ──── */}
+        <div style={{ marginTop: "1.5rem", display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
+          <WhatIfSimulator
+            origin={cityMeta.presets[0]?.label.split(" → ")[0] || "Connaught Place"}
+            destination={cityMeta.presets[0]?.label.split(" → ")[1] || "Saket"}
+            city={selectedCity}
+          />
+
+          <LastMileSafetyCard
+            origin={cityMeta.presets[0]?.label.split(" → ")[0] || "Connaught Place"}
+            destination={cityMeta.presets[0]?.label.split(" → ")[1] || "Saket"}
+            city={selectedCity}
+          />
+        </div>
       </div>
+
+      {/* Layer 7 Platform Diagnostics & Subsystem Health Drawer */}
+      <PlatformHealthDrawer />
 
       {/* Floating Emergency SOS Component */}
       <SOSButton />
@@ -461,6 +517,15 @@ export default function CitizenPortal() {
         city={selectedCity}
         initialLat={reportCoords.lat}
         initialLon={reportCoords.lon}
+      />
+
+      {/* Family Safety Mode Modal */}
+      <FamilySafetyModal
+        isOpen={isFamilyModalOpen}
+        onClose={() => setIsFamilyModalOpen(false)}
+        origin={cityMeta.presets[0]?.label.split(" → ")[0] || "Connaught Place"}
+        destination={cityMeta.presets[0]?.label.split(" → ")[1] || "Saket"}
+        city={selectedCity}
       />
 
       {/* Floating Rakshak AI Voice Copilot & Route Traverser */}

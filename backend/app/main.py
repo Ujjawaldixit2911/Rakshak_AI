@@ -20,6 +20,9 @@ from .models import CrimeRecord, SOSAlert, User
 from .routers.public import router as public_router
 from .routers.police import router as police_router
 from .routers.assistant import router as assistant_router
+from .routers.agent import router as agent_router
+from .routers.modules_router import router as modules_router
+from .routers.platform_router import router as platform_router
 
 load_dotenv()
 
@@ -28,7 +31,7 @@ logger = logging.getLogger("RakshakAI")
 
 app = FastAPI(
     title="Crime Alert Map (Rakshak AI) API",
-    description="AI-powered Crime Hotspot Detection (DBSCAN), Multi-factor Area Safety Scoring (0-100), and Safe Routing Platform.",
+    description="AI-powered Crime Hotspot Detection (DBSCAN), Multi-factor Area Safety Scoring (0-100), Safe Routing Platform, and Layer 7 Enterprise Architecture.",
     version="2.0.0"
 )
 
@@ -45,6 +48,9 @@ app.add_middleware(
 app.include_router(public_router)
 app.include_router(police_router)
 app.include_router(assistant_router)
+app.include_router(agent_router)
+app.include_router(modules_router)
+app.include_router(platform_router)
 
 
 # ─── Startup Event ─────────────────────────────────────────────────────────────

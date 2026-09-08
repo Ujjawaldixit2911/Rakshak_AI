@@ -154,4 +154,246 @@ export const api = {
         mode,
       }),
     }),
+
+  // ── Agentic Supervisor API (Part 3) ───────────────────────────────────────
+  agentChat: (
+    message: string,
+    city: string = "Delhi",
+    history: any[] = [],
+    admin_mode: boolean = false,
+    confirmed_action: any = null
+  ) =>
+    fetchJSON<{
+      response: string;
+      action?: string | null;
+      action_data?: any;
+      tool_audit_log?: Array<{ tool: string; status: string; args: any }>;
+      data_confidence?: string;
+    }>("/api/agent/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, city, history, admin_mode, confirmed_action }),
+    }),
+
+  getPreJourneyBriefing: (
+    origin_name: string,
+    dest_name: string,
+    city: string = "Delhi",
+    time_of_day: string = "Night",
+    mode: string = "safest"
+  ) =>
+    fetchJSON<any>("/api/agent/pre-journey-briefing", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ origin_name, dest_name, city, time_of_day, mode }),
+    }),
+
+  // ── Part 4 Advanced Safety Modules APIs ──────────────────────────────────
+  getRakshakScore: (lat: number, lon: number, city: string = "Delhi", time_of_day: string = "Evening", mode: string = "women_safety") =>
+    fetchJSON<{
+      rakshak_safety_score: number;
+      classification: string;
+      color: string;
+      one_line_explanation: string;
+      data_confidence: string;
+      factors: any;
+      disclaimer: string;
+    }>(`/api/safety/rakshak-score?lat=${lat}&lon=${lon}&city=${city}&time_of_day=${time_of_day}&mode=${mode}`),
+
+  runWhatIfSimulation: (payload: { origin: string; destination: string; city: string; times?: string[]; modes?: string[] }) =>
+    fetchJSON<{
+      origin: string;
+      destination: string;
+      city: string;
+      scenarios: Array<{
+        time_of_day: string;
+        mode: string;
+        rakshak_safety_score: number;
+        travel_time_minutes: number;
+        distance_km: number;
+        risk_exposure: string;
+        recommendation: string;
+      }>;
+      summary: string;
+    }>("/api/safety/what-if", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }),
+
+  getLastMileAnalysis: (payload: { origin: string; destination: string; city: string; time_of_day?: string }) =>
+    fetchJSON<{
+      route_title: string;
+      overall_route_safety_score: number;
+      segments: Array<{
+        segment_name: string;
+        type: string;
+        distance_approx: string;
+        rakshak_safety_score: number;
+        classification: string;
+        lighting_index: string;
+        safety_tip: string;
+      }>;
+      last_mile_critical_alert: boolean;
+      last_mile_advice: string;
+    }>("/api/safety/last-mile", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }),
+
+  runNLCrimeSearch: (q: string, city: string = "Delhi") =>
+    fetchJSON<{
+      parsed_filters: { crime_type: string; location: string; time_of_day: string; city: string };
+      total_results: number;
+      data_confidence: string;
+      incidents: Array<{ id: number; crime_type: string; location_name: string; severity: number; time_of_day: string; date: string }>;
+    }>(`/api/safety/nl-search?q=${encodeURIComponent(q)}&city=${encodeURIComponent(city)}`),
+
+  startFamilyMode: (payload: { origin: string; destination: string; city: string; eta_minutes?: number }) =>
+    fetchJSON<{
+      trip_id: string;
+      share_url: string;
+      status: string;
+      origin: string;
+      destination: string;
+      eta_minutes: number;
+      departure_time: string;
+      geofence_status: string;
+      battery_saver_available: boolean;
+      trusted_contacts_alerted: string[];
+      message: string;
+    }>("/api/safety/family-mode", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }),
+
+  // ── Layer 7 Platform & Journey Lifecycle APIs ────────────────────────────────
+  getPlatformHealth: () => fetchJSON<{
+    status: string;
+    timestamp: string;
+    components: Record<string, { status: string; records_indexed?: number; formula?: string; provider?: string; quality_score?: string; permission_gating?: string }>;
+    system_metrics: { uptime_pct: number; avg_latency_ms: number; cache_hit_rate: string; active_permission_tier: number };
+  }>("/api/platform/health"),
+
+  getDataQualityReport: () => fetchJSON<{
+    dataset_version: string;
+    last_ingestion_date: string;
+    total_records: number;
+    valid_coordinates: number;
+    missing_coordinates: number;
+    quality_index_pct: number;
+    sources: Array<{ source_name: string; records: number; verified: boolean }>;
+    coverage_jurisdiction: string[];
+  }>("/api/platform/data-quality"),
+
+  createJourney: (payload: {
+    start_lat: number;
+    start_lon: number;
+    dest_lat: number;
+    dest_lon: number;
+    start_name?: string;
+    dest_name?: string;
+    route_type?: string;
+    selected_route?: any;
+    safety_briefing?: any;
+    user_id?: number;
+  }) =>
+    fetchJSON<{
+      status: string;
+      journey_uuid: string;
+      journey_status: string;
+      start_name: string;
+      dest_name: string;
+      created_at: string;
+    }>("/api/platform/journey/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }),
+
+  startJourney: (journey_uuid: string) =>
+    fetchJSON<{
+      status: string;
+      journey_uuid: string;
+      start_time: string;
+      expected_arrival: string;
+    }>(`/api/platform/journey/${journey_uuid}/start`, {
+      method: "POST",
+    }),
+
+  sendJourneyTelemetry: (
+    journey_uuid: string,
+    payload: { current_lat: number; current_lon: number; deviation_threshold_km?: number }
+  ) =>
+    fetchJSON<{
+      journey_uuid: string;
+      status: string;
+      current_lat: number;
+      current_lon: number;
+      dist_to_route_km: number;
+      is_deviated: boolean;
+      deviations_count: number;
+      current_risk: number;
+      risk_level: string;
+      recent_alert?: any;
+    }>(`/api/platform/journey/${journey_uuid}/telemetry`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }),
+
+  completeJourney: (journey_uuid: string) =>
+    fetchJSON<{
+      journey_uuid: string;
+      start_name: string;
+      dest_name: string;
+      route_type: string;
+      duration_min: number;
+      distance_km: number;
+      avg_risk_score: number;
+      safety_rating: string;
+      deviations_count: number;
+      route_adherence_pct: string;
+      alerts_resolved: number;
+      completed_at: string;
+      disclaimer: string;
+    }>(`/api/platform/journey/${journey_uuid}/complete`, {
+      method: "POST",
+    }),
+
+  getJourneyStatus: (journey_uuid: string) =>
+    fetchJSON<any>(`/api/platform/journey/${journey_uuid}`),
+
+  transitionPoliceCase: (
+    case_id: number,
+    payload: { changed_by?: string; role?: string; new_status: string; action_note?: string; evidence_urls?: string[] }
+  ) =>
+    fetchJSON<{
+      status: string;
+      case_id: number;
+      old_status: string;
+      new_status: string;
+      note: string;
+    }>(`/api/platform/police/case/${case_id}/transition`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    }),
+
+  getPoliceCaseAudit: (case_id: number) =>
+    fetchJSON<Array<{
+      id: number;
+      changed_by: string;
+      role: string;
+      old_status: string;
+      new_status: string;
+      action_note: string;
+      evidence_urls: string[];
+      timestamp: string;
+    }>>(`/api/platform/police/case/${case_id}/audit`),
+
+  getSystemConfigs: () =>
+    fetchJSON<Record<string, any>>("/api/platform/configs"),
 };

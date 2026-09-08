@@ -138,3 +138,71 @@ class SOSAlert(Base):
 
     user = relationship("User", back_populates="sos_alerts", foreign_keys=[user_id])
     officer = relationship("User", foreign_keys=[officer_assigned])
+
+
+class Journey(Base):
+    __tablename__ = "journeys"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    journey_uuid = Column(String(64), unique=True, index=True, nullable=True)
+    user_id = Column(Integer, ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True)
+    start_lat = Column(Float, nullable=False)
+    start_lon = Column(Float, nullable=False)
+    start_name = Column(String(200), default="Start Location")
+    dest_lat = Column(Float, nullable=False)
+    dest_lon = Column(Float, nullable=False)
+    dest_name = Column(String(200), default="Destination")
+    route_type = Column(String(50), default="Safe")  # Safe, Fast, Balanced
+    selected_route = Column(JSON, nullable=True)  # { polyline, waypoints, distance_km, eta_min, risk_score }
+    start_time = Column(DateTime(timezone=True), nullable=True)
+    expected_arrival = Column(DateTime(timezone=True), nullable=True)
+    current_lat = Column(Float, nullable=True)
+    current_lon = Column(Float, nullable=True)
+    current_risk = Column(Float, default=15.0)
+    risk_level = Column(String(30), default="Low")
+    status = Column(String(50), default="PLANNED", index=True)  # PLANNED, STARTED, IN_PROGRESS, ARRIVED, CANCELLED
+    deviations_count = Column(Integer, default=0)
+    deviation_alerts = Column(JSON, default=list)
+    safety_briefing = Column(JSON, nullable=True)
+    summary = Column(JSON, nullable=True)  # { duration_min, distance_km, avg_risk, route_adhered_pct }
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
+class PoliceCaseLog(Base):
+    __tablename__ = "police_case_logs"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    report_id = Column(Integer, ForeignKey("incident_reports.id", ondelete="CASCADE"), nullable=False, index=True)
+    changed_by = Column(String(100), default="System")
+    role = Column(String(50), default="POLICE_OFFICER")
+    old_status = Column(String(50), nullable=True)
+    new_status = Column(String(50), nullable=False)
+    action_note = Column(Text, nullable=True)
+    evidence_urls = Column(JSON, default=list)
+    timestamp = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class PlatformAuditLog(Base):
+    __tablename__ = "platform_audit_logs"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    user_id = Column(Integer, nullable=True, index=True)
+    user_role = Column(String(50), default="PUBLIC_USER")
+    action = Column(String(100), nullable=False, index=True)  # e.g. SOS_TRIGGERED, DATASET_REIMPORT, CONFIG_UPDATE
+    permission_tier = Column(Integer, default=1)  # 1 (Read), 2 (Form Actions), 3 (Sensitive Actions)
+    ip_address = Column(String(50), nullable=True)
+    details = Column(JSON, default=dict)
+    status = Column(String(20), default="SUCCESS")
+    timestamp = Column(DateTime(timezone=True), server_default=func.now())
+
+
+class AdminSystemConfig(Base):
+    __tablename__ = "admin_system_configs"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    config_key = Column(String(100), unique=True, nullable=False, index=True)
+    config_val = Column(JSON, nullable=False)
+    description = Column(String(255), nullable=True)
+    updated_by = Column(String(100), default="Admin")
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())

@@ -19,8 +19,8 @@ const CrimeHeatmap = dynamic(() => import("@/components/public/CrimeHeatmap"), {
 });
 
 const QUICK_AREAS = [
-  "Hazratganj", "Gomti Nagar", "Charbagh", "Aminabad",
-  "Alambagh", "Indira Nagar", "Hussainganj", "Mahanagar",
+  "Connaught Place", "Saket", "Rohini", "Hauz Khas",
+  "Karol Bagh", "Dwarka", "Andheri", "Bandra",
 ];
 
 function PanelTitle({ icon, title, badge }: { icon: string; title: string; badge?: React.ReactNode }) {
@@ -41,23 +41,29 @@ function SkeletonCard({ h = 200 }: { h?: number }) {
 
 export default function CrimeSearchPage() {
   const [query, setQuery] = useState("");
-  const [areas, setAreas] = useState<Area[]>([]);
+  const [selectedArea, setSelectedArea] = useState("Connaught Place");
+  const [result, setResult] = useState<CrimeSearchResult | null>(null);
+  const [allAreas, setAllAreas] = useState<Area[]>([]);
   const [suggestions, setSuggestions] = useState<Area[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [result, setResult] = useState<CrimeSearchResult | null>(null);
-  const [selectedArea, setSelectedArea] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    api.getAreas().then(r => setAreas(r.areas)).catch(console.error);
+    api.getAreas()
+      .then(res => setAllAreas(res.areas || []))
+      .catch(() => {});
+    doSearch("Connaught Place");
   }, []);
 
-  const filterSuggestions = useCallback((q: string) => {
-    if (!q) return setSuggestions([]);
-    setSuggestions(areas.filter(a => a.name.toLowerCase().includes(q.toLowerCase())));
-  }, [areas]);
+  const filterSuggestions = useCallback((val: string) => {
+    if (!val.trim()) { setSuggestions([]); return; }
+    const filtered = allAreas.filter(a =>
+      a.name.toLowerCase().includes(val.toLowerCase())
+    ).slice(0, 6);
+    setSuggestions(filtered);
+  }, [allAreas]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
@@ -87,25 +93,26 @@ export default function CrimeSearchPage() {
     if (e.key === "Enter") doSearch(query);
   };
 
-  const { score, classification, color } = result?.safety_score || {};
-
   return (
     <div style={{ maxWidth: 1100, margin: "0 auto", padding: "2rem 1.5rem 4rem" }}>
 
       {/* ── Hero Search ────────────────────────────────────────────────────── */}
       <div className="fade-in-up" style={{ marginBottom: "2.5rem", textAlign: "center" }}>
+        <div style={{ display: "inline-block", padding: "3px 10px", background: "rgba(59, 130, 246, 0.15)", border: "1px solid rgba(59, 130, 246, 0.3)", borderRadius: "20px", fontSize: "0.75rem", color: "#93c5fd", fontWeight: 700, marginBottom: "8px" }}>
+          MODULE 3: NATURAL LANGUAGE CRIME INTELLIGENCE
+        </div>
         <h1 style={{ fontSize: "clamp(1.8rem, 4vw, 2.5rem)", fontWeight: 900, letterSpacing: "-0.02em", marginBottom: 8 }}>
-          Search any area in{" "}
+          Area Safety Intelligence ·{" "}
           <span style={{ background: "linear-gradient(135deg, #4f7cff, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-            Lucknow
+            Rakshak AI
           </span>
         </h1>
         <p style={{ color: "var(--color-text-secondary)", fontSize: "1rem", marginBottom: "1.75rem" }}>
-          AI-powered crime analytics · Safety scores · Hotspot detection · 7-day forecast
+          Unified Rakshak Safety Score (0–100) · DBSCAN Hotspot Clusters · LSTM Forecasting
         </p>
 
         {/* Search bar */}
-        <div style={{ position: "relative", maxWidth: 560, margin: "0 auto" }}>
+        <div style={{ position: "relative", maxWidth: 580, margin: "0 auto" }}>
           <div style={{ display: "flex", gap: 10 }}>
             <div style={{ flex: 1, position: "relative" }}>
               <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: "1rem", pointerEvents: "none" }}>🔍</span>
@@ -114,7 +121,7 @@ export default function CrimeSearchPage() {
                 id="area-search-input"
                 className="input-dark"
                 style={{ paddingLeft: "2.5rem" }}
-                placeholder="Search area... e.g. Gomti Nagar, Hazratganj"
+                placeholder="Search any area or type query... e.g. 'Theft near Saket at night'"
                 value={query}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
