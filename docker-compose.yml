@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # ─── PostgreSQL + PostGIS Geospatial Database ──────────────────────────────
+  db:
+    image: postgis/postgis:15-3.3-alpine
+    container_name: rakshak_postgis_db
+    restart: always
+    environment:
+      POSTGRES_USER: rakshak
+      POSTGRES_PASSWORD: rakshakpass
+      POSTGRES_DB: rakshak_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rakshak -d rakshak_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ─── FastAPI Backend & ML Engine ───────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: rakshak_backend
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://rakshak:rakshakpass@db:5432/rakshak_db
+      - GROQ_API_KEY=${GROQ_API_KEY:-}
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend/data:/app/data
+
+  # ─── Next.js Citizen Portal & Police Dashboard ─────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: rakshak_frontend
+    restart: always
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

@@ -1,23 +1,37 @@
-from fastapi import FastAPI, Depends
+"""
+main.py
+FastAPI application for Crime Alert Map (Rakshak AI).
+Serves DBSCAN hotspots, dynamic Area Safety Score, Safe Routing engine, Live SOS WebSockets,
+and Police Analytics Dashboard.
+"""
+import os
+import json
+import logging
+from dotenv import load_dotenv
+from fastapi import FastAPI, Depends, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from typing import Optional
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.future import select
+from sqlalchemy import select, func
+
 from .database import engine, Base, get_db
-from .models import CrimeIncident
-import logging
-import os
-from dotenv import load_dotenv
-from shapely.geometry import LineString, Point
-from groq import Groq
+from .models import CrimeRecord, SOSAlert, User
+from .routers.public import router as public_router
+from .routers.police import router as police_router
 
 load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("RakshakAI")
 
-app = FastAPI(title="Rakshak AI", description="Crime-aware safe navigation API")
+app = FastAPI(
+    title="Crime Alert Map (Rakshak AI) API",
+    description="AI-powered Crime Hotspot Detection (DBSCAN), Multi-factor Area Safety Scoring (0-100), and Safe Routing Platform.",
+    version="2.0.0"
+)
 
+# CORS middleware for Next.js frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -26,126 +40,120 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Groq Client setup
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-if not GROQ_API_KEY:
-    raise ValueError("GROQ_API_KEY not set. Please add it to your backend/.env file.")
-groq_client = Groq(api_key=GROQ_API_KEY)
+# Mount Routers
+app.include_router(public_router)
+app.include_router(police_router)
 
-class RouteRequest(BaseModel):
-    coordinates: list[list[float]] # [lat, lng]
 
+# ─── Startup Event ─────────────────────────────────────────────────────────────
 @app.on_event("startup")
 async def startup_event():
-    logger.info("Starting up API...")
-
-@app.post("/api/analyze-route")
-async def analyze_route(route: RouteRequest, db: AsyncSession = Depends(get_db)):
-    # 1. Convert Route to Shapely LineString (using lng, lat for proper projection roughly)
-    line = LineString([(c[1], c[0]) for c in route.coordinates])
+    logger.info("Initializing database schema...")
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
     
-    # Approx 150m buffer in degrees (very rough estimate for Delhi region ~0.00135 degrees)
-    buffer_zone = line.buffer(0.00135) 
-    
-    # 2. Fetch all crimes (For MVP, we fetch all and filter in python, or could filter by bounding box)
-    result = await db.execute(select(CrimeIncident))
-    crimes = result.scalars().all()
-    
-    # 3. Find crimes within the buffer
-    crimes_on_route = []
-    for crime in crimes:
-        pt = Point(crime.lng, crime.lat)
-        if buffer_zone.contains(pt):
-            crimes_on_route.append(crime)
-            
-    # 4. Calculate Risk Score
-    # Simple formula: 1 point for low severity, 3 for high severity. 
-    score = sum((c.severity or 1) for c in crimes_on_route)
-    
-    if score < 20:
-        risk_level = "Safe"
-        color = "green"
-    elif score < 60:
-        risk_level = "Medium"
-        color = "yellow"
-    else:
-        risk_level = "High"
-        color = "red"
-        
-    # 5. Generate AI Briefing with Groq
-    prompt = f"Act as Rakshak AI, a safety navigation assistant. The user is traveling a route in Delhi NCR. There are {len(crimes_on_route)} reported crime incidents near this route historically (Score: {score}, Level: {risk_level}). Write a short 3-sentence safety briefing. Do not claim the route is perfectly safe. Be helpful and professional."
-    
+    # Check if dataset is already seeded
     try:
-        completion = groq_client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.7,
-            max_tokens=150,
-        )
-        briefing = completion.choices[0].message.content
+        from .load_seed_data import load_seed_data
+        async with engine.connect() as conn:
+            pass
+        from .database import AsyncSessionLocal
+        async with AsyncSessionLocal() as session:
+            q = await session.execute(select(func.count()).select_from(CrimeRecord))
+            count = q.scalar() or 0
+            if count < 5000:
+                logger.info(f"Database contains {count} records. Launching automatic seed ingestion...")
+                await load_seed_data()
+            else:
+                logger.info(f"Database is already seeded with {count} records.")
     except Exception as e:
-        logger.error(f"Groq error: {e}")
-        briefing = f"This route has a {risk_level} historical risk profile based on {len(crimes_on_route)} nearby incidents. Please stay alert."
-    
-    return {
-        "risk_level": risk_level,
-        "color": color,
-        "incident_count": len(crimes_on_route),
-        "ai_briefing": briefing
-    }
+        logger.error(f"Auto-seeding check failed: {e}")
 
-# --- SOS Feature ---
-from fastapi import WebSocket, WebSocketDisconnect
-from .models import SOSAlert
-import json
 
-class ConnectionManager:
+# ─── WebSocket Connection Hub for Police Monitoring ───────────────────────────
+class WebSocketManager:
     def __init__(self):
         self.active_connections: list[WebSocket] = []
 
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
         self.active_connections.append(websocket)
+        logger.info(f"WebSocket client connected. Active: {len(self.active_connections)}")
 
     def disconnect(self, websocket: WebSocket):
-        self.active_connections.remove(websocket)
+        if websocket in self.active_connections:
+            self.active_connections.remove(websocket)
+            logger.info(f"WebSocket client disconnected. Active: {len(self.active_connections)}")
 
     async def broadcast(self, message: dict):
-        for connection in self.active_connections:
-            await connection.send_json(message)
+        for connection in list(self.active_connections):
+            try:
+                await connection.send_json(message)
+            except Exception as e:
+                logger.warning(f"Failed to send to socket: {e}")
+                self.disconnect(connection)
 
-manager = ConnectionManager()
+
+ws_manager = WebSocketManager()
+
 
 @app.websocket("/ws/police")
-async def websocket_endpoint(websocket: WebSocket):
-    await manager.connect(websocket)
+async def police_websocket_endpoint(websocket: WebSocket):
+    """Real-time police monitor socket for instant SOS dispatch alerts."""
+    await ws_manager.connect(websocket)
     try:
         while True:
             data = await websocket.receive_text()
+            # Echo heartbeat
+            await websocket.send_json({"type": "heartbeat_ack", "received": data})
     except WebSocketDisconnect:
-        manager.disconnect(websocket)
+        ws_manager.disconnect(websocket)
 
+
+# ─── Emergency SOS Trigger ────────────────────────────────────────────────────
 class SOSRequest(BaseModel):
     lat: float
-    lng: float
-    user_id: int = 1 # Dummy user ID for MVP
+    lon: float
+    city: Optional[str] = "Delhi"
+    user_id: Optional[int] = 3
+    emergency_type: Optional[str] = "Immediate Threat / Harassment"
+
 
 @app.post("/api/sos")
-async def trigger_sos(sos: SOSRequest, db: AsyncSession = Depends(get_db)):
-    # Create SOS Record
-    alert = SOSAlert(user_id=sos.user_id, lat=sos.lat, lng=sos.lng, status="Alert Received")
+async def trigger_emergency_sos(sos: SOSRequest, db: AsyncSession = Depends(get_db)):
+    """
+    Triggers instant Emergency SOS:
+    1. Persists incident in sos_alerts.
+    2. Broadcasts live GPS coordinates via WebSocket to Police Dashboard.
+    3. Simulates emergency dispatch notification.
+    """
+    alert = SOSAlert(
+        user_id=sos.user_id,
+        lat=sos.lat,
+        lon=sos.lon,
+        city=sos.city,
+        status="Active Dispatch Alert",
+        contacts_notified=["+91-9811000000", "Police Control (112)", "Women Helpline (1091)"]
+    )
     db.add(alert)
     await db.commit()
     await db.refresh(alert)
-    
-    # Broadcast to Police Dashboard
-    alert_data = {
-        "id": alert.id,
+
+    alert_payload = {
+        "event": "EMERGENCY_SOS_TRIGGERED",
+        "alert_id": alert.id,
         "lat": alert.lat,
-        "lng": alert.lng,
+        "lon": alert.lon,
+        "city": alert.city,
+        "emergency_type": sos.emergency_type,
         "status": alert.status,
-        "created_at": alert.created_at.isoformat()
+        "timestamp": alert.timestamp.isoformat() if alert.timestamp else None,
+        "contacts_notified": alert.contacts_notified,
     }
-    await manager.broadcast(alert_data)
-    
-    return {"message": "SOS Alert Sent", "alert": alert_data}
+
+    await ws_manager.broadcast(alert_payload)
+    return {
+        "status": "success",
+        "message": "🚨 SOS Alert broadcasted to Police Command Center & Emergency Contacts.",
+        "alert": alert_payload
+    }
