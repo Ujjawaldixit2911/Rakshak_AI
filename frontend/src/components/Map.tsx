@@ -14,6 +14,7 @@ import {
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { API_BASE_URL } from "@/lib/api";
 
 // Fix default marker icons in Leaflet
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -82,7 +83,7 @@ export default function InteractiveSafetyMap({
     setScoreLoading(true);
     try {
       const res = await fetch(
-        `http://localhost:8000/api/safety-score?lat=${lat}&lon=${lon}&city=${city}`
+        `${API_BASE_URL}/api/safety-score?lat=${lat}&lon=${lon}&city=${city}`
       );
       const data = await res.json();
       setClickedScore(data);

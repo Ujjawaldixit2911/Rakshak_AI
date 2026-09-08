@@ -1,6 +1,14 @@
-// lib/api.ts — Typed API client for Rakshak AI backend
+export const API_BASE_URL = (
+  process.env.NEXT_PUBLIC_API_URL || "https://rakshak-ai-backend-ndgm.onrender.com"
+).replace(/\/$/, "");
 
-const BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+export const WS_BASE_URL = API_BASE_URL.startsWith("https://")
+  ? API_BASE_URL.replace(/^https:\/\//, "wss://")
+  : API_BASE_URL.startsWith("http://")
+  ? API_BASE_URL.replace(/^http:\/\//, "ws://")
+  : `ws://${API_BASE_URL}`;
+
+const BASE = API_BASE_URL;
 
 async function fetchJSON<T>(path: string, init?: RequestInit): Promise<T> {
   const res = await fetch(`${BASE}${path}`, init);

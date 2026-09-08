@@ -6,6 +6,7 @@ import {
   BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, Legend
 } from "recharts";
+import { API_BASE_URL, WS_BASE_URL } from "@/lib/api";
 
 type Tab = "analytics" | "moderation" | "hotspots" | "sos_monitor";
 
@@ -40,8 +41,8 @@ export default function PoliceCommandDashboard() {
     setLoading(true);
     try {
       const [dashRes, queueRes] = await Promise.all([
-        fetch(`http://localhost:8000/api/police/dashboard?city=${selectedCity}`),
-        fetch(`http://localhost:8000/api/police/incident-queue?city=${selectedCity}`),
+        fetch(`${API_BASE_URL}/api/police/dashboard?city=${selectedCity}`),
+        fetch(`${API_BASE_URL}/api/police/incident-queue?city=${selectedCity}`),
       ]);
       const d = await dashRes.json();
       const q = await queueRes.json();
@@ -60,7 +61,7 @@ export default function PoliceCommandDashboard() {
 
   // Connect to Live SOS WebSocket
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8000/ws/police");
+    const socket = new WebSocket(`${WS_BASE_URL}/ws/police`);
     wsRef.current = socket;
 
     socket.onopen = () => {
@@ -91,7 +92,7 @@ export default function PoliceCommandDashboard() {
   // Moderate Incident Action
   const handleModerate = async (incidentId: number, status: "verified" | "rejected") => {
     try {
-      const res = await fetch(`http://localhost:8000/api/police/incidents/${incidentId}/moderate`, {
+      const res = await fetch(`${API_BASE_URL}/api/police/incidents/${incidentId}/moderate`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status }),

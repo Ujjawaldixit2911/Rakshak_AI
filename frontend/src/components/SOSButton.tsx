@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { API_BASE_URL } from "@/lib/api";
 
 export default function SOSButton() {
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
@@ -24,7 +25,7 @@ export default function SOSButton() {
 
   const sendSOS = async (lat: number, lon: number) => {
     try {
-      await fetch("http://localhost:8000/api/sos", {
+      await fetch(`${API_BASE_URL}/api/sos`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ lat, lon, user_id: 3, emergency_type: "Immediate Threat / Harassment" }),

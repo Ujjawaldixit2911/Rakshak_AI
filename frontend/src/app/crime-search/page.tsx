@@ -76,7 +76,7 @@ export default function CrimeSearchPage() {
       const data = await api.crimeSearch(areaName);
       setResult(data);
     } catch (e) {
-      setError("Could not load data. Please ensure the backend is running at localhost:8000.");
+      setError("Could not load data. Please check backend connection.");
     } finally {
       setLoading(false);
     }

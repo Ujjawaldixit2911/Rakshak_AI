@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import SOSButton from "@/components/SOSButton";
 import ReportIncidentModal from "@/components/ReportIncidentModal";
+import { API_BASE_URL } from "@/lib/api";
 
 // Dynamically import Interactive Leaflet Map to avoid SSR errors
 const InteractiveMap = dynamic(() => import("@/components/Map"), {
@@ -23,28 +24,37 @@ const CITY_OPTIONS = [
       { label: "Rohini → Hauz Khas", start: [28.7495, 77.0565], dest: [28.5494, 77.2001] },
       { label: "Dwarka → India Gate", start: [28.5921, 77.0460], dest: [28.6129, 77.2295] },
       { label: "Karol Bagh → Lajpat Nagar", start: [28.6514, 77.1907], dest: [28.5700, 77.2373] },
-    ]
+      { label: "Noida Sec 18 → CP", start: [28.5708, 77.3261], dest: [28.6315, 77.2167] },
+    ],
   },
   {
     name: "Mumbai",
     center: [19.0760, 72.8777] as [number, number],
     zoom: 12,
     presets: [
-      { label: "Colaba → Bandra West", start: [18.9067, 72.8147], dest: [19.0596, 72.8295] },
-      { label: "Bandra → Powai IIT", start: [19.0596, 72.8295], dest: [19.1176, 72.9060] },
-      { label: "Dadar → Andheri East", start: [19.0178, 72.8478], dest: [19.1136, 72.8697] },
-      { label: "Juhu → Borivali West", start: [19.1075, 72.8263], dest: [19.2307, 72.8567] },
-    ]
-  }
+      { label: "Andheri → Bandra", start: [19.1136, 72.8697], dest: [19.0596, 72.8295] },
+      { label: "Colaba → Dadar", start: [18.9067, 72.8147], dest: [19.0178, 72.8478] },
+      { label: "Powai → BKC", start: [19.1176, 72.9060], dest: [19.0664, 72.8677] },
+    ],
+  },
+  {
+    name: "Bengaluru",
+    center: [12.9716, 77.5946] as [number, number],
+    zoom: 12,
+    presets: [
+      { label: "Indiranagar → Koramangala", start: [12.9784, 77.6408], dest: [12.9352, 77.6245] },
+      { label: "Whitefield → MG Road", start: [12.9698, 77.7500], dest: [12.9756, 77.6066] },
+      { label: "Electronic City → HSR", start: [12.8399, 77.6770], dest: [12.9121, 77.6446] },
+    ],
+  },
 ];
 
-export default function CitizenSafetyPortal() {
+export default function CitizenPortal() {
   const [selectedCity, setSelectedCity] = useState("Delhi");
-  const [safetyMode, setSafetyMode] = useState<"normal" | "night_safety" | "women_safety">("women_safety");
-  const [timeOfDay, setTimeOfDay] = useState("Night");
-
   const [startCoords, setStartCoords] = useState<[number, number]>([28.6315, 77.2167]);
   const [destCoords, setDestCoords] = useState<[number, number]>([28.5245, 77.2066]);
+  const [safetyMode, setSafetyMode] = useState<"safest" | "balanced" | "fastest">("safest");
+  const [timeOfDay, setTimeOfDay] = useState("22:00");
 
   const [routePlan, setRoutePlan] = useState<any | null>(null);
   const [hotspotsData, setHotspotsData] = useState<any | null>(null);
@@ -65,8 +75,8 @@ export default function CitizenSafetyPortal() {
     const fetchCityData = async () => {
       try {
         const [hsRes, hmRes] = await Promise.all([
-          fetch(`http://localhost:8000/api/hotspots?city=${selectedCity}`),
-          fetch(`http://localhost:8000/api/safety-heatmap?city=${selectedCity}&grid_size=10`),
+          fetch(`${API_BASE_URL}/api/hotspots?city=${selectedCity}`),
+          fetch(`${API_BASE_URL}/api/safety-heatmap?city=${selectedCity}&grid_size=10`),
         ]);
         const hs = await hsRes.json();
         const hm = await hmRes.json();
@@ -88,7 +98,7 @@ export default function CitizenSafetyPortal() {
   const handleFindSafeRoute = async () => {
     setLoadingRoute(true);
     try {
-      const res = await fetch("http://localhost:8000/api/route/safe", {
+      const res = await fetch(`${API_BASE_URL}/api/route/safe`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

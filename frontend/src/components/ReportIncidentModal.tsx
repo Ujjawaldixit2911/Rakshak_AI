@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { API_BASE_URL } from "@/lib/api";
 
 interface ReportIncidentModalProps {
   isOpen: boolean;
@@ -32,7 +33,7 @@ export default function ReportIncidentModal({
     e.preventDefault();
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:8000/api/incidents/report", {
+      const res = await fetch(`${API_BASE_URL}/api/incidents/report`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
