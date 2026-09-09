@@ -272,14 +272,30 @@ Tone: Empathetic, professional, safety-first, concise. You can converse fluently
                     messages.append({"role": h.role, "content": h.content})
             messages.append({"role": "user", "content": user_msg})
 
-            completion = client.chat.completions.create(
-                model="llama-3.3-70b-versatile",
-                messages=messages,
-                temperature=0.3,
-                max_tokens=800,
-            )
+            candidate_models = [
+                "llama-3.3-70b-versatile",
+                "qwen/qwen3.8-27b",
+                "qwen/qwen3.6-27b",
+                "openai/gpt-oss-120b",
+                "openai/gpt-oss-20b",
+            ]
+            completion = None
+            for model_name in candidate_models:
+                try:
+                    completion = client.chat.completions.create(
+                        model=model_name,
+                        messages=messages,
+                        temperature=0.3,
+                        max_tokens=800,
+                    )
+                    break
+                except Exception as model_err:
+                    logger.warning(f"Groq model {model_name} failed: {model_err}, trying next candidate.")
 
-            raw_reply = completion.choices[0].message.content.strip()
+            if completion and completion.choices:
+                raw_reply = completion.choices[0].message.content.strip()
+            else:
+                raw_reply = ""
 
             # Parse action block if present
             action = None

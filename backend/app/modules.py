@@ -316,7 +316,8 @@ def generate_family_safety_trip(
     Generates live trip sharing token, ETA tracking, and geofence monitoring.
     """
     trip_id = f"trip_{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}"
-    share_url = f"https://rakshak-ai-frontend.onrender.com/?trip={trip_id}"
+    frontend_base = os.getenv("FRONTEND_URL", "https://rakshak-ai-frontend.onrender.com").rstrip("/")
+    share_url = f"{frontend_base}/?trip={trip_id}"
 
     return {
         "trip_id": trip_id,

@@ -38,7 +38,12 @@ app = FastAPI(
 # CORS middleware for Next.js frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "https://rakshak-ai-frontend.onrender.com",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "*",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -57,14 +62,12 @@ app.include_router(platform_router)
 @app.on_event("startup")
 async def startup_event():
     logger.info("Initializing database schema...")
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    
-    # Check if dataset is already seeded
     try:
+        async with engine.begin() as conn:
+            await conn.run_sync(Base.metadata.create_all)
+        
+        # Check if dataset is already seeded
         from .load_seed_data import load_seed_data
-        async with engine.connect() as conn:
-            pass
         from .database import AsyncSessionLocal
         async with AsyncSessionLocal() as session:
             q = await session.execute(select(func.count()).select_from(CrimeRecord))
@@ -75,7 +78,8 @@ async def startup_event():
             else:
                 logger.info(f"Database is already seeded with {count} records.")
     except Exception as e:
-        logger.error(f"Auto-seeding check failed: {e}")
+        logger.error(f"Database initialization/seeding warning: {e}")
+
 
 
 # ─── WebSocket Connection Hub for Police Monitoring ───────────────────────────
