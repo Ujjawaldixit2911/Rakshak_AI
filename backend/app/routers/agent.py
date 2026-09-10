@@ -1,21 +1,25 @@
 """
 agent.py
-FastAPI Router for Rakshak AI Copilot (Supervisor Agent & Sub-agents API).
-Supports tool auditing, structured form extractions, and confirmation-gated actions.
+FastAPI Router for Rakshak AI Copilot (Supervisor Agent & Modular Tool-Calling AI Agent API).
+Supports tool auditing, structured form extractions, confirmation-gated actions,
+and pure REST-tool agentic orchestration via POST /api/agent/query.
 """
 import logging
 from typing import Optional, List, Dict, Any
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
 from app.agent.supervisor import SupervisorAgent
+from app.agent.schemas import AgentQueryRequest, AgentQueryResponse
+from app.agent.orchestrator import AIAgentOrchestrator
 
 logger = logging.getLogger("RakshakAI.AgentRouter")
-router = APIRouter(prefix="/api/agent", tags=["agent"])
+router = APIRouter(prefix="/api/agent", tags=["AI Agent Module"])
 
 
+# ─── Legacy Copilot Models ────────────────────────────────────────────────────────
 class AgentChatRequest(BaseModel):
     message: str
     city: Optional[str] = "Delhi"
@@ -32,15 +36,44 @@ class PreJourneyBriefingRequest(BaseModel):
     mode: Optional[str] = "safest"
 
 
+# ─── Tool-Calling Agentic Query Endpoint ──────────────────────────────────────────
+@router.post(
+    "/query",
+    response_model=AgentQueryResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Query AI Safety Agent",
+    description="Tool-calling AI Agent that orchestrates Location, Route, Risk, and Emergency POI modules over REST APIs without touching databases directly."
+)
+async def agent_query_endpoint(payload: AgentQueryRequest) -> AgentQueryResponse:
+    """
+    Main Agentic Orchestration endpoint.
+    Agent -> Tools -> Backend APIs -> Services -> Database.
+    Never touches any database table directly.
+    """
+    try:
+        orchestrator = AIAgentOrchestrator()
+        user_loc_dict = payload.userLocation.model_dump() if payload.userLocation else None
+
+        result = await orchestrator.run(
+            message=payload.message,
+            user_id=payload.userId,
+            user_location=user_loc_dict,
+            conversation_history=payload.conversationHistory
+        )
+        return result
+    except Exception as e:
+        logger.error(f"Agent query execution failed: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Agent execution error: {str(e)}")
+
+
+# ─── Legacy Copilot Supervisor Endpoints ──────────────────────────────────────────
 @router.post("/chat")
 async def agent_chat_endpoint(
     req: AgentChatRequest,
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Main Agentic Supervisor endpoint.
-    Orchestrates sub-agents, calls real database tools, provides tool audit logs,
-    and returns explainable recommendations.
+    Supervisor endpoint for interactive copilot sessions.
     """
     try:
         result = await SupervisorAgent.process_user_query(

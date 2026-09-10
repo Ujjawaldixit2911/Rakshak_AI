@@ -9,6 +9,8 @@ import VoiceInputButton from "@/components/VoiceInputButton";
 import WhatIfSimulator from "@/components/public/WhatIfSimulator";
 import LastMileSafetyCard from "@/components/public/LastMileSafetyCard";
 import FamilySafetyModal from "@/components/FamilySafetyModal";
+import VoiceAgentModal from "@/components/VoiceAgentModal";
+import WhatIfSimulatorModal from "@/components/WhatIfSimulatorModal";
 import { JourneyLifecycleController } from "@/components/JourneyLifecycleController";
 import { PlatformHealthDrawer } from "@/components/PlatformHealthDrawer";
 import { API_BASE_URL } from "@/lib/api";
@@ -74,6 +76,8 @@ export default function CitizenPortal() {
   const [loadingRoute, setLoadingRoute] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isFamilyModalOpen, setIsFamilyModalOpen] = useState(false);
+  const [isVoiceAgentModalOpen, setIsVoiceAgentModalOpen] = useState(false);
+  const [isWhatIfModalOpen, setIsWhatIfModalOpen] = useState(false);
   const [reportCoords, setReportCoords] = useState<{ lat?: number; lon?: number }>({});
 
   const cityMeta = CITY_OPTIONS.find((c) => c.name === selectedCity) || CITY_OPTIONS[0];
@@ -220,6 +224,46 @@ export default function CitizenPortal() {
                 </button>
               ))}
             </div>
+
+            <button
+              onClick={() => setIsVoiceAgentModalOpen(true)}
+              style={{
+                padding: "8px 14px",
+                borderRadius: "10px",
+                background: "linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(168, 85, 247, 0.25) 100%)",
+                border: "1px solid rgba(168, 85, 247, 0.4)",
+                color: "#e9d5ff",
+                fontSize: "0.82rem",
+                fontWeight: 700,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                boxShadow: "0 0 15px rgba(168, 85, 247, 0.2)"
+              }}
+            >
+              🎙️ Voice Agent
+            </button>
+
+            <button
+              onClick={() => setIsWhatIfModalOpen(true)}
+              style={{
+                padding: "8px 14px",
+                borderRadius: "10px",
+                background: "linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(234, 88, 12, 0.25) 100%)",
+                border: "1px solid rgba(245, 158, 11, 0.4)",
+                color: "#fde68a",
+                fontSize: "0.82rem",
+                fontWeight: 700,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+                boxShadow: "0 0 15px rgba(245, 158, 11, 0.2)"
+              }}
+            >
+              ⚡ What-If Simulator
+            </button>
 
             <button
               onClick={() => setIsFamilyModalOpen(true)}
@@ -534,13 +578,33 @@ export default function CitizenPortal() {
         routeData={routePlan}
         onApplyRoute={handleApplyAIRoute}
         onSelectCity={(c) => setSelectedCity(c)}
-        onTriggerSOS={() => {
-          const sosBtn = document.getElementById("sos-button");
-          if (sosBtn) sosBtn.click();
-        }}
         onOpenReport={(lat, lon) => {
           setReportCoords({ lat: lat || startCoords[0], lon: lon || startCoords[1] });
           setIsReportModalOpen(true);
+        }}
+      />
+
+      {/* Standalone Voice Agent Modal */}
+      <VoiceAgentModal
+        isOpen={isVoiceAgentModalOpen}
+        onClose={() => setIsVoiceAgentModalOpen(false)}
+        onSelectRoute={(route) => {
+          if (route) {
+            setRoutePlan(route);
+          }
+        }}
+      />
+
+      {/* Standalone What-If Stress-Testing Modal */}
+      <WhatIfSimulatorModal
+        isOpen={isWhatIfModalOpen}
+        onClose={() => setIsWhatIfModalOpen(false)}
+        sourceCoords={{ lat: startCoords[0], lng: startCoords[1] }}
+        destCoords={{ lat: destCoords[0], lng: destCoords[1] }}
+        onApplySimulatedRoute={(routes) => {
+          if (routes) {
+            setRoutePlan(routes);
+          }
         }}
       />
     </>

@@ -206,3 +206,77 @@ class AdminSystemConfig(Base):
     description = Column(String(255), nullable=True)
     updated_by = Column(String(100), default="Admin")
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
+class EmergencyPOI(Base):
+    __tablename__ = "emergency_pois"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    name = Column(String(200), nullable=False, index=True)
+    type = Column(String(50), nullable=False, index=True)  # police, hospital, fire_station, pharmacy
+    latitude = Column(Float, nullable=False, index=True)
+    longitude = Column(Float, nullable=False, index=True)
+    source = Column(String(100), default="Overpass API (OSM)")
+    phone = Column(String(50), nullable=True)
+    city = Column(String(50), index=True, default="Delhi")
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
+class SOSEvent(Base):
+    __tablename__ = "sos_events"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    user_id = Column(String(100), nullable=False, index=True)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
+    status = Column(String(50), default="ACTIVE", index=True)  # ACTIVE, RESOLVED, CANCELLED
+    timestamp = Column(DateTime(timezone=True), server_default=func.now(), index=True)
+    resolved_at = Column(DateTime(timezone=True), nullable=True)
+    metadata_info = Column(JSON, default=dict)
+
+
+class TrustedContact(Base):
+    __tablename__ = "trusted_contacts"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    user_id = Column(String(100), nullable=False, index=True)
+    name = Column(String(100), nullable=False)
+    relationship = Column(String(50), nullable=True)  # Parent, Sibling, Spouse, Friend, Guardian
+    phone = Column(String(30), nullable=False)
+    email = Column(String(150), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
+class Incident(Base):
+    __tablename__ = "incidents"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    user_id = Column(String(100), nullable=False, index=True)
+    crime_type = Column(String(100), nullable=False, index=True)
+    latitude = Column(Float, nullable=False, index=True)
+    longitude = Column(Float, nullable=False, index=True)
+    description = Column(Text, nullable=True)
+    photo_url = Column(String(500), nullable=True)
+    status = Column(String(50), default="Reported", index=True)  # Reported, Under Review, Verified, Rejected
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), index=True)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
+class UserSafetyProfile(Base):
+    __tablename__ = "user_safety_profiles"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    user_id = Column(String(100), unique=True, nullable=False, index=True)
+    travel_preference = Column(String(50), default="safest")  # fastest, safest, balanced
+    night_travel_enabled = Column(Boolean, default=True)
+    women_safety_mode = Column(Boolean, default=False)
+    avoid_high_crime_areas = Column(Boolean, default=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
+
+
+

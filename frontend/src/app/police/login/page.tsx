@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Shield, KeyRound, User, Lock, AlertCircle } from "lucide-react";
 import { api } from "@/lib/api";
+import { Button, Card, Badge } from "@/components/ui";
 
 export default function PoliceLoginPage() {
   const [officerId, setOfficerId] = useState("");
@@ -29,84 +31,95 @@ export default function PoliceLoginPage() {
   };
 
   return (
-    <div style={{
-      minHeight: "calc(100vh - 60px)",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      padding: "2rem",
-      background: "radial-gradient(ellipse at 50% 0%, rgba(79,124,255,0.08) 0%, transparent 60%)",
-    }}>
-      <div style={{ width: "100%", maxWidth: 400 }}>
-        {/* Header */}
-        <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-          <div style={{
-            width: 64, height: 64, borderRadius: 16,
-            background: "linear-gradient(135deg, #4f7cff, #818cf8)",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 28, margin: "0 auto 16px",
-            boxShadow: "0 0 32px rgba(79,124,255,0.3)",
-          }}>🚔</div>
-          <h1 style={{ fontSize: "1.6rem", fontWeight: 800, marginBottom: 6 }}>Police Command Portal</h1>
-          <p style={{ color: "var(--color-text-secondary)", fontSize: "0.9rem" }}>
-            Authorized personnel only · Rakshak AI
+    <div className="min-h-screen bg-[#0a0a0a] text-white flex items-center justify-center p-4 sm:p-6 font-['Inter',-apple-system,'SF_Pro_Display',system-ui,sans-serif] selection:bg-[#0071e3]/30 selection:text-white">
+      <div className="w-full max-w-[420px] space-y-8">
+        {/* Apple-style Brand Header */}
+        <div className="text-center space-y-3">
+          <div className="w-14 h-14 rounded-3xl bg-[#0071e3]/15 border border-[#0071e3]/30 flex items-center justify-center text-[#0071e3] mx-auto shadow-[0_0_30px_rgba(0,113,227,0.3)]">
+            <Shield className="w-7 h-7" />
+          </div>
+          <h1 className="text-[28px] sm:text-[32px] font-semibold tracking-[-0.02em] text-white">
+            Command Portal
+          </h1>
+          <p className="text-[15px] text-white/50 leading-relaxed">
+            Authorized Law Enforcement & Patrol Units
           </p>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <div className="card" style={{ padding: "1.75rem" }}>
-            <div style={{ marginBottom: 14 }}>
-              <label style={{ display: "block", fontSize: "0.78rem", fontWeight: 600, color: "var(--color-text-secondary)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>
-                Officer ID
+        {/* Login Card */}
+        <Card className="p-7 sm:p-8 space-y-6">
+          <form onSubmit={handleLogin} className="space-y-5">
+            <div className="space-y-2">
+              <label className="block text-[12px] font-semibold uppercase tracking-wider text-white/50">
+                Officer Identifier
               </label>
-              <input
-                id="officer-id-input"
-                className="input-dark"
-                placeholder="e.g. officer001"
-                value={officerId}
-                onChange={e => setOfficerId(e.target.value)}
-                autoComplete="username"
-                required
-              />
+              <div className="relative">
+                <input
+                  id="officer-id-input"
+                  type="text"
+                  placeholder="e.g. officer001"
+                  value={officerId}
+                  onChange={(e) => setOfficerId(e.target.value)}
+                  autoComplete="username"
+                  required
+                  className="w-full h-12 px-4 rounded-2xl bg-white/[0.04] border border-white/[0.1] text-[15px] text-white placeholder:text-white/30 focus:outline-none focus:border-[#0071e3] focus:ring-2 focus:ring-[#0071e3]/30 transition-all"
+                />
+              </div>
             </div>
-            <div>
-              <label style={{ display: "block", fontSize: "0.78rem", fontWeight: 600, color: "var(--color-text-secondary)", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>
-                PIN
+
+            <div className="space-y-2">
+              <label className="block text-[12px] font-semibold uppercase tracking-wider text-white/50">
+                Security PIN
               </label>
-              <input
-                id="officer-pin-input"
-                className="input-dark"
-                type="password"
-                placeholder="••••"
-                value={pin}
-                onChange={e => setPin(e.target.value)}
-                autoComplete="current-password"
-                required
-              />
+              <div className="relative">
+                <input
+                  id="officer-pin-input"
+                  type="password"
+                  placeholder="••••"
+                  value={pin}
+                  onChange={(e) => setPin(e.target.value)}
+                  autoComplete="current-password"
+                  required
+                  className="w-full h-12 px-4 rounded-2xl bg-white/[0.04] border border-white/[0.1] text-[15px] text-white placeholder:text-white/30 focus:outline-none focus:border-[#0071e3] focus:ring-2 focus:ring-[#0071e3]/30 transition-all font-mono tracking-widest"
+                />
+              </div>
             </div>
 
             {error && (
-              <div style={{ marginTop: 12, padding: "10px 12px", borderRadius: 8, background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)", color: "#f87171", fontSize: "0.84rem" }}>
-                {error}
+              <div className="rounded-xl bg-[#ff3b30]/10 border border-[#ff3b30]/25 p-3.5 flex items-center gap-2.5 text-[13px] text-[#ff3b30]">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{error}</span>
               </div>
             )}
 
-            <button id="police-login-btn" type="submit" className="btn-primary" disabled={loading} style={{ width: "100%", marginTop: 20, padding: "0.8rem" }}>
-              {loading ? "Authenticating…" : "🔐 Access Dashboard"}
-            </button>
-          </div>
-        </form>
+            <Button
+              id="police-login-btn"
+              type="submit"
+              variant="primary"
+              size="lg"
+              loading={loading}
+              className="w-full mt-2"
+            >
+              Authenticate & Access
+            </Button>
+          </form>
 
-        {/* Demo credentials */}
-        <div style={{ marginTop: 16, padding: "12px 16px", borderRadius: 10, background: "rgba(79,124,255,0.08)", border: "1px solid rgba(79,124,255,0.2)", fontSize: "0.82rem" }}>
-          <div style={{ fontWeight: 600, color: "#93c5fd", marginBottom: 6 }}>Demo Credentials</div>
-          <div style={{ color: "var(--color-text-secondary)", lineHeight: 1.8 }}>
-            Officer: <code style={{ color: "#a5b4fc" }}>officer001</code> / PIN: <code style={{ color: "#a5b4fc" }}>1234</code><br />
-            Commander: <code style={{ color: "#a5b4fc" }}>commander01</code> / PIN: <code style={{ color: "#a5b4fc" }}>5678</code>
+          {/* Demo Credentials Box */}
+          <div className="pt-4 border-t border-white/[0.06] space-y-2 text-[12px] text-white/40">
+            <div className="font-semibold text-white/60">Demo Credentials:</div>
+            <div className="flex justify-between">
+              <span>Officer: <code className="text-[#0071e3]">officer001</code></span>
+              <span>PIN: <code className="text-[#0071e3]">1234</code></span>
+            </div>
+            <div className="flex justify-between">
+              <span>Commander: <code className="text-[#0071e3]">commander01</code></span>
+              <span>PIN: <code className="text-[#0071e3]">5678</code></span>
+            </div>
           </div>
-        </div>
+        </Card>
 
-        <p style={{ textAlign: "center", marginTop: 16, fontSize: "0.75rem", color: "var(--color-text-muted)" }}>
-          Unauthorized access is prohibited under the IT Act 2000.
+        <p className="text-center text-[12px] text-white/30">
+          Rakshak AI · Enterprise Command & Public Safety Architecture
         </p>
       </div>
     </div>

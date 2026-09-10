@@ -23,6 +23,25 @@ from .routers.assistant import router as assistant_router
 from .routers.agent import router as agent_router
 from .routers.modules_router import router as modules_router
 from .routers.platform_router import router as platform_router
+from .routers.location import router as location_router
+from .routers.route import router as route_router
+from .routers.eta import router as eta_router
+from .routers.crimes import router as crimes_router
+from .routers.hotspots import router as hotspots_router
+from .routers.route_risk import router as route_risk_router
+from .routers.route_compare import router as route_compare_router
+from .routers.safety_score import router as safety_score_router
+from .routers.emergency_poi import router as emergency_poi_router
+from .routers.sos import router as sos_router
+from .routers.live_location import router as live_location_router
+from .routers.trusted_contacts import router as trusted_contacts_router
+from .routers.notifications import router as notifications_router
+from .routers.ai_briefing import router as ai_briefing_router
+from .routers.simulator import router as simulator_router
+from .routers.incidents import router as incidents_router
+from .routers.admin import router as admin_router
+from .routers.profile import router as profile_router
+from .routers.analytics import router as analytics_router
 
 load_dotenv()
 
@@ -50,12 +69,31 @@ app.add_middleware(
 )
 
 # Mount Routers
+app.include_router(hotspots_router)
 app.include_router(public_router)
 app.include_router(police_router)
 app.include_router(assistant_router)
 app.include_router(agent_router)
 app.include_router(modules_router)
 app.include_router(platform_router)
+app.include_router(location_router)
+app.include_router(route_router)
+app.include_router(eta_router)
+app.include_router(crimes_router)
+app.include_router(route_risk_router)
+app.include_router(route_compare_router)
+app.include_router(safety_score_router)
+app.include_router(emergency_poi_router)
+app.include_router(sos_router)
+app.include_router(live_location_router)
+app.include_router(trusted_contacts_router)
+app.include_router(notifications_router)
+app.include_router(ai_briefing_router)
+app.include_router(simulator_router)
+app.include_router(incidents_router)
+app.include_router(admin_router)
+app.include_router(profile_router)
+app.include_router(analytics_router)
 
 
 # ─── Startup Event ─────────────────────────────────────────────────────────────
