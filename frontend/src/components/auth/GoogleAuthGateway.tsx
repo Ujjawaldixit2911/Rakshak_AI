@@ -21,10 +21,16 @@ const DEMO_GOOGLE_ACCOUNTS = [
   },
 ];
 
+export const DEMO_CREDENTIALS = {
+  email: "demo@rakshak.ai",
+  password: "Rakshak@2026",
+  name: "Ujjawal Dixit",
+};
+
 export default function GoogleAuthGateway() {
   const { loginWithGoogle } = useAuth();
 
-  const [authMethod, setAuthMethod] = useState<"google" | "email">("google");
+  const [authMethod, setAuthMethod] = useState<"google" | "email">("email");
   const [step, setStep] = useState<1 | 2>(1); // Step 1: Auth, Step 2: Select Field
   const [selectedAccount, setSelectedAccount] = useState<{
     name: string;
@@ -32,12 +38,15 @@ export default function GoogleAuthGateway() {
     avatar: string;
   } | null>(null);
 
-  // Email form state
-  const [emailInput, setEmailInput] = useState("");
-  const [nameInput, setNameInput] = useState("");
+  // Email & Password login state
+  const [emailInput, setEmailInput] = useState("demo@rakshak.ai");
+  const [passwordInput, setPasswordInput] = useState("Rakshak@2026");
+  const [nameInput, setNameInput] = useState("Ujjawal Dixit");
+  const [emailAuthMode, setEmailAuthMode] = useState<"password" | "otp">("password");
   const [otpCode, setOtpCode] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [mockGeneratedOtp, setMockGeneratedOtp] = useState("");
+  const [loginError, setLoginError] = useState("");
 
   // Custom Google input
   const [customGoogleName, setCustomGoogleName] = useState("");
@@ -68,7 +77,6 @@ export default function GoogleAuthGateway() {
           client_id: googleClientId,
           callback: (response: any) => {
             try {
-              // Parse JWT credential
               const payload = JSON.parse(
                 atob(response.credential.split(".")[1])
               );
@@ -103,7 +111,9 @@ export default function GoogleAuthGateway() {
     document.body.appendChild(script);
 
     return () => {
-      document.body.removeChild(script);
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
     };
   }, [googleClientId, isRealGoogleConfigured]);
 
@@ -125,13 +135,43 @@ export default function GoogleAuthGateway() {
     setStep(2);
   };
 
-  // Email login handling
+  // Auto-fill demo credentials
+  const handleFillDemoCredentials = () => {
+    setEmailInput(DEMO_CREDENTIALS.email);
+    setPasswordInput(DEMO_CREDENTIALS.password);
+    setNameInput(DEMO_CREDENTIALS.name);
+    setLoginError("");
+  };
+
+  // Email & Password login handling
+  const handlePasswordLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError("");
+    if (!emailInput) {
+      setLoginError("Please enter your email address.");
+      return;
+    }
+    if (!passwordInput || passwordInput.length < 4) {
+      setLoginError("Password must be at least 4 characters.");
+      return;
+    }
+
+    const name = nameInput.trim() || emailInput.split("@")[0];
+    const avatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(
+      emailInput
+    )}`;
+    setSelectedAccount({ name, email: emailInput, avatar });
+    setStep(2);
+  };
+
+  // Email OTP handling
   const handleSendOtp = (e: React.FormEvent) => {
     e.preventDefault();
     if (!emailInput) return;
     const randomOtp = Math.floor(100000 + Math.random() * 900000).toString();
     setMockGeneratedOtp(randomOtp);
     setOtpSent(true);
+    setLoginError("");
   };
 
   const handleVerifyOtp = (e: React.FormEvent) => {
@@ -234,7 +274,7 @@ export default function GoogleAuthGateway() {
             }}
           >
             {step === 1
-              ? "Sign in to Unlock Public Safety & Navigation Intelligence"
+              ? "Sign in to Access Citizen Safety & Navigation Intelligence"
               : "Select Your Field & Purpose of Use"}
           </h1>
 
@@ -248,7 +288,7 @@ export default function GoogleAuthGateway() {
             }}
           >
             {step === 1
-              ? "Home page ke AI safe route navigators, crime heatmaps aur SOS ko unlock karne ke liye Google ya Email se login karein."
+              ? "Home page ke AI safe route navigators, crime heatmaps aur SOS ko unlock karne ke liye Email / Password ya Google se login karein."
               : "Aap kis field ke liye login kar rahe hain? Apna role chunein taki platform aapke focus ke anusaar customize ho jaye."}
           </p>
         </div>
@@ -283,7 +323,7 @@ export default function GoogleAuthGateway() {
             }}
           >
             <span>{step > 1 ? "✓" : "1"}</span>
-            <span>Authentication (Google / Email)</span>
+            <span>Authentication (Email / Google)</span>
           </div>
           <div
             style={{ width: 24, height: 1, background: "rgba(255,255,255,0.2)" }}
@@ -336,9 +376,34 @@ export default function GoogleAuthGateway() {
                 border: "1px solid rgba(255, 255, 255, 0.08)",
                 borderRadius: 12,
                 padding: 4,
-                marginBottom: "1.5rem",
+                marginBottom: "1.25rem",
               }}
             >
+              <button
+                type="button"
+                onClick={() => setAuthMethod("email")}
+                style={{
+                  flex: 1,
+                  padding: "8px 12px",
+                  borderRadius: 9,
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: "0.84rem",
+                  fontWeight: 700,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                  background:
+                    authMethod === "email" ? "#4f7cff" : "transparent",
+                  color: authMethod === "email" ? "#fff" : "#94a3b8",
+                  transition: "all 0.2s",
+                }}
+              >
+                <span>🔑</span>
+                <span>Email & Password</span>
+              </button>
+
               <button
                 type="button"
                 onClick={() => setAuthMethod("google")}
@@ -361,34 +426,297 @@ export default function GoogleAuthGateway() {
                 }}
               >
                 <GoogleIcon size={16} />
-                <span>Google Login</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setAuthMethod("email")}
-                style={{
-                  flex: 1,
-                  padding: "8px 12px",
-                  borderRadius: 9,
-                  border: "none",
-                  cursor: "pointer",
-                  fontSize: "0.84rem",
-                  fontWeight: 700,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 8,
-                  background:
-                    authMethod === "email" ? "#4f7cff" : "transparent",
-                  color: authMethod === "email" ? "#fff" : "#94a3b8",
-                  transition: "all 0.2s",
-                }}
-              >
-                <span>✉️</span>
-                <span>Email Login</span>
+                <span>Google Sign-In</span>
               </button>
             </div>
+
+            {/* ── EMAIL & PASSWORD AUTH METHOD ─────────────────────────────── */}
+            {authMethod === "email" && (
+              <div>
+                {/* Demo Credentials Box */}
+                <div
+                  style={{
+                    padding: "10px 14px",
+                    background: "rgba(79, 124, 255, 0.1)",
+                    border: "1px solid rgba(79, 124, 255, 0.25)",
+                    borderRadius: 12,
+                    marginBottom: "1.25rem",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    gap: 8,
+                  }}
+                >
+                  <div>
+                    <div style={{ fontSize: "0.72rem", color: "#93c5fd", fontWeight: 700, textTransform: "uppercase" }}>
+                      ⚡ Demo Credentials Ready:
+                    </div>
+                    <div style={{ fontSize: "0.78rem", color: "#e2e8f0", marginTop: 2 }}>
+                      Email: <code style={{ color: "#60a5fa" }}>demo@rakshak.ai</code> · Pass: <code style={{ color: "#60a5fa" }}>Rakshak@2026</code>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleFillDemoCredentials}
+                    style={{
+                      padding: "4px 10px",
+                      borderRadius: 6,
+                      background: "rgba(79, 124, 255, 0.25)",
+                      border: "1px solid rgba(79, 124, 255, 0.5)",
+                      color: "#fff",
+                      fontSize: "0.72rem",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                    }}
+                  >
+                    Auto-Fill
+                  </button>
+                </div>
+
+                {emailAuthMode === "password" ? (
+                  <form
+                    onSubmit={handlePasswordLogin}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 12,
+                      marginBottom: "1rem",
+                    }}
+                  >
+                    <div>
+                      <label
+                        style={{
+                          fontSize: "0.75rem",
+                          color: "#94a3b8",
+                          fontWeight: 600,
+                          display: "block",
+                          marginBottom: 4,
+                        }}
+                      >
+                        Your Name
+                      </label>
+                      <input
+                        type="text"
+                        className="input-dark"
+                        placeholder="e.g. Ujjawal Dixit"
+                        value={nameInput}
+                        onChange={(e) => setNameInput(e.target.value)}
+                      />
+                    </div>
+
+                    <div>
+                      <label
+                        style={{
+                          fontSize: "0.75rem",
+                          color: "#94a3b8",
+                          fontWeight: 600,
+                          display: "block",
+                          marginBottom: 4,
+                        }}
+                      >
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        className="input-dark"
+                        required
+                        placeholder="demo@rakshak.ai"
+                        value={emailInput}
+                        onChange={(e) => setEmailInput(e.target.value)}
+                      />
+                    </div>
+
+                    <div>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
+                        <label
+                          style={{
+                            fontSize: "0.75rem",
+                            color: "#94a3b8",
+                            fontWeight: 600,
+                          }}
+                        >
+                          Password
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => setEmailAuthMode("otp")}
+                          style={{
+                            background: "transparent",
+                            border: "none",
+                            color: "#93c5fd",
+                            fontSize: "0.72rem",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Use OTP Code instead
+                        </button>
+                      </div>
+                      <input
+                        type="password"
+                        className="input-dark"
+                        required
+                        placeholder="••••••••"
+                        value={passwordInput}
+                        onChange={(e) => setPasswordInput(e.target.value)}
+                      />
+                    </div>
+
+                    {loginError && (
+                      <div
+                        style={{
+                          padding: "8px 12px",
+                          borderRadius: 8,
+                          background: "rgba(239, 68, 68, 0.15)",
+                          border: "1px solid rgba(239, 68, 68, 0.3)",
+                          color: "#fca5a5",
+                          fontSize: "0.78rem",
+                        }}
+                      >
+                        ⚠️ {loginError}
+                      </div>
+                    )}
+
+                    <button
+                      type="submit"
+                      className="btn-primary"
+                      style={{
+                        marginTop: 4,
+                        fontSize: "0.9rem",
+                        padding: "0.7rem",
+                        background: "linear-gradient(135deg, #4f7cff 0%, #6366f1 100%)",
+                      }}
+                    >
+                      Authenticate & Select Field →
+                    </button>
+                  </form>
+                ) : (
+                  <div>
+                    {!otpSent ? (
+                      <form
+                        onSubmit={handleSendOtp}
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 12,
+                          marginBottom: "1rem",
+                        }}
+                      >
+                        <div>
+                          <label
+                            style={{
+                              fontSize: "0.75rem",
+                              color: "#94a3b8",
+                              fontWeight: 600,
+                              display: "block",
+                              marginBottom: 4,
+                            }}
+                          >
+                            Email Address for OTP
+                          </label>
+                          <input
+                            type="email"
+                            className="input-dark"
+                            required
+                            placeholder="name@example.com"
+                            value={emailInput}
+                            onChange={(e) => setEmailInput(e.target.value)}
+                          />
+                        </div>
+
+                        <div style={{ display: "flex", gap: 8 }}>
+                          <button
+                            type="button"
+                            onClick={() => setEmailAuthMode("password")}
+                            className="btn-outline"
+                            style={{ flex: 1, fontSize: "0.8rem" }}
+                          >
+                            Use Password
+                          </button>
+                          <button
+                            type="submit"
+                            className="btn-primary"
+                            style={{ flex: 2, fontSize: "0.85rem" }}
+                          >
+                            Send OTP Code →
+                          </button>
+                        </div>
+                      </form>
+                    ) : (
+                      <form
+                        onSubmit={handleVerifyOtp}
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 12,
+                          marginBottom: "1rem",
+                        }}
+                      >
+                        <div
+                          style={{
+                            padding: "10px 12px",
+                            borderRadius: 10,
+                            background: "rgba(34, 197, 94, 0.12)",
+                            border: "1px solid rgba(34, 197, 94, 0.3)",
+                          }}
+                        >
+                          <div style={{ fontSize: "0.78rem", color: "#86efac", fontWeight: 700 }}>
+                            ✓ OTP Code Sent to {emailInput}
+                          </div>
+                          <div style={{ fontSize: "0.74rem", color: "#cbd5e1", marginTop: 2 }}>
+                            Demo Code:{" "}
+                            <strong
+                              style={{
+                                color: "#fff",
+                                background: "rgba(0,0,0,0.3)",
+                                padding: "2px 6px",
+                                borderRadius: 4,
+                              }}
+                            >
+                              {mockGeneratedOtp}
+                            </strong>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label style={{ fontSize: "0.75rem", color: "#94a3b8", fontWeight: 600, display: "block", marginBottom: 4 }}>
+                            Enter 6-Digit OTP
+                          </label>
+                          <input
+                            type="text"
+                            className="input-dark"
+                            required
+                            placeholder={mockGeneratedOtp}
+                            value={otpCode}
+                            onChange={(e) => setOtpCode(e.target.value)}
+                            style={{ letterSpacing: "4px", textAlign: "center", fontSize: "1.1rem", fontWeight: 800 }}
+                          />
+                        </div>
+
+                        <div style={{ display: "flex", gap: 8 }}>
+                          <button
+                            type="button"
+                            onClick={() => setOtpSent(false)}
+                            className="btn-outline"
+                            style={{ flex: 1, fontSize: "0.8rem" }}
+                          >
+                            Back
+                          </button>
+                          <button
+                            type="submit"
+                            className="btn-primary"
+                            style={{ flex: 2, fontSize: "0.85rem" }}
+                          >
+                            Verify & Proceed →
+                          </button>
+                        </div>
+                      </form>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* ── GOOGLE AUTH METHOD ─────────────────────────────── */}
             {authMethod === "google" && (
@@ -590,168 +918,6 @@ export default function GoogleAuthGateway() {
                         style={{ flex: 2, fontSize: "0.82rem" }}
                       >
                         Sign in with Google
-                      </button>
-                    </div>
-                  </form>
-                )}
-              </div>
-            )}
-
-            {/* ── EMAIL AUTH METHOD ─────────────────────────────── */}
-            {authMethod === "email" && (
-              <div>
-                {!otpSent ? (
-                  <form
-                    onSubmit={handleSendOtp}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 12,
-                      marginBottom: "1.25rem",
-                    }}
-                  >
-                    <div>
-                      <label
-                        style={{
-                          fontSize: "0.75rem",
-                          color: "#94a3b8",
-                          fontWeight: 600,
-                          display: "block",
-                          marginBottom: 4,
-                        }}
-                      >
-                        Your Name
-                      </label>
-                      <input
-                        type="text"
-                        className="input-dark"
-                        placeholder="e.g. Ujjawal Dixit"
-                        value={nameInput}
-                        onChange={(e) => setNameInput(e.target.value)}
-                      />
-                    </div>
-
-                    <div>
-                      <label
-                        style={{
-                          fontSize: "0.75rem",
-                          color: "#94a3b8",
-                          fontWeight: 600,
-                          display: "block",
-                          marginBottom: 4,
-                        }}
-                      >
-                        Email Address
-                      </label>
-                      <input
-                        type="email"
-                        className="input-dark"
-                        required
-                        placeholder="name@example.com"
-                        value={emailInput}
-                        onChange={(e) => setEmailInput(e.target.value)}
-                      />
-                    </div>
-
-                    <button
-                      type="submit"
-                      className="btn-primary"
-                      style={{ marginTop: 6, fontSize: "0.88rem" }}
-                    >
-                      Send Verification Code (OTP) →
-                    </button>
-                  </form>
-                ) : (
-                  <form
-                    onSubmit={handleVerifyOtp}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 12,
-                      marginBottom: "1.25rem",
-                    }}
-                  >
-                    <div
-                      style={{
-                        padding: "10px 12px",
-                        borderRadius: 10,
-                        background: "rgba(34, 197, 94, 0.12)",
-                        border: "1px solid rgba(34, 197, 94, 0.3)",
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontSize: "0.78rem",
-                          color: "#86efac",
-                          fontWeight: 700,
-                        }}
-                      >
-                        ✓ Code Sent to {emailInput}
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "0.74rem",
-                          color: "#cbd5e1",
-                          marginTop: 2,
-                        }}
-                      >
-                        Your demo verification code is:{" "}
-                        <strong
-                          style={{
-                            color: "#fff",
-                            background: "rgba(0,0,0,0.3)",
-                            padding: "2px 6px",
-                            borderRadius: 4,
-                          }}
-                        >
-                          {mockGeneratedOtp}
-                        </strong>
-                      </div>
-                    </div>
-
-                    <div>
-                      <label
-                        style={{
-                          fontSize: "0.75rem",
-                          color: "#94a3b8",
-                          fontWeight: 600,
-                          display: "block",
-                          marginBottom: 4,
-                        }}
-                      >
-                        Enter 6-Digit OTP Code
-                      </label>
-                      <input
-                        type="text"
-                        className="input-dark"
-                        required
-                        placeholder={mockGeneratedOtp}
-                        value={otpCode}
-                        onChange={(e) => setOtpCode(e.target.value)}
-                        style={{
-                          letterSpacing: "4px",
-                          textAlign: "center",
-                          fontSize: "1.1rem",
-                          fontWeight: 800,
-                        }}
-                      />
-                    </div>
-
-                    <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
-                      <button
-                        type="button"
-                        onClick={() => setOtpSent(false)}
-                        className="btn-outline"
-                        style={{ flex: 1, fontSize: "0.82rem" }}
-                      >
-                        Change Email
-                      </button>
-                      <button
-                        type="submit"
-                        className="btn-primary"
-                        style={{ flex: 2, fontSize: "0.85rem" }}
-                      >
-                        Verify & Proceed →
                       </button>
                     </div>
                   </form>
