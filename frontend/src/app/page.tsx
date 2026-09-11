@@ -823,7 +823,7 @@ export default function CitizenPortal() {
             marginBottom: "1.5rem"
           }}>
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
                 <span style={{
                   fontSize: "0.74rem",
                   fontWeight: 800,
@@ -835,8 +835,16 @@ export default function CitizenPortal() {
                 }}>
                   🛡️ AI Hotspot & Safe Navigation Platform
                 </span>
-                <span style={{ fontSize: "0.74rem", color: "#94a3b8" }}>
-                  Live Crime Density · DBSCAN Spatial Clusters · Dijkstra Penalty Routing
+                <span style={{
+                  fontSize: "0.72rem",
+                  fontWeight: 700,
+                  padding: "3px 8px",
+                  borderRadius: "6px",
+                  background: "rgba(34, 197, 94, 0.15)",
+                  color: "#4ade80",
+                  border: "1px solid rgba(34, 197, 94, 0.3)",
+                }}>
+                  ⚛️ React • 🗺️ Leaflet • 🌐 OpenStreetMap • 🛣️ OSRM (100% Free & Open-Source)
                 </span>
               </div>
               <h2 style={{ fontSize: "1.8rem", fontWeight: 900, margin: 0, letterSpacing: "-0.03em", color: "#f8fafc" }}>
