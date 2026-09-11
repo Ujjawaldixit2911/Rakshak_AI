@@ -11,13 +11,20 @@ export const WS_BASE_URL = API_BASE_URL.startsWith("https://")
 const BASE = API_BASE_URL;
 
 async function fetchJSON<T>(path: string, init?: RequestInit): Promise<T> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 second timeout
+
   try {
-    const res = await fetch(`${BASE}${path}`, init);
+    const res = await fetch(`${BASE}${path}`, {
+      ...init,
+      signal: controller.signal,
+    });
+    clearTimeout(timeoutId);
     if (!res.ok) throw new Error(`API ${path} → ${res.status}`);
     return (await res.json()) as Promise<T>;
   } catch (err: any) {
-    // Preserve clear error description for debugging while preventing uncaught crashes
-    const errorMsg = err?.message || String(err);
+    clearTimeout(timeoutId);
+    const errorMsg = err?.name === "AbortError" ? "Request timed out (4s)" : err?.message || String(err);
     throw new Error(`[Rakshak API Error on ${path}]: ${errorMsg}`);
   }
 }
