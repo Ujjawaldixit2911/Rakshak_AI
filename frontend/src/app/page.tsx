@@ -273,6 +273,122 @@ export default function CitizenPortal() {
           </div>
         </div>
 
+        {/* ── Presenter Avatar AI Safety Advisor Banner ────────────────────────── */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 20,
+            padding: "1.25rem 1.75rem",
+            background: "linear-gradient(135deg, rgba(30, 41, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 100%)",
+            border: "1px solid rgba(79, 124, 255, 0.3)",
+            borderRadius: "18px",
+            marginBottom: "1.75rem",
+            boxShadow: "0 10px 30px rgba(0, 0, 0, 0.4)",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          {/* Ambient background glow */}
+          <div
+            style={{
+              position: "absolute",
+              top: "-50px",
+              right: "100px",
+              width: "200px",
+              height: "200px",
+              background: "radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, transparent 70%)",
+              filter: "blur(40px)",
+              pointerEvents: "none",
+            }}
+          />
+
+          <div style={{ display: "flex", alignItems: "center", gap: 20, zIndex: 1 }}>
+            {/* Avatar Image */}
+            <div
+              style={{
+                width: 90,
+                height: 120,
+                flexShrink: 0,
+                borderRadius: "14px",
+                overflow: "hidden",
+                border: "2px solid rgba(79, 124, 255, 0.5)",
+                boxShadow: "0 8px 24px rgba(79, 124, 255, 0.35)",
+                background: "linear-gradient(180deg, #1e293b, #0f172a)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <img
+                src="/assets/presenter_character.jpg"
+                alt="Rakshak AI Safety Guide Avatar"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: "top center",
+                }}
+              />
+            </div>
+
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                <span
+                  style={{
+                    fontSize: "0.75rem",
+                    padding: "2px 8px",
+                    borderRadius: 99,
+                    background: "rgba(34, 197, 94, 0.15)",
+                    color: "#4ade80",
+                    fontWeight: 800,
+                    border: "1px solid rgba(34, 197, 94, 0.3)",
+                  }}
+                >
+                  🟢 AI SAFETY GUIDE ACTIVE
+                </span>
+                <span style={{ fontSize: "0.78rem", color: "#94a3b8" }}>
+                  Real-time Geospatial & Safe Route Intelligence
+                </span>
+              </div>
+              <h2 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#f8fafc", margin: "0 0 4px 0" }}>
+                "Namaste! Main aapka Rakshak AI Safety Navigator hoon."
+              </h2>
+              <p style={{ fontSize: "0.84rem", color: "#cbd5e1", margin: 0, lineHeight: 1.4, maxWidth: 640 }}>
+                Aap real-time crime density, DBSCAN hotspots, aur multi-factor safe routes test kar sakte hain. 
+                Neeche diye presets choose karein ya bottom-right <strong>🤖 Rakshak AI Copilot</strong> se bolkar direct safe navigation activate karein!
+              </p>
+            </div>
+          </div>
+
+          <div style={{ display: "flex", gap: 10, zIndex: 1 }}>
+            <button
+              onClick={() => {
+                const el = document.getElementById("rakshak-copilot-launcher");
+                if (el) el.click();
+              }}
+              style={{
+                padding: "10px 18px",
+                borderRadius: "12px",
+                background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
+                border: "1px solid rgba(255, 255, 255, 0.25)",
+                color: "#fff",
+                fontWeight: 700,
+                fontSize: "0.85rem",
+                cursor: "pointer",
+                boxShadow: "0 4px 15px rgba(59, 130, 246, 0.4)",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+              }}
+            >
+              <span>🤖 Talk to AI Copilot</span>
+            </button>
+          </div>
+        </div>
+
         {/* ── Header & City Switcher Bar ───────────────────────────────────────── */}
         <div style={{
           display: "flex",

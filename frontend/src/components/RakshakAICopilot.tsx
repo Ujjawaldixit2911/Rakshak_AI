@@ -538,17 +538,20 @@ function parseRouteQuery(query: string, currentCity: string) {
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <div
                 style={{
-                  width: "36px",
-                  height: "36px",
+                  width: "38px",
+                  height: "38px",
                   borderRadius: "10px",
-                  background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "18px",
+                  overflow: "hidden",
+                  border: "1.5px solid rgba(79, 124, 255, 0.6)",
+                  boxShadow: "0 2px 8px rgba(79, 124, 255, 0.4)",
+                  background: "#1e293b",
                 }}
               >
-                🧠
+                <img
+                  src="/assets/presenter_character.jpg"
+                  alt="AI Avatar"
+                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
+                />
               </div>
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
