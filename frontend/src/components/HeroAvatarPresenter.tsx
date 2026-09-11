@@ -22,7 +22,7 @@ export default function HeroAvatarPresenter({
     "Conventional maps aapko sirf sabse chhota ya fastest rasta dikhate hain, chahe wo kitna bhi sunsaan ya khatarnak kyu na ho.",
     "Lekin Rakshak AI par hum real-time crime incidents, unlit blindspots, aur accident zones ko bypass karte hain.",
     "Chahe do minute extra lagein, par hum aapko sabse safe aur fully illuminated route provide karenge!",
-    "Now you can login, aur uske next step me hum Firebase connect karenge. Chaliye shuru karte hain!"
+    "Now you can login and explore the live safety map. Chaliye shuru karte hain!"
   ];
 
   const englishDialogue = [
@@ -30,7 +30,7 @@ export default function HeroAvatarPresenter({
     "Standard navigation apps only focus on the shortest or fastest path, even if it takes you through dark and risky alleys.",
     "Rakshak AI analyzes real crime hotspots, street lighting, and police patrolling to compute the safest possible route.",
     "Even if it takes 2 minutes more, we ensure you always reach your destination safely and securely.",
-    "Now you can log in, and in the next step we will connect Firebase authentication and live database. Let's get started!"
+    "Now you can log in to explore the live safety platform. Let's get started!"
   ];
 
   const activeDialogue = language === "hindi" ? hindiDialogue : englishDialogue;
