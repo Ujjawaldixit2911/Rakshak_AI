@@ -168,10 +168,10 @@ export const MapView: React.FC<MapViewProps> = ({
         <MapViewportManager center={center} zoom={zoom} routeCoords={activePolylineCoords} />
         <MapClickHandler onClick={onMapClick} />
 
-        {/* Base Map Tiles (OSM / Carto Voyager) */}
+        {/* Base Map Tiles (OpenStreetMap) */}
         <TileLayer
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
-          attribution='&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://openstreetmap.org">OSM</a>'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
 
         {/* 1. Routes Layer */}

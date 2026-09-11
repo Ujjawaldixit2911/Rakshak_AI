@@ -183,6 +183,23 @@ class SupervisorAgent:
             tool_audit_log.append({"tool": "calculate_route_risk", "status": "EXECUTED", "args": {"time_of_day": time_of_day, "mode": "safest"}})
             tool_audit_log.append({"tool": "find_nearby_police", "status": "EXECUTED", "args": {"lat": origin_coords[0], "lon": origin_coords[1]}})
 
+            route_opt = await RouteAgent.get_route_options(
+                db=db,
+                origin=origin_coords,
+                destination=dest_coords,
+                city=city,
+                time_of_day=time_of_day,
+                mode="safest"
+            )
+            safest_info = route_opt.get("routes", {}).get("safest_route", {})
+            fastest_info = route_opt.get("routes", {}).get("fastest_route", {})
+            waypoints = safest_info.get("waypoints", [])
+            path_str = " ➔ ".join(waypoints) if waypoints else f"{origin_name} ➔ {dest_name}"
+            safest_time = safest_info.get("estimated_time_minutes", 18.0)
+            fastest_time = fastest_info.get("estimated_time_minutes", 15.0)
+            safest_dist = safest_info.get("distance_km", 12.0)
+            fastest_dist = fastest_info.get("distance_km", 10.5)
+
             tradeoff = await RiskAnalysisAgent.evaluate_tradeoff(
                 db=db,
                 origin=origin_coords,
@@ -203,6 +220,11 @@ class SupervisorAgent:
                 "fastest_score": tradeoff["fastest_score"],
                 "risk_reduction_pct": tradeoff["risk_reduction_pct"],
                 "time_overhead_mins": tradeoff["time_overhead_mins"],
+                "safest_time_mins": safest_time,
+                "fastest_time_mins": fastest_time,
+                "safest_distance_km": safest_dist,
+                "fastest_distance_km": fastest_dist,
+                "waypoints": waypoints,
                 "nearest_police": police_stations[0]["name"] if police_stations else "Central Police Station",
                 "nearest_hospital": hospitals[0]["name"] if hospitals else "Emergency Trauma Centre",
                 "origin": origin_coords,
@@ -214,10 +236,16 @@ class SupervisorAgent:
             unverified_warning = "\n\n⚠️ **Notice:** User-mentioned social media rumor labeled as *Unverified Information*." if is_unverified else ""
 
             response_text = (
-                f"🛡️ **Pre-Journey AI Safety Briefing ({origin_name} → {dest_name})**\n\n"
-                f"{tradeoff['explanation']}\n\n"
-                f"• **Emergency Cover:** Nearest Police: *{briefing['nearest_police']}* | Nearest Trauma Care: *{briefing['nearest_hospital']}*\n"
-                f"• **Data Confidence:** High (Computed over 5,000 verified crime records and active PostGIS road network).{unverified_warning}"
+                f"🛡️ **Safe Navigation Plan: {origin_name} se {dest_name}**\n\n"
+                f"📍 **Aapko aise jana hai (Step-by-Step Path):**\n"
+                f"{path_str}\n\n"
+                f"⏱️ **Travel Time & Distance:**\n"
+                f"• 🟢 **AI Safest Route:** ~{safest_time} mins ({safest_dist} km) — Safety Score: {tradeoff['safest_score']}/100\n"
+                f"• 🔵 **Fastest Alternative:** ~{fastest_time} mins ({fastest_dist} km) — Safety Score: {tradeoff['fastest_score']}/100\n"
+                f"• ⚖️ **Trade-off:** Sirf +{round(max(0.0, safest_time - fastest_time), 1)} mins extra time me {tradeoff['risk_reduction_pct']}% crime exposure kam hota hai.\n\n"
+                f"🚨 **Emergency Cover on Path:**\n"
+                f"• Police Station: {briefing['nearest_police']}\n"
+                f"• Hospital: {briefing['nearest_hospital']}{unverified_warning}"
             )
 
             return {

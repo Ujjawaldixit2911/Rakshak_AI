@@ -63,6 +63,7 @@ export default function RakshakAICopilot({
   const [traverseSummary, setTraverseSummary] = useState("");
 
   const chatEndRef = useRef<HTMLDivElement | null>(null);
+  const currentUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -70,13 +71,44 @@ export default function RakshakAICopilot({
 
   // Text to Speech
   const speakText = (text: string) => {
-    if (!ttsEnabled || typeof window === "undefined" || !("speechSynthesis" in window)) return;
-    window.speechSynthesis.cancel();
-    const cleanText = text.replace(/[*_#`[\]()]/g, "").replace(/https?:\/\/\S+/g, "");
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.rate = 1.0;
-    utterance.pitch = 1.0;
-    window.speechSynthesis.speak(utterance);
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    if (!ttsEnabled) return;
+    try {
+      window.speechSynthesis.cancel();
+      if (window.speechSynthesis.paused) {
+        window.speechSynthesis.resume();
+      }
+      const cleanText = text
+        .replace(/[*_#`[\]()~]/g, "")
+        .replace(/https?:\/\/\S+/g, "")
+        .replace(/[\u{1F600}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F300}-\u{1F5FF}\u{1F900}-\u{1F9FF}\u{1FA70}-\u{1FAFF}]/gu, "")
+        .replace(/[-•\n➔]+/g, ". ")
+        .trim();
+
+      if (!cleanText) return;
+
+      const utterance = new SpeechSynthesisUtterance(cleanText);
+      currentUtteranceRef.current = utterance;
+
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoice =
+        voices.find((v) => v.lang === "hi-IN" || v.lang === "hi_IN" || v.lang.startsWith("en-IN")) ||
+        voices.find((v) => v.lang.startsWith("en"));
+      if (preferredVoice) utterance.voice = preferredVoice;
+      utterance.rate = 1.0;
+      utterance.pitch = 1.0;
+
+      utterance.onend = () => {
+        currentUtteranceRef.current = null;
+      };
+      utterance.onerror = () => {
+        currentUtteranceRef.current = null;
+      };
+
+      window.speechSynthesis.speak(utterance);
+    } catch (e) {
+      console.warn("TTS Error:", e);
+    }
   };
 
   // Pre-Journey / Route Guidance
@@ -505,12 +537,63 @@ export default function RakshakAICopilot({
                         </div>
                       )}
 
-                      {/* Confidence Tag */}
-                      {m.dataConfidence && (
-                        <div style={{ marginTop: "6px", fontSize: "10px", color: "#34d399", fontWeight: 600 }}>
-                          📊 Confidence: {m.dataConfidence}
+                      {/* Confidence Tag & Action Buttons */}
+                      <div style={{ marginTop: "8px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "6px" }}>
+                        {m.dataConfidence ? (
+                          <div style={{ fontSize: "10px", color: "#34d399", fontWeight: 600 }}>
+                            📊 Confidence: {m.dataConfidence}
+                          </div>
+                        ) : <div />}
+
+                        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                          {m.sender === "bot" && (
+                            <button
+                              onClick={() => speakText(m.text)}
+                              title="Replay Voice Speech"
+                              style={{
+                                background: "rgba(255, 255, 255, 0.08)",
+                                border: "1px solid rgba(255, 255, 255, 0.15)",
+                                borderRadius: "6px",
+                                color: "#38bdf8",
+                                padding: "2px 6px",
+                                fontSize: "10.5px",
+                                cursor: "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "3px",
+                              }}
+                            >
+                              🔊 <span>Voice</span>
+                            </button>
+                          )}
+                          {m.action === "SET_ROUTE" && (
+                            <button
+                              onClick={() => {
+                                setActiveTab("traverser");
+                                if (routeSteps.length > 0) {
+                                  setIsTraversing(true);
+                                  speakText(`Starting journey. ${routeSteps[0].title}. ${routeSteps[0].guidance}`);
+                                }
+                              }}
+                              style={{
+                                background: "#10b981",
+                                border: "none",
+                                borderRadius: "6px",
+                                color: "#fff",
+                                padding: "3px 8px",
+                                fontSize: "11px",
+                                fontWeight: 700,
+                                cursor: "pointer",
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "4px",
+                              }}
+                            >
+                              🚗 <span>Start Navigation</span>
+                            </button>
+                          )}
                         </div>
-                      )}
+                      </div>
                     </div>
                   </div>
                 ))}

@@ -14,6 +14,8 @@ import WhatIfSimulatorModal from "@/components/WhatIfSimulatorModal";
 import { JourneyLifecycleController } from "@/components/JourneyLifecycleController";
 import { PlatformHealthDrawer } from "@/components/PlatformHealthDrawer";
 import { API_BASE_URL } from "@/lib/api";
+import { useAuth } from "@/context/AuthContext";
+import GoogleAuthGateway from "@/components/auth/GoogleAuthGateway";
 
 // Dynamically import Interactive Leaflet Map to avoid SSR errors
 const InteractiveMap = dynamic(() => import("@/components/Map"), {
@@ -59,6 +61,8 @@ const CITY_OPTIONS = [
 ];
 
 export default function CitizenPortal() {
+  const { isAuthenticated, isLoading, user, currentFieldInfo, openFieldModal } = useAuth();
+
   const [selectedCity, setSelectedCity] = useState("Delhi");
   const [startCoords, setStartCoords] = useState<[number, number]>([28.6315, 77.2167]);
   const [destCoords, setDestCoords] = useState<[number, number]>([28.5245, 77.2066]);
@@ -84,6 +88,7 @@ export default function CitizenPortal() {
 
   // Fetch Hotspots and Heatmap for active city on mount or city change
   useEffect(() => {
+    if (!isAuthenticated) return;
     const fetchCityData = async () => {
       try {
         const [hsRes, hmRes] = await Promise.all([
@@ -104,10 +109,11 @@ export default function CitizenPortal() {
     const firstPreset = cityMeta.presets[0];
     setStartCoords(firstPreset.start as [number, number]);
     setDestCoords(firstPreset.dest as [number, number]);
-  }, [selectedCity]);
+  }, [selectedCity, isAuthenticated]);
 
   // Request Safe Route
   const handleFindSafeRoute = async () => {
+    if (!isAuthenticated) return;
     setLoadingRoute(true);
     try {
       const res = await fetch(`${API_BASE_URL}/api/route/safe`, {
@@ -132,8 +138,10 @@ export default function CitizenPortal() {
 
   // Run initial route calculation on load
   useEffect(() => {
-    handleFindSafeRoute();
-  }, [selectedCity, safetyMode, timeOfDay]);
+    if (isAuthenticated) {
+      handleFindSafeRoute();
+    }
+  }, [selectedCity, safetyMode, timeOfDay, isAuthenticated]);
 
   // AI Copilot Route Dispatcher
   const handleApplyAIRoute = (
@@ -170,9 +178,100 @@ export default function CitizenPortal() {
     computeAIRoute();
   };
 
+  // Loading state
+  if (isLoading) {
+    return (
+      <div style={{ minHeight: "calc(100vh - 64px)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ textAlign: "center" }}>
+          <div style={{
+            width: 48,
+            height: 48,
+            border: "3px solid rgba(79, 124, 255, 0.2)",
+            borderTopColor: "#4f7cff",
+            borderRadius: "50%",
+            animation: "spin 0.8s linear infinite",
+            margin: "0 auto 16px",
+          }} />
+          <span style={{ fontSize: "0.9rem", color: "#94a3b8", fontWeight: 600 }}>
+            Verifying Authentication & Field Profile...
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  // Not authenticated -> Show Google Sign-in & Field selection gateway
+  if (!isAuthenticated || !user) {
+    return <GoogleAuthGateway />;
+  }
+
   return (
     <>
       <div style={{ maxWidth: 1240, margin: "0 auto", padding: "1.5rem 1rem 4rem" }}>
+        {/* ── Active User & Field Welcome Banner ─────────────────────────────────── */}
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: 12,
+          padding: "12px 18px",
+          background: currentFieldInfo.bgGlow,
+          border: `1px solid ${currentFieldInfo.color}44`,
+          borderRadius: 14,
+          marginBottom: "1.5rem",
+          boxShadow: `0 4px 20px ${currentFieldInfo.bgGlow}`,
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <img
+              src={user.avatar}
+              alt={user.name}
+              style={{ width: 36, height: 36, borderRadius: "50%", border: `2px solid ${currentFieldInfo.color}` }}
+            />
+            <div>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <span style={{ fontSize: "0.95rem", fontWeight: 800, color: "#f8fafc" }}>
+                  Welcome, {user.name}!
+                </span>
+                <span style={{
+                  fontSize: "0.72rem",
+                  padding: "2px 8px",
+                  borderRadius: 6,
+                  background: "rgba(255,255,255,0.1)",
+                  color: "#fff",
+                  fontWeight: 700,
+                }}>
+                  {currentFieldInfo.icon} {currentFieldInfo.title}
+                </span>
+              </div>
+              <div style={{ fontSize: "0.76rem", color: "#cbd5e1" }}>
+                🎯 <strong>Field Focus:</strong> {currentFieldInfo.tagline}
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <button
+              onClick={openFieldModal}
+              style={{
+                padding: "6px 12px",
+                borderRadius: 8,
+                background: "rgba(255, 255, 255, 0.08)",
+                border: "1px solid rgba(255, 255, 255, 0.15)",
+                color: "#e2e8f0",
+                fontSize: "0.78rem",
+                fontWeight: 700,
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
+              🔄 Switch Field
+            </button>
+          </div>
+        </div>
+
         {/* ── Header & City Switcher Bar ───────────────────────────────────────── */}
         <div style={{
           display: "flex",

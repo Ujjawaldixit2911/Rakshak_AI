@@ -11,9 +11,15 @@ export const WS_BASE_URL = API_BASE_URL.startsWith("https://")
 const BASE = API_BASE_URL;
 
 async function fetchJSON<T>(path: string, init?: RequestInit): Promise<T> {
-  const res = await fetch(`${BASE}${path}`, init);
-  if (!res.ok) throw new Error(`API ${path} → ${res.status}`);
-  return res.json() as Promise<T>;
+  try {
+    const res = await fetch(`${BASE}${path}`, init);
+    if (!res.ok) throw new Error(`API ${path} → ${res.status}`);
+    return (await res.json()) as Promise<T>;
+  } catch (err: any) {
+    // Preserve clear error description for debugging while preventing uncaught crashes
+    const errorMsg = err?.message || String(err);
+    throw new Error(`[Rakshak API Error on ${path}]: ${errorMsg}`);
+  }
 }
 
 function authHeaders(): Record<string, string> {
