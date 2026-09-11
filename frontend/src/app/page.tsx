@@ -219,9 +219,8 @@ export default function CitizenPortal() {
 
   return (
     <div style={{ minHeight: "100vh", background: "#070d1a" }}>
-      <div style={{ maxWidth: 1240, margin: "0 auto", padding: "1.5rem 1rem 4rem" }}>
-        
-        {/* ── 1. ACTIVE USER & FIELD STATUS BAR ───────────────────────────────────── */}
+      {/* ── 1. ACTIVE USER & FIELD STATUS BAR ───────────────────────────────────── */}
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "1rem 1.5rem 0" }}>
         <div style={{
           display: "flex",
           justifyContent: "space-between",
@@ -232,7 +231,7 @@ export default function CitizenPortal() {
           background: currentFieldInfo.bgGlow,
           border: `1px solid ${currentFieldInfo.color}33`,
           borderRadius: 20,
-          marginBottom: "2rem",
+          marginBottom: "1rem",
           boxShadow: `0 4px 25px ${currentFieldInfo.bgGlow}`,
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
@@ -282,8 +281,10 @@ export default function CitizenPortal() {
             🔄 Switch Profile Focus
           </button>
         </div>
+      </div>
 
-        {/* ── 2. CARESYNC-STYLE PRESENTATION HERO SECTION ──────────────────────── */}
+      {/* ── 2. CARESYNC-STYLE PRESENTATION HERO SECTION ──────────────────────── */}
+      <main style={{ maxWidth: "1280px", margin: "0 auto", padding: "0 1.5rem" }}>
         <section style={{
           textAlign: "center",
           padding: "2rem 1rem 3rem",
@@ -363,7 +364,7 @@ export default function CitizenPortal() {
               Autonomous crime spatial clustering, Dijkstra penalty avoidance routing, and instant 24x7 emergency response orchestration across 36 Indian States & UTs.
             </p>
 
-            {/* Primary Action Button Bar */}
+            {/* Focused Core Action Buttons */}
             <div style={{
               display: "flex",
               alignItems: "center",
@@ -372,37 +373,39 @@ export default function CitizenPortal() {
               flexWrap: "wrap",
               marginBottom: "2.5rem",
             }}>
+              {/* Feature 1: Safe Routing Launch */}
               <button
                 onClick={scrollToMap}
                 style={{
-                  padding: "14px 28px",
+                  padding: "13px 26px",
                   borderRadius: "9999px",
                   background: "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
                   border: "1px solid rgba(255, 255, 255, 0.3)",
                   color: "#fff",
-                  fontSize: "0.98rem",
+                  fontSize: "0.95rem",
                   fontWeight: 800,
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
                   gap: 10,
-                  boxShadow: "0 8px 25px rgba(59, 130, 246, 0.5)",
+                  boxShadow: "0 8px 25px rgba(59, 130, 246, 0.45)",
                   transition: "all 0.2s ease",
                 }}
               >
-                <span>🚀 Explore Safe Routes</span>
+                <span>🗺️ Launch Safe Navigation</span>
                 <span style={{ fontSize: "1.1rem" }}>→</span>
               </button>
 
+              {/* Feature 2: AI Voice Copilot */}
               <button
                 onClick={openCopilot}
                 style={{
-                  padding: "14px 24px",
+                  padding: "13px 24px",
                   borderRadius: "9999px",
-                  background: "rgba(30, 41, 59, 0.8)",
+                  background: "linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(168, 85, 247, 0.25) 100%)",
                   border: "1px solid rgba(168, 85, 247, 0.45)",
                   color: "#e9d5ff",
-                  fontSize: "0.98rem",
+                  fontSize: "0.95rem",
                   fontWeight: 800,
                   cursor: "pointer",
                   display: "flex",
@@ -412,21 +415,22 @@ export default function CitizenPortal() {
                   boxShadow: "0 4px 20px rgba(168, 85, 247, 0.25)",
                 }}
               >
-                <span>🤖 Launch AI Copilot</span>
+                <span>🤖 Open AI Copilot</span>
               </button>
 
+              {/* Feature 3: Avatar Presenter Stage */}
               <button
                 onClick={() => {
                   const el = document.getElementById("hero-presenter-stage");
                   if (el) el.scrollIntoView({ behavior: "smooth" });
                 }}
                 style={{
-                  padding: "14px 24px",
+                  padding: "13px 22px",
                   borderRadius: "9999px",
                   background: "rgba(255, 255, 255, 0.05)",
                   border: "1px solid rgba(255, 255, 255, 0.15)",
                   color: "#f1f5f9",
-                  fontSize: "0.98rem",
+                  fontSize: "0.95rem",
                   fontWeight: 700,
                   cursor: "pointer",
                   display: "flex",
@@ -434,11 +438,11 @@ export default function CitizenPortal() {
                   gap: 8,
                 }}
               >
-                <span>🎙️ AI Presenter Speech</span>
+                <span>🎙️ Meet AI Presenter</span>
               </button>
             </div>
 
-            {/* CareSync-style Trust & Telemetry metric ribbon */}
+            {/* Trust & Telemetry metric ribbon */}
             <div style={{
               display: "flex",
               alignItems: "center",
@@ -471,72 +475,15 @@ export default function CitizenPortal() {
           </div>
         </section>
 
-        {/* ── 3. "I NEED TO..." ACTION PILLS (CARE-SYNC QUICK ACTION CHIPS) ──────── */}
-        <section style={{ marginBottom: "2.5rem" }}>
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-            marginBottom: "0.8rem",
-            justifyContent: "center",
-          }}>
-            <span style={{ fontSize: "0.72rem", color: "#94a3b8", textTransform: "uppercase", fontWeight: 800, letterSpacing: "0.1em" }}>
-              ⚡ QUICK LAUNCH ACTIONS
-            </span>
-          </div>
-
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            flexWrap: "wrap",
-            gap: 10,
-          }}>
-            {[
-              { label: "🗺️ Safest Route (Women/Night)", onClick: () => { setSafetyMode("safest"); scrollToMap(); } },
-              { label: "🚨 Emergency SOS (112)", onClick: () => { const btn = document.querySelector(".sos-floating-btn") as HTMLElement; if (btn) btn.click(); }, highlight: true },
-              { label: "🔥 Live Crime Heatmap", onClick: () => { setShowHeatmap(true); scrollToMap(); } },
-              { label: "🤖 Ask AI Voice Copilot", onClick: openCopilot },
-              { label: "🎙️ Standalone Voice Agent", onClick: () => setIsVoiceAgentModalOpen(true) },
-              { label: "⚡ Run What-If Scenario", onClick: () => setIsWhatIfModalOpen(true) },
-              { label: "🛡️ Family Safety Tracker", onClick: () => setIsFamilyModalOpen(true) },
-              { label: "📢 Report Incident", onClick: () => { setReportCoords({ lat: startCoords[0], lon: startCoords[1] }); setIsReportModalOpen(true); } },
-            ].map((chip, idx) => (
-              <button
-                key={idx}
-                onClick={chip.onClick}
-                style={{
-                  padding: "8px 16px",
-                  borderRadius: "9999px",
-                  background: chip.highlight
-                    ? "linear-gradient(135deg, rgba(239,68,68,0.2) 0%, rgba(220,38,38,0.3) 100%)"
-                    : "rgba(30, 41, 59, 0.7)",
-                  border: chip.highlight
-                    ? "1px solid rgba(239, 68, 68, 0.4)"
-                    : "1px solid rgba(255, 255, 255, 0.12)",
-                  color: chip.highlight ? "#fca5a5" : "#e2e8f0",
-                  fontSize: "0.82rem",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  backdropFilter: "blur(10px)",
-                }}
-              >
-                {chip.label}
-              </button>
-            ))}
-          </div>
-        </section>
-
-        {/* ── 4. AI PRESENTER HERO STAGE ────────────────────────────────────────── */}
-        <div id="hero-presenter-stage" style={{ marginBottom: "3rem" }}>
+        {/* ── 3. AI PRESENTER HERO STAGE ────────────────────────────────────────── */}
+        <div id="hero-presenter-stage" style={{ marginBottom: "3.5rem" }}>
           <HeroAvatarPresenter
             onExploreMap={scrollToMap}
             onOpenCopilot={openCopilot}
           />
         </div>
 
-        {/* ── 5. CARESYNC 4-PILLAR CORE SAFETY ARCHITECTURE SECTION ──────────────── */}
+        {/* ── 4. 4-PILLAR CORE SAFETY ARCHITECTURE (EACH CARD WITH ITS SPECIFIC BUTTON) ─ */}
         <section id="four-pillars-section" style={{ marginBottom: "3.5rem" }}>
           <div style={{ textAlign: "center", marginBottom: "2rem" }}>
             <span style={{
@@ -562,7 +509,7 @@ export default function CitizenPortal() {
               4-Pillar Autonomous Intelligence Stack
             </h2>
             <p style={{ fontSize: "0.95rem", color: "#94a3b8", maxWidth: 640, margin: "0 auto" }}>
-              Engineered with advanced spatial machine learning and civic safety protocols for real-time threat neutralization.
+              Explore the four core modules powering Rakshak AI's threat neutralization architecture.
             </p>
           </div>
 
@@ -571,205 +518,263 @@ export default function CitizenPortal() {
             gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
             gap: "1.25rem",
           }}>
-            {/* Pillar 1 */}
+            {/* Pillar 1: Spatial AI */}
             <div style={{
-              background: "linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.9) 100%)",
+              background: "linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.95) 100%)",
               border: "1px solid rgba(244, 63, 94, 0.25)",
               borderRadius: "24px",
               padding: "1.75rem",
               boxShadow: "0 15px 30px rgba(0,0,0,0.4)",
-              position: "relative",
-              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
             }}>
-              <div style={{
-                width: 48,
-                height: 48,
-                borderRadius: "16px",
-                background: "rgba(244, 63, 94, 0.15)",
-                border: "1px solid rgba(244, 63, 94, 0.3)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "1.4rem",
-                marginBottom: "1rem",
-              }}>
-                📍
+              <div>
+                <div style={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: "16px",
+                  background: "rgba(244, 63, 94, 0.15)",
+                  border: "1px solid rgba(244, 63, 94, 0.3)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "1.4rem",
+                  marginBottom: "1rem",
+                }}>
+                  📍
+                </div>
+                <div style={{ fontSize: "0.72rem", color: "#fb7185", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
+                  SPATIAL AI
+                </div>
+                <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#f8fafc", marginBottom: "8px" }}>
+                  DBSCAN Hotspot Clustering
+                </h3>
+                <p style={{ fontSize: "0.85rem", color: "#cbd5e1", lineHeight: 1.5, marginBottom: "1rem" }}>
+                  Groups historical FIRs, harassment alerts, and crowd reports into continuous dynamic risk clusters.
+                </p>
               </div>
-              <div style={{ fontSize: "0.72rem", color: "#fb7185", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
-                SPATIAL AI
-              </div>
-              <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#f8fafc", marginBottom: "8px" }}>
-                DBSCAN Hotspot Clustering
-              </h3>
-              <p style={{ fontSize: "0.85rem", color: "#cbd5e1", lineHeight: 1.5, marginBottom: "1rem" }}>
-                Groups historical FIRs, harassment alerts, and crowd reports into continuous dynamic risk clusters.
-              </p>
-              <div style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "3px 10px",
-                borderRadius: "9999px",
-                background: "rgba(244, 63, 94, 0.1)",
-                border: "1px solid rgba(244, 63, 94, 0.2)",
-                fontSize: "0.74rem",
-                color: "#fda4af",
-                fontWeight: 700,
-              }}>
-                ⚡ &lt; 50ms Dynamic Clustering
-              </div>
+
+              {/* Specific Action Button for Spatial AI */}
+              <button
+                onClick={() => {
+                  setShowHeatmap(true);
+                  setShowHotspots(true);
+                  scrollToMap();
+                }}
+                style={{
+                  width: "100%",
+                  padding: "10px 14px",
+                  borderRadius: "12px",
+                  background: "linear-gradient(135deg, rgba(244, 63, 94, 0.2) 0%, rgba(225, 29, 72, 0.25) 100%)",
+                  border: "1px solid rgba(244, 63, 94, 0.4)",
+                  color: "#fecdd3",
+                  fontSize: "0.82rem",
+                  fontWeight: 800,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 6,
+                  transition: "all 0.2s",
+                }}
+              >
+                <span>🔥 View Live Crime Heatmap</span>
+              </button>
             </div>
 
-            {/* Pillar 2 */}
+            {/* Pillar 2: Algorithmic Routing Engine */}
             <div style={{
-              background: "linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.9) 100%)",
+              background: "linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.95) 100%)",
               border: "1px solid rgba(16, 185, 129, 0.25)",
               borderRadius: "24px",
               padding: "1.75rem",
               boxShadow: "0 15px 30px rgba(0,0,0,0.4)",
-              position: "relative",
-              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
             }}>
-              <div style={{
-                width: 48,
-                height: 48,
-                borderRadius: "16px",
-                background: "rgba(16, 185, 129, 0.15)",
-                border: "1px solid rgba(16, 185, 129, 0.3)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "1.4rem",
-                marginBottom: "1rem",
-              }}>
-                🛣️
+              <div>
+                <div style={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: "16px",
+                  background: "rgba(16, 185, 129, 0.15)",
+                  border: "1px solid rgba(16, 185, 129, 0.3)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "1.4rem",
+                  marginBottom: "1rem",
+                }}>
+                  🛣️
+                </div>
+                <div style={{ fontSize: "0.72rem", color: "#34d399", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
+                  ALGORITHMIC ENGINE
+                </div>
+                <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#f8fafc", marginBottom: "8px" }}>
+                  Multi-Criteria Dijkstra Routing
+                </h3>
+                <p style={{ fontSize: "0.85rem", color: "#cbd5e1", lineHeight: 1.5, marginBottom: "1rem" }}>
+                  Penalizes unlit paths and high-crime sectors, prioritizing illuminated avenues with CCTV surveillance.
+                </p>
               </div>
-              <div style={{ fontSize: "0.72rem", color: "#34d399", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
-                ALGORITHMIC ENGINE
-              </div>
-              <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#f8fafc", marginBottom: "8px" }}>
-                Multi-Criteria Dijkstra Routing
-              </h3>
-              <p style={{ fontSize: "0.85rem", color: "#cbd5e1", lineHeight: 1.5, marginBottom: "1rem" }}>
-                Penalizes unlit paths and high-crime sectors, prioritizing illuminated avenues with CCTV surveillance.
-              </p>
-              <div style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "3px 10px",
-                borderRadius: "9999px",
-                background: "rgba(16, 185, 129, 0.1)",
-                border: "1px solid rgba(16, 185, 129, 0.2)",
-                fontSize: "0.74rem",
-                color: "#6ee7b7",
-                fontWeight: 700,
-              }}>
-                🛡️ 84% Threat Avoidance
-              </div>
+
+              {/* Specific Action Button for Routing Engine */}
+              <button
+                onClick={() => {
+                  setSafetyMode("safest");
+                  scrollToMap();
+                }}
+                style={{
+                  width: "100%",
+                  padding: "10px 14px",
+                  borderRadius: "12px",
+                  background: "linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.25) 100%)",
+                  border: "1px solid rgba(16, 185, 129, 0.4)",
+                  color: "#a7f3d0",
+                  fontSize: "0.82rem",
+                  fontWeight: 800,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 6,
+                  transition: "all 0.2s",
+                }}
+              >
+                <span>🗺️ Calculate Safest Corridor</span>
+              </button>
             </div>
 
-            {/* Pillar 3 */}
+            {/* Pillar 3: Civic Infrastructure & SOS */}
             <div style={{
-              background: "linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.9) 100%)",
-              border: "1px solid rgba(59, 130, 246, 0.25)",
+              background: "linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.95) 100%)",
+              border: "1px solid rgba(239, 68, 68, 0.25)",
               borderRadius: "24px",
               padding: "1.75rem",
               boxShadow: "0 15px 30px rgba(0,0,0,0.4)",
-              position: "relative",
-              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
             }}>
-              <div style={{
-                width: 48,
-                height: 48,
-                borderRadius: "16px",
-                background: "rgba(59, 130, 246, 0.15)",
-                border: "1px solid rgba(59, 130, 246, 0.3)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "1.4rem",
-                marginBottom: "1rem",
-              }}>
-                🚨
+              <div>
+                <div style={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: "16px",
+                  background: "rgba(239, 68, 68, 0.15)",
+                  border: "1px solid rgba(239, 68, 68, 0.3)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "1.4rem",
+                  marginBottom: "1rem",
+                }}>
+                  🚨
+                </div>
+                <div style={{ fontSize: "0.72rem", color: "#f87171", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
+                  CIVIC & EMERGENCY NETWORK
+                </div>
+                <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#f8fafc", marginBottom: "8px" }}>
+                  24x7 Verified POI Corridors
+                </h3>
+                <p style={{ fontSize: "0.85rem", color: "#cbd5e1", lineHeight: 1.5, marginBottom: "1rem" }}>
+                  Seamless integration with geocoded police stations, pink booths, PCR vans, and emergency 112 dispatch.
+                </p>
               </div>
-              <div style={{ fontSize: "0.72rem", color: "#60a5fa", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
-                CIVIC INFRASTRUCTURE
-              </div>
-              <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#f8fafc", marginBottom: "8px" }}>
-                24x7 Verified POI Corridors
-              </h3>
-              <p style={{ fontSize: "0.85rem", color: "#cbd5e1", lineHeight: 1.5, marginBottom: "1rem" }}>
-                Seamless integration with geocoded police stations, pink booths, PCR vans, and hospital trauma centers.
-              </p>
-              <div style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "3px 10px",
-                borderRadius: "9999px",
-                background: "rgba(59, 130, 246, 0.1)",
-                border: "1px solid rgba(59, 130, 246, 0.2)",
-                fontSize: "0.74rem",
-                color: "#93c5fd",
-                fontWeight: 700,
-              }}>
-                🚓 100% Geocoded POIs
-              </div>
+
+              {/* Specific Action Button for Civic/Emergency */}
+              <button
+                onClick={() => {
+                  setReportCoords({ lat: startCoords[0], lon: startCoords[1] });
+                  setIsReportModalOpen(true);
+                }}
+                style={{
+                  width: "100%",
+                  padding: "10px 14px",
+                  borderRadius: "12px",
+                  background: "linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(185, 28, 28, 0.25) 100%)",
+                  border: "1px solid rgba(239, 68, 68, 0.4)",
+                  color: "#fecaca",
+                  fontSize: "0.82rem",
+                  fontWeight: 800,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 6,
+                  transition: "all 0.2s",
+                }}
+              >
+                <span>📢 Report Concern / Hazard Pin</span>
+              </button>
             </div>
 
-            {/* Pillar 4 */}
+            {/* Pillar 4: Conversational AI Copilot */}
             <div style={{
-              background: "linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.9) 100%)",
+              background: "linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.95) 100%)",
               border: "1px solid rgba(168, 85, 247, 0.25)",
               borderRadius: "24px",
               padding: "1.75rem",
               boxShadow: "0 15px 30px rgba(0,0,0,0.4)",
-              position: "relative",
-              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
             }}>
-              <div style={{
-                width: 48,
-                height: 48,
-                borderRadius: "16px",
-                background: "rgba(168, 85, 247, 0.15)",
-                border: "1px solid rgba(168, 85, 247, 0.3)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "1.4rem",
-                marginBottom: "1rem",
-              }}>
-                🎙️
+              <div>
+                <div style={{
+                  width: 48,
+                  height: 48,
+                  borderRadius: "16px",
+                  background: "rgba(168, 85, 247, 0.15)",
+                  border: "1px solid rgba(168, 85, 247, 0.3)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontSize: "1.4rem",
+                  marginBottom: "1rem",
+                }}>
+                  🎙️
+                </div>
+                <div style={{ fontSize: "0.72rem", color: "#c084fc", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
+                  CONVERSATIONAL AI
+                </div>
+                <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#f8fafc", marginBottom: "8px" }}>
+                  Multilingual Voice Copilot
+                </h3>
+                <p style={{ fontSize: "0.85rem", color: "#cbd5e1", lineHeight: 1.5, marginBottom: "1rem" }}>
+                  Hands-free natural Hindi & English voice assistant for instant route computation, hazard reporting & SOS.
+                </p>
               </div>
-              <div style={{ fontSize: "0.72rem", color: "#c084fc", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
-                CONVERSATIONAL AI
-              </div>
-              <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#f8fafc", marginBottom: "8px" }}>
-                Multilingual Voice Copilot
-              </h3>
-              <p style={{ fontSize: "0.85rem", color: "#cbd5e1", lineHeight: 1.5, marginBottom: "1rem" }}>
-                Hands-free natural Hindi & English voice assistant for instant route computation, hazard reporting & SOS.
-              </p>
-              <div style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                padding: "3px 10px",
-                borderRadius: "9999px",
-                background: "rgba(168, 85, 247, 0.1)",
-                border: "1px solid rgba(168, 85, 247, 0.2)",
-                fontSize: "0.74rem",
-                color: "#e9d5ff",
-                fontWeight: 700,
-              }}>
-                🗣️ Natural Voice Synthesis
-              </div>
+
+              {/* Specific Action Button for Voice Copilot */}
+              <button
+                onClick={openCopilot}
+                style={{
+                  width: "100%",
+                  padding: "10px 14px",
+                  borderRadius: "12px",
+                  background: "linear-gradient(135deg, rgba(168, 85, 247, 0.2) 0%, rgba(126, 34, 206, 0.25) 100%)",
+                  border: "1px solid rgba(168, 85, 247, 0.4)",
+                  color: "#f3e8ff",
+                  fontSize: "0.82rem",
+                  fontWeight: 800,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 6,
+                  transition: "all 0.2s",
+                }}
+              >
+                <span>🤖 Chat with AI Voice Copilot</span>
+              </button>
             </div>
           </div>
         </section>
 
-        {/* ── 6. INTERACTIVE LIVE SAFE NAVIGATION CONSOLE ───────────────────────── */}
+        {/* ── 5. INTERACTIVE LIVE SAFE NAVIGATION CONSOLE ───────────────────────── */}
         <div id="safety-map-section" style={{
           background: "linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(13, 24, 41, 1) 100%)",
           border: "1px solid rgba(79, 124, 255, 0.3)",
@@ -809,115 +814,34 @@ export default function CitizenPortal() {
               </h2>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-              {/* City selector capsules */}
-              <div style={{
-                display: "flex",
-                background: "rgba(255,255,255,0.05)",
-                border: "1px solid rgba(255,255,255,0.1)",
-                borderRadius: "9999px",
-                padding: "3px"
-              }}>
-                {CITY_OPTIONS.map((c) => (
-                  <button
-                    key={c.name}
-                    onClick={() => setSelectedCity(c.name)}
-                    style={{
-                      padding: "6px 14px",
-                      borderRadius: "9999px",
-                      border: "none",
-                      cursor: "pointer",
-                      fontSize: "0.85rem",
-                      fontWeight: 700,
-                      background: selectedCity === c.name ? "linear-gradient(135deg, #3b82f6, #2563eb)" : "transparent",
-                      color: selectedCity === c.name ? "#fff" : "#94a3b8",
-                      boxShadow: selectedCity === c.name ? "0 2px 10px rgba(59,130,246,0.4)" : "none",
-                      transition: "all 0.2s"
-                    }}
-                  >
-                    📍 {c.name}
-                  </button>
-                ))}
-              </div>
-
-              <button
-                onClick={() => setIsVoiceAgentModalOpen(true)}
-                style={{
-                  padding: "8px 14px",
-                  borderRadius: "9999px",
-                  background: "linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(168, 85, 247, 0.25) 100%)",
-                  border: "1px solid rgba(168, 85, 247, 0.4)",
-                  color: "#e9d5ff",
-                  fontSize: "0.82rem",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                }}
-              >
-                🎙️ Voice Agent
-              </button>
-
-              <button
-                onClick={() => setIsWhatIfModalOpen(true)}
-                style={{
-                  padding: "8px 14px",
-                  borderRadius: "9999px",
-                  background: "linear-gradient(135deg, rgba(245, 158, 11, 0.25) 0%, rgba(234, 88, 12, 0.25) 100%)",
-                  border: "1px solid rgba(245, 158, 11, 0.4)",
-                  color: "#fde68a",
-                  fontSize: "0.82rem",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6,
-                }}
-              >
-                ⚡ What-If Simulator
-              </button>
-
-              <button
-                onClick={() => setIsFamilyModalOpen(true)}
-                style={{
-                  padding: "8px 14px",
-                  borderRadius: "9999px",
-                  background: "rgba(59, 130, 246, 0.15)",
-                  border: "1px solid rgba(59, 130, 246, 0.35)",
-                  color: "#93c5fd",
-                  fontSize: "0.82rem",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6
-                }}
-              >
-                🛡️ Family Safety Live
-              </button>
-
-              <button
-                onClick={() => {
-                  setReportCoords({ lat: startCoords[0], lon: startCoords[1] });
-                  setIsReportModalOpen(true);
-                }}
-                style={{
-                  padding: "8px 14px",
-                  borderRadius: "9999px",
-                  background: "rgba(239, 68, 68, 0.15)",
-                  border: "1px solid rgba(239, 68, 68, 0.35)",
-                  color: "#fca5a5",
-                  fontSize: "0.82rem",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 6
-                }}
-              >
-                📢 Report Concern
-              </button>
+            {/* City Selector Tabs */}
+            <div style={{
+              display: "flex",
+              background: "rgba(255,255,255,0.05)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              borderRadius: "9999px",
+              padding: "3px"
+            }}>
+              {CITY_OPTIONS.map((c) => (
+                <button
+                  key={c.name}
+                  onClick={() => setSelectedCity(c.name)}
+                  style={{
+                    padding: "6px 16px",
+                    borderRadius: "9999px",
+                    border: "none",
+                    cursor: "pointer",
+                    fontSize: "0.85rem",
+                    fontWeight: 700,
+                    background: selectedCity === c.name ? "linear-gradient(135deg, #3b82f6, #2563eb)" : "transparent",
+                    color: selectedCity === c.name ? "#fff" : "#94a3b8",
+                    boxShadow: selectedCity === c.name ? "0 2px 10px rgba(59,130,246,0.4)" : "none",
+                    transition: "all 0.2s"
+                  }}
+                >
+                  📍 {c.name}
+                </button>
+              ))}
             </div>
           </div>
 
@@ -930,35 +854,68 @@ export default function CitizenPortal() {
             marginBottom: "1.5rem"
           }}>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
-              {/* Mode Selector */}
+              {/* Feature Mode Selector (Purpose-built button styling) */}
               <div>
                 <label style={{ fontSize: "0.72rem", color: "#94a3b8", textTransform: "uppercase", fontWeight: 800, letterSpacing: "0.08em", display: "block", marginBottom: 6 }}>
                   🛡️ Routing Safety Mode
                 </label>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
-                  {[
-                    { id: "women_safety", label: "👩 Women Safety", desc: "Penalizes harassment records & avoids dark alleys" },
-                    { id: "night_safety", label: "🌙 Night Safety", desc: "Favors high-lit & police patrolled avenues" },
-                    { id: "normal", label: "⚖️ Balanced", desc: "Fastest path with moderate safety penalty" },
-                  ].map((m) => (
-                    <button
-                      key={m.id}
-                      onClick={() => setSafetyMode(m.id as any)}
-                      style={{
-                        padding: "8px 6px",
-                        borderRadius: "12px",
-                        border: `1px solid ${safetyMode === m.id ? "#10b981" : "rgba(255,255,255,0.08)"}`,
-                        background: safetyMode === m.id ? "rgba(16, 185, 129, 0.15)" : "rgba(255,255,255,0.03)",
-                        color: safetyMode === m.id ? "#34d399" : "#cbd5e1",
-                        fontSize: "0.78rem",
-                        fontWeight: 700,
-                        cursor: "pointer",
-                        textAlign: "center"
-                      }}
-                    >
-                      {m.label}
-                    </button>
-                  ))}
+                  {/* Safest / Women Safety Button */}
+                  <button
+                    onClick={() => setSafetyMode("safest")}
+                    style={{
+                      padding: "8px 6px",
+                      borderRadius: "12px",
+                      border: `1px solid ${safetyMode === "safest" ? "#ec4899" : "rgba(255,255,255,0.08)"}`,
+                      background: safetyMode === "safest" ? "rgba(236, 72, 153, 0.15)" : "rgba(255,255,255,0.03)",
+                      color: safetyMode === "safest" ? "#f472b6" : "#cbd5e1",
+                      fontSize: "0.78rem",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                      textAlign: "center",
+                      transition: "all 0.2s ease"
+                    }}
+                  >
+                    🛡️ Safest / Women
+                  </button>
+
+                  {/* Balanced Corridor Button */}
+                  <button
+                    onClick={() => setSafetyMode("balanced")}
+                    style={{
+                      padding: "8px 6px",
+                      borderRadius: "12px",
+                      border: `1px solid ${safetyMode === "balanced" ? "#10b981" : "rgba(255,255,255,0.08)"}`,
+                      background: safetyMode === "balanced" ? "rgba(16, 185, 129, 0.15)" : "rgba(255,255,255,0.03)",
+                      color: safetyMode === "balanced" ? "#34d399" : "#cbd5e1",
+                      fontSize: "0.78rem",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                      textAlign: "center",
+                      transition: "all 0.2s ease"
+                    }}
+                  >
+                    ⚖️ Balanced
+                  </button>
+
+                  {/* Fastest / Night Transit Button */}
+                  <button
+                    onClick={() => setSafetyMode("fastest")}
+                    style={{
+                      padding: "8px 6px",
+                      borderRadius: "12px",
+                      border: `1px solid ${safetyMode === "fastest" ? "#818cf8" : "rgba(255,255,255,0.08)"}`,
+                      background: safetyMode === "fastest" ? "rgba(99, 102, 241, 0.15)" : "rgba(255,255,255,0.03)",
+                      color: safetyMode === "fastest" ? "#a5b4fc" : "#cbd5e1",
+                      fontSize: "0.78rem",
+                      fontWeight: 700,
+                      cursor: "pointer",
+                      textAlign: "center",
+                      transition: "all 0.2s ease"
+                    }}
+                  >
+                    ⚡ Fastest / Night
+                  </button>
                 </div>
               </div>
 
@@ -1156,6 +1113,229 @@ export default function CitizenPortal() {
             </div>
           )}
         </div>
+
+        {/* ── 6. PROACTIVE SAFETY & SIMULATION STUDIO ───────────────────────────── */}
+        <section style={{ marginBottom: "3.5rem" }}>
+          <div style={{ textAlign: "center", marginBottom: "2rem" }}>
+            <span style={{
+              fontSize: "0.76rem",
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "0.1em",
+              color: "#fbbf24",
+              padding: "4px 12px",
+              borderRadius: "9999px",
+              background: "rgba(245, 158, 11, 0.1)",
+              border: "1px solid rgba(245, 158, 11, 0.25)",
+            }}>
+              ADVANCED SAFETY MODULES
+            </span>
+            <h2 style={{
+              fontSize: "2rem",
+              fontWeight: 900,
+              color: "#f8fafc",
+              letterSpacing: "-0.03em",
+              margin: "10px 0 6px 0",
+            }}>
+              Proactive Safety & Simulation Studio
+            </h2>
+            <p style={{ fontSize: "0.95rem", color: "#94a3b8", maxWidth: 640, margin: "0 auto" }}>
+              Live family safety monitoring, what-if threat stress-testing, and standalone voice assistance.
+            </p>
+          </div>
+
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
+            gap: "1.25rem",
+          }}>
+            {/* Feature Studio Card 1: Family Safety Circle */}
+            <div style={{
+              background: "linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.95) 100%)",
+              border: "1px solid rgba(59, 130, 246, 0.3)",
+              borderRadius: "24px",
+              padding: "1.75rem",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}>
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "1rem" }}>
+                  <div style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: "14px",
+                    background: "rgba(59, 130, 246, 0.15)",
+                    border: "1px solid rgba(59, 130, 246, 0.3)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "1.3rem",
+                  }}>
+                    🛡️
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#f8fafc", margin: 0 }}>
+                      Family Safety Live Circle
+                    </h3>
+                    <span style={{ fontSize: "0.72rem", color: "#60a5fa", fontWeight: 700 }}>
+                      REAL-TIME GEOFENCE MONITORING
+                    </span>
+                  </div>
+                </div>
+                <p style={{ fontSize: "0.85rem", color: "#cbd5e1", lineHeight: 1.5, marginBottom: "1.25rem" }}>
+                  Share encrypted live route trajectories with family members. Receive instant push notifications if a commuter deviates from the safe corridor.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setIsFamilyModalOpen(true)}
+                style={{
+                  width: "100%",
+                  padding: "11px",
+                  borderRadius: "12px",
+                  background: "linear-gradient(135deg, #3b82f6, #2563eb)",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                  color: "#fff",
+                  fontSize: "0.86rem",
+                  fontWeight: 800,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                  boxShadow: "0 4px 15px rgba(59, 130, 246, 0.35)",
+                }}
+              >
+                <span>🛡️ Launch Family Safety Mode</span>
+              </button>
+            </div>
+
+            {/* Feature Studio Card 2: What-If Threat Simulator */}
+            <div style={{
+              background: "linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.95) 100%)",
+              border: "1px solid rgba(245, 158, 11, 0.3)",
+              borderRadius: "24px",
+              padding: "1.75rem",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}>
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "1rem" }}>
+                  <div style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: "14px",
+                    background: "rgba(245, 158, 11, 0.15)",
+                    border: "1px solid rgba(245, 158, 11, 0.3)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "1.3rem",
+                  }}>
+                    ⚡
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#f8fafc", margin: 0 }}>
+                      What-If Threat Simulator
+                    </h3>
+                    <span style={{ fontSize: "0.72rem", color: "#fbbf24", fontWeight: 700 }}>
+                      STRESS-TEST DANGEROUS SCENARIOS
+                    </span>
+                  </div>
+                </div>
+                <p style={{ fontSize: "0.85rem", color: "#cbd5e1", lineHeight: 1.5, marginBottom: "1.25rem" }}>
+                  Simulate peak night conditions, dark alley hazards, and sudden mob unrest to evaluate how the safety algorithm re-routes commuters to safety.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setIsWhatIfModalOpen(true)}
+                style={{
+                  width: "100%",
+                  padding: "11px",
+                  borderRadius: "12px",
+                  background: "linear-gradient(135deg, #f59e0b, #d97706)",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                  color: "#fff",
+                  fontSize: "0.86rem",
+                  fontWeight: 800,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                  boxShadow: "0 4px 15px rgba(245, 158, 11, 0.35)",
+                }}
+              >
+                <span>⚡ Run What-If Simulation</span>
+              </button>
+            </div>
+
+            {/* Feature Studio Card 3: Standalone Voice Agent */}
+            <div style={{
+              background: "linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.95) 100%)",
+              border: "1px solid rgba(99, 102, 241, 0.3)",
+              borderRadius: "24px",
+              padding: "1.75rem",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+            }}>
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "1rem" }}>
+                  <div style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: "14px",
+                    background: "rgba(99, 102, 241, 0.15)",
+                    border: "1px solid rgba(99, 102, 241, 0.3)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "1.3rem",
+                  }}>
+                    🎙️
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#f8fafc", margin: 0 }}>
+                      Interactive Voice Agent
+                    </h3>
+                    <span style={{ fontSize: "0.72rem", color: "#a5b4fc", fontWeight: 700 }}>
+                      HANDS-FREE COMMUTE ESCORT
+                    </span>
+                  </div>
+                </div>
+                <p style={{ fontSize: "0.85rem", color: "#cbd5e1", lineHeight: 1.5, marginBottom: "1.25rem" }}>
+                  Speak commands naturally in Hindi or English (e.g. "Mujhe Hauz Khas ka sabse safe rasta batao"). Instant bidirectional voice responses.
+                </p>
+              </div>
+
+              <button
+                onClick={() => setIsVoiceAgentModalOpen(true)}
+                style={{
+                  width: "100%",
+                  padding: "11px",
+                  borderRadius: "12px",
+                  background: "linear-gradient(135deg, #6366f1, #4f46e5)",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                  color: "#fff",
+                  fontSize: "0.86rem",
+                  fontWeight: 800,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                  boxShadow: "0 4px 15px rgba(99, 102, 241, 0.35)",
+                }}
+              >
+                <span>🎙️ Launch Voice Agent</span>
+              </button>
+            </div>
+          </div>
+        </section>
 
         {/* ── 7. CARESYNC-STYLE REAL-TIME TELEMETRY & METRICS COUNTERS GRID ────── */}
         <section style={{ marginBottom: "3.5rem" }}>
@@ -1439,8 +1619,9 @@ export default function CitizenPortal() {
               Safety Navigation
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8, fontSize: "0.82rem", color: "#94a3b8" }}>
-              <span style={{ cursor: "pointer" }} onClick={() => { setSafetyMode("women_safety"); scrollToMap(); }}>👩 Women Safety Routing</span>
-              <span style={{ cursor: "pointer" }} onClick={() => { setSafetyMode("night_safety"); scrollToMap(); }}>🌙 Night Safety Mode</span>
+              <span style={{ cursor: "pointer" }} onClick={() => { setSafetyMode("safest"); scrollToMap(); }}>🛡️ Safest / Women Safe Routing</span>
+              <span style={{ cursor: "pointer" }} onClick={() => { setSafetyMode("fastest"); scrollToMap(); }}>⚡ Fastest / Night Safety Mode</span>
+              <span style={{ cursor: "pointer" }} onClick={() => { setSafetyMode("balanced"); scrollToMap(); }}>⚖️ Balanced Corridor</span>
               <span style={{ cursor: "pointer" }} onClick={scrollToMap}>🔥 Live Spatial Heatmap</span>
               <span style={{ cursor: "pointer" }} onClick={openCopilot}>🤖 Multilingual AI Copilot</span>
             </div>
@@ -1471,7 +1652,7 @@ export default function CitizenPortal() {
           </div>
         </footer>
 
-      </div>
+      </main>
 
       {/* Layer 7 Platform Diagnostics & Subsystem Health Drawer */}
       <PlatformHealthDrawer />
@@ -1535,4 +1716,5 @@ export default function CitizenPortal() {
     </div>
   );
 }
+
 
