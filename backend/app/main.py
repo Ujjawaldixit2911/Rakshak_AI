@@ -42,6 +42,7 @@ from .routers.incidents import router as incidents_router
 from .routers.admin import router as admin_router
 from .routers.profile import router as profile_router
 from .routers.analytics import router as analytics_router
+from .routers.history import router as history_router
 
 load_dotenv()
 
@@ -96,6 +97,7 @@ app.include_router(incidents_router)
 app.include_router(admin_router)
 app.include_router(profile_router)
 app.include_router(analytics_router)
+app.include_router(history_router)
 
 
 # ─── Startup Event ─────────────────────────────────────────────────────────────
@@ -105,6 +107,11 @@ async def startup_event():
     try:
         async with engine.begin() as conn:
             await conn.run_sync(Base.metadata.create_all)
+            try:
+                from sqlalchemy import text
+                await conn.execute(text("ALTER TABLE user_safety_profiles ADD COLUMN role VARCHAR(50) DEFAULT 'citizen'"))
+            except Exception:
+                pass
         
         # Check if dataset is already seeded
         from .load_seed_data import load_seed_data

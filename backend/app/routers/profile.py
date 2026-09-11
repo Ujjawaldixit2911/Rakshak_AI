@@ -220,3 +220,51 @@ async def update_safety_settings(
         createdAt=profile.created_at.isoformat() if profile.created_at else None,
         updatedAt=profile.updated_at.isoformat() if profile.updated_at else None
     )
+
+
+class RoleUpdatePayload(BaseModel):
+    userId: str = Field(..., description="Unique User Identifier")
+    role: str = Field(..., description="Selected role: citizen, corporate, emergency, police")
+
+
+class RoleUpdateResponse(BaseModel):
+    userId: str
+    role: str
+    message: str = "User role successfully updated"
+
+
+@router.put(
+    "/role",
+    response_model=RoleUpdateResponse,
+    summary="Update User Role",
+    description="Persists user role selection (citizen, corporate, emergency, police) in backend profile."
+)
+async def update_user_role(
+    payload: RoleUpdatePayload,
+    db: AsyncSession = Depends(get_db)
+) -> RoleUpdateResponse:
+    q = await db.execute(select(UserSafetyProfile).where(UserSafetyProfile.user_id == payload.userId))
+    profile = q.scalars().first()
+
+    if not profile:
+        profile = UserSafetyProfile(
+            user_id=payload.userId,
+            role=payload.role,
+            travel_preference="safest",
+            night_travel_enabled=True,
+            women_safety_mode=False,
+            avoid_high_crime_areas=True
+        )
+        db.add(profile)
+    else:
+        profile.role = payload.role
+
+    await db.commit()
+    await db.refresh(profile)
+
+    return RoleUpdateResponse(
+        userId=profile.user_id,
+        role=profile.role,
+        message="User role successfully updated and persisted across sessions"
+    )
+

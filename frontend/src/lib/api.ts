@@ -1,5 +1,7 @@
+export const FALLBACK_BACKEND_URL = "https://rakshak-ai-backend-ndgm.onrender.com";
+
 export const API_BASE_URL = (
-  process.env.NEXT_PUBLIC_API_URL || "https://rakshak-ai-backend-ndgm.onrender.com"
+  process.env.NEXT_PUBLIC_API_URL || FALLBACK_BACKEND_URL
 ).replace(/\/$/, "");
 
 export const WS_BASE_URL = API_BASE_URL.startsWith("https://")
@@ -8,25 +10,53 @@ export const WS_BASE_URL = API_BASE_URL.startsWith("https://")
   ? API_BASE_URL.replace(/^http:\/\//, "ws://")
   : `ws://${API_BASE_URL}`;
 
-const BASE = API_BASE_URL;
+export async function safeApiFetch(path: string, init?: RequestInit): Promise<Response | null> {
+  const url = path.startsWith("http") ? path : `${API_BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
+  try {
+    const res = await fetch(url, init);
+    if (res.ok) return res;
+  } catch (e) {
+    // If primary local URL fails, fallback to production URL
+    if (API_BASE_URL !== FALLBACK_BACKEND_URL) {
+      try {
+        const cleanPath = path.startsWith("http") ? path.replace(API_BASE_URL, "") : path;
+        const prodUrl = `${FALLBACK_BACKEND_URL}${cleanPath.startsWith("/") ? "" : "/"}${cleanPath}`;
+        const prodRes = await fetch(prodUrl, init);
+        if (prodRes.ok) return prodRes;
+      } catch (prodErr) {
+        // Silent catch for resilience
+      }
+    }
+  }
+  return null;
+}
 
 async function fetchJSON<T>(path: string, init?: RequestInit): Promise<T> {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 second timeout
+  const timeoutId = setTimeout(() => controller.abort(), 6000);
 
   try {
-    const res = await fetch(`${BASE}${path}`, {
+    const res = await fetch(`${API_BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`, {
       ...init,
       signal: controller.signal,
     });
     clearTimeout(timeoutId);
-    if (!res.ok) throw new Error(`API ${path} → ${res.status}`);
-    return (await res.json()) as Promise<T>;
-  } catch (err: any) {
+    if (res.ok) return (await res.json()) as T;
+  } catch (err) {
     clearTimeout(timeoutId);
-    const errorMsg = err?.name === "AbortError" ? "Request timed out (4s)" : err?.message || String(err);
-    throw new Error(`[Rakshak API Error on ${path}]: ${errorMsg}`);
   }
+
+  // Fallback to production endpoint if primary failed
+  if (API_BASE_URL !== FALLBACK_BACKEND_URL) {
+    try {
+      const prodRes = await fetch(`${FALLBACK_BACKEND_URL}${path.startsWith("/") ? "" : "/"}${path}`, init);
+      if (prodRes.ok) return (await prodRes.json()) as T;
+    } catch (prodErr) {
+      // ignore
+    }
+  }
+
+  throw new Error(`[Rakshak API Error on ${path}]: Service unavailable`);
 }
 
 function authHeaders(): Record<string, string> {

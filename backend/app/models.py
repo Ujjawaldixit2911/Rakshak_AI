@@ -269,12 +269,33 @@ class UserSafetyProfile(Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     user_id = Column(String(100), unique=True, nullable=False, index=True)
+    role = Column(String(50), default="citizen") # citizen, corporate, emergency, police
     travel_preference = Column(String(50), default="safest")  # fastest, safest, balanced
     night_travel_enabled = Column(Boolean, default=True)
     women_safety_mode = Column(Boolean, default=False)
     avoid_high_crime_areas = Column(Boolean, default=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+
+
+class JourneyHistory(Base):
+    __tablename__ = "journey_history"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    user_id = Column(String(100), index=True, nullable=False)
+    source = Column(String(200), nullable=False)
+    destination = Column(String(200), nullable=False)
+    source_lat = Column(Float, nullable=True)
+    source_lon = Column(Float, nullable=True)
+    dest_lat = Column(Float, nullable=True)
+    dest_lon = Column(Float, nullable=True)
+    timestamp = Column(DateTime(timezone=True), server_default=func.now(), index=True)
+    safety_score = Column(Float, default=88.0)
+    route_type = Column(String(50), default="Safest")  # Safest, Balanced, Fastest
+    distance_km = Column(Float, nullable=True)
+    duration_min = Column(Float, nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+
 
 
 

@@ -1,0 +1,103 @@
+/* ==========================================================================
+   Rakshak AI — SaaS Design System Tokens (Light Default + Dark Mode Toggle)
+   ========================================================================== */
+
+:root {
+  /* Color Palette — Light Theme (Default SaaS Palette) */
+  --bg-base: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f1f5f9;
+  --bg-input: #ffffff;
+  --bg-overlay: rgba(15, 23, 42, 0.4);
+
+  /* Typography */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+  --text-inverse: #ffffff;
+
+  /* Primary Brand Accent (Confident Ocean / Deep Blue) */
+  --accent-primary: #0284c7;
+  --accent-primary-hover: #0369a1;
+  --accent-primary-light: #e0f2fe;
+  --accent-subtle: rgba(2, 132, 199, 0.08);
+  --accent-glow: rgba(2, 132, 199, 0.2);
+
+  /* Border Tokens */
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.14);
+  --border-focus: #0284c7;
+
+  /* Shadows (Soft Layered Depth, No Harsh Black Outlines) */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.07), 0 2px 6px rgba(0, 0, 0, 0.03);
+  --shadow-modal: 0 20px 45px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.06);
+
+  /* Severity & Risk Palette (Consistent Across Both Themes) */
+  --color-safe: #10b981;
+  --color-safe-bg: rgba(16, 185, 129, 0.1);
+  --color-moderate: #f59e0b;
+  --color-moderate-bg: rgba(245, 158, 11, 0.1);
+  --color-high: #f97316;
+  --color-high-bg: rgba(249, 115, 22, 0.1);
+  --color-critical: #ef4444;
+  --color-critical-bg: rgba(239, 68, 68, 0.1);
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Ambient Mesh Gradients (Light) */
+  --mesh-blob-1: rgba(2, 132, 199, 0.06);
+  --mesh-blob-2: rgba(56, 189, 248, 0.05);
+  --mesh-blob-3: rgba(99, 102, 241, 0.04);
+}
+
+/* Dark Theme (Manual Toggle Only) */
+[data-theme="dark"] {
+  --bg-base: #070d1a;
+  --bg-surface: #0d1829;
+  --bg-surface-elevated: #111e33;
+  --bg-card: rgba(17, 30, 51, 0.85);
+  --bg-card-hover: rgba(22, 37, 68, 0.95);
+  --bg-input: #0a1324;
+  --bg-overlay: rgba(0, 0, 0, 0.7);
+
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-inverse: #0f172a;
+
+  --accent-primary: #38bdf8;
+  --accent-primary-hover: #0284c7;
+  --accent-primary-light: rgba(56, 189, 248, 0.15);
+  --accent-subtle: rgba(56, 189, 248, 0.12);
+  --accent-glow: rgba(56, 189, 248, 0.3);
+
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --border-focus: #38bdf8;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.45);
+  --shadow-card-hover: 0 12px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(56, 189, 248, 0.15);
+  --shadow-modal: 0 25px 60px rgba(0, 0, 0, 0.75), 0 0 30px rgba(56, 189, 248, 0.2);
+
+  /* Ambient Mesh Gradients (Dark) */
+  --mesh-blob-1: rgba(2, 132, 199, 0.15);
+  --mesh-blob-2: rgba(56, 189, 248, 0.1);
+  --mesh-blob-3: rgba(168, 85, 247, 0.1);
+}
+
+/* Global Transition Smoothness */
+body {
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  transition: background-color 250ms ease, color 250ms ease;
+}

@@ -1,40 +1,40 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
-/* ── Design Tokens ───────────────────────────────────────────────────────────── */
+/* ── Design Tokens Bridge ─────────────────────────────────────────────────── */
 :root {
-  /* Navy base palette */
-  --color-bg-base:     #070d1a;
-  --color-bg-surface:  #0d1829;
-  --color-bg-card:     #111e33;
-  --color-bg-card-hover: #162544;
-  --color-border:      rgba(255,255,255,0.07);
-  --color-border-bright: rgba(255,255,255,0.14);
+  /* Dynamic mappings to theme.css SaaS design tokens */
+  --color-bg-base:     var(--bg-base, #f8fafc);
+  --color-bg-surface:  var(--bg-surface, #ffffff);
+  --color-bg-card:     var(--bg-card, #ffffff);
+  --color-bg-card-hover: var(--bg-card-hover, #f1f5f9);
+  --color-border:      var(--border-subtle, rgba(0,0,0,0.08));
+  --color-border-bright: var(--border-strong, rgba(0,0,0,0.14));
 
   /* Text */
-  --color-text-primary:   #f0f4ff;
-  --color-text-secondary: #8899bb;
-  --color-text-muted:     #4a5f82;
+  --color-text-primary:   var(--text-primary, #0f172a);
+  --color-text-secondary: var(--text-secondary, #475569);
+  --color-text-muted:     var(--text-muted, #64748b);
 
   /* Risk scale */
-  --color-safe:     #22c55e;
+  --color-safe:     #10b981;
   --color-moderate: #f59e0b;
   --color-high:     #f97316;
   --color-critical: #ef4444;
 
   /* Accent */
-  --color-accent:        #3b82f6;
-  --color-accent-bright: #60a5fa;
-  --color-accent-glow:   rgba(59,130,246,0.25);
+  --color-accent:        var(--accent-primary, #0284c7);
+  --color-accent-bright: var(--accent-primary, #0284c7);
+  --color-accent-glow:   var(--accent-glow, rgba(2,132,199,0.2));
 
   /* Rakshak brand */
-  --color-brand:     #4f7cff;
-  --color-brand-dim: rgba(79,124,255,0.15);
+  --color-brand:     var(--accent-primary, #0284c7);
+  --color-brand-dim: var(--accent-subtle, rgba(2,132,199,0.08));
 
   /* Shadows */
-  --shadow-card:  0 4px 24px rgba(0,0,0,0.45);
-  --shadow-glow:  0 0 24px rgba(79,124,255,0.20);
-  --shadow-risk:  0 0 16px rgba(239,68,68,0.30);
+  --shadow-card:  var(--shadow-card, 0 2px 8px rgba(0,0,0,0.04));
+  --shadow-glow:  var(--shadow-card-hover, 0 8px 24px rgba(0,0,0,0.07));
+  --shadow-risk:  0 0 16px rgba(239,68,68,0.20);
 
   /* Spacing */
   --radius-card: 14px;

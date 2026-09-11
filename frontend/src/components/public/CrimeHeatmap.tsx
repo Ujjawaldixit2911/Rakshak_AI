@@ -60,8 +60,11 @@ export default function CrimeHeatmap({ center, heatmap, hotspots, zoom = 13 }: P
       const RISK_COLORS: Record<string, string> = {
         Critical: "#ef4444", High: "#f97316", Medium: "#f59e0b", Low: "#22c55e",
       };
-      hotspots.forEach(h => {
-        const color = RISK_COLORS[h.risk_level] || "#6b7280";
+      (hotspots || []).forEach(h => {
+        if (!h || typeof h.lat !== "number" || typeof h.lng !== "number") return;
+        const color = RISK_COLORS[h.risk_level] || (h as any).color || "#f59e0b";
+        const count = (h as any)?.crime_count ?? (h as any)?.crimes_count ?? 0;
+        const intensityPct = Math.round(((h as any)?.intensity ?? 0.5) * 100);
         const icon = L.divIcon({
           className: "",
           html: `<div style="
@@ -70,16 +73,16 @@ export default function CrimeHeatmap({ center, heatmap, hotspots, zoom = 13 }: P
             display:flex;align-items:center;justify-content:center;
             font-size:11px;font-weight:700;color:${color};
             box-shadow:0 0 10px ${color}66;
-          ">${h.crime_count}</div>`,
+          ">${count}</div>`,
           iconSize: [28, 28],
         });
         L.marker([h.lat, h.lng], { icon })
           .addTo(map)
           .bindPopup(`
             <div style="font-family:Inter,sans-serif;padding:4px">
-              <strong style="color:${color}">${h.risk_level} Risk</strong><br/>
-              <span style="font-size:0.85rem">${h.location}</span><br/>
-              <span style="font-size:0.82rem;color:#8899bb">${h.crime_count} crimes · Intensity ${Math.round(h.intensity * 100)}%</span>
+              <strong style="color:${color}">${h.risk_level || "Moderate"} Risk</strong><br/>
+              <span style="font-size:0.85rem">${h.location || "Hotspot"}</span><br/>
+              <span style="font-size:0.82rem;color:#8899bb">${count} crimes · Intensity ${intensityPct}%</span>
             </div>
           `);
       });
