@@ -16,6 +16,7 @@ import { PlatformHealthDrawer } from "@/components/PlatformHealthDrawer";
 import { API_BASE_URL } from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
 import GoogleAuthGateway from "@/components/auth/GoogleAuthGateway";
+import RouteNavigationGuidance from "@/components/route/RouteNavigationGuidance";
 
 // Dynamically import Interactive Leaflet Map to avoid SSR errors
 const InteractiveMap = dynamic(() => import("@/components/Map"), {
@@ -616,6 +617,15 @@ export default function CitizenPortal() {
               </div>
             </div>
           </div>
+        )}
+
+        {/* ── Route Scenes & Step-by-Step Navigation Guidance ──────────────────── */}
+        {routePlan && (
+          <RouteNavigationGuidance
+            routePlan={routePlan}
+            city={selectedCity}
+            safetyMode={safetyMode}
+          />
         )}
 
         {/* ── PART 5: COMPLETE SINGLE UNBROKEN USER JOURNEY LIFECYCLE CONTROLLER ──── */}
