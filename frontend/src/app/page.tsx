@@ -18,6 +18,7 @@ import { useAuth } from "@/context/AuthContext";
 import GoogleAuthGateway from "@/components/auth/GoogleAuthGateway";
 import RouteNavigationGuidance from "@/components/route/RouteNavigationGuidance";
 import HeroAvatarPresenter from "@/components/HeroAvatarPresenter";
+import EmergencyHubModal from "@/components/EmergencyHubModal";
 
 // Dynamically import Interactive Leaflet Map to avoid SSR errors
 const InteractiveMap = dynamic(() => import("@/components/Map"), {
@@ -45,9 +46,9 @@ const CITY_OPTIONS = [
     center: [19.0760, 72.8777] as [number, number],
     zoom: 12,
     presets: [
-      { label: "Andheri → Bandra", start: [19.1136, 72.8697], dest: [19.0596, 72.8295] },
-      { label: "Colaba → Dadar", start: [18.9067, 72.8147], dest: [19.0178, 72.8478] },
-      { label: "Powai → BKC", start: [19.1176, 72.9060], dest: [19.0664, 72.8677] },
+      { label: "Bandra → BKC", start: [19.0596, 72.8295], dest: [19.0657, 72.8687] },
+      { label: "Andheri → Juhu", start: [19.1197, 72.8464], dest: [19.1075, 72.8263] },
+      { label: "Colaba → Nariman Point", start: [18.9067, 72.8147], dest: [18.9256, 72.8242] },
     ],
   },
   {
@@ -84,7 +85,14 @@ export default function CitizenPortal() {
   const [isFamilyModalOpen, setIsFamilyModalOpen] = useState(false);
   const [isVoiceAgentModalOpen, setIsVoiceAgentModalOpen] = useState(false);
   const [isWhatIfModalOpen, setIsWhatIfModalOpen] = useState(false);
+  const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
+  const [emergencyTab, setEmergencyTab] = useState<"ambulance" | "police" | "sos">("sos");
   const [reportCoords, setReportCoords] = useState<{ lat?: number; lon?: number }>({});
+
+  const openEmergencyHub = (tab: "ambulance" | "police" | "sos" = "sos") => {
+    setEmergencyTab(tab);
+    setIsEmergencyModalOpen(true);
+  };
 
   const cityMeta = CITY_OPTIONS.find((c) => c.name === selectedCity) || CITY_OPTIONS[0];
 
@@ -418,7 +426,29 @@ export default function CitizenPortal() {
                 <span>🤖 Open AI Copilot</span>
               </button>
 
-              {/* Feature 3: Avatar Presenter Stage */}
+              {/* Feature 3: Emergency Action Hub */}
+              <button
+                onClick={() => openEmergencyHub("sos")}
+                style={{
+                  padding: "13px 24px",
+                  borderRadius: "9999px",
+                  background: "linear-gradient(135deg, rgba(239, 68, 68, 0.28) 0%, rgba(220, 38, 38, 0.45) 100%)",
+                  border: "1px solid rgba(239, 68, 68, 0.6)",
+                  color: "#fca5a5",
+                  fontSize: "0.95rem",
+                  fontWeight: 800,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                  boxShadow: "0 4px 20px rgba(239, 68, 68, 0.35)",
+                  transition: "all 0.2s ease",
+                }}
+              >
+                <span>🚨 Emergency Hub (🚑 👮 🚨)</span>
+              </button>
+
+              {/* Feature 4: Avatar Presenter Stage */}
               <button
                 onClick={() => {
                   const el = document.getElementById("hero-presenter-stage");
@@ -1514,7 +1544,197 @@ export default function CitizenPortal() {
           />
         </div>
 
-        {/* ── 10. CARESYNC-STYLE BOTTOM PITCH BANNER ───────────────────────────── */}
+        {/* ── 10. EMERGENCY & RAPID DISPATCH RESPONSE CENTER (AMBULANCE • POLICE • SOS) ── */}
+        <section style={{ marginBottom: "3.5rem" }}>
+          <div style={{ textAlign: "center", marginBottom: "1.75rem" }}>
+            <div style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 8,
+              padding: "4px 14px",
+              borderRadius: 9999,
+              background: "rgba(239, 68, 68, 0.15)",
+              border: "1px solid rgba(239, 68, 68, 0.35)",
+              color: "#fca5a5",
+              fontSize: "0.78rem",
+              fontWeight: 800,
+              textTransform: "uppercase",
+              letterSpacing: "0.06em",
+              marginBottom: 8,
+            }}>
+              🚨 24x7 Emergency Relay Grid
+            </div>
+            <h2 style={{ fontSize: "2rem", fontWeight: 900, color: "#f8fafc", margin: 0, letterSpacing: "-0.03em" }}>
+              Emergency & Rapid Dispatch Center
+            </h2>
+            <p style={{ color: "#94a3b8", fontSize: "0.92rem", maxWidth: 640, margin: "8px auto 0" }}>
+              Instant zero-delay connection with National Medical Network (108), State Police ERSS (112), and High-Decibel Deterrent SOS Siren.
+            </p>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 20 }}>
+            {/* 1. Ambulance Card */}
+            <div style={{
+              background: "rgba(30, 41, 59, 0.45)",
+              border: "1px solid rgba(239, 68, 68, 0.3)",
+              borderRadius: 24,
+              padding: "1.75rem",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              backdropFilter: "blur(12px)",
+            }}>
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                  <div style={{ width: 44, height: 44, borderRadius: "50%", background: "rgba(239, 68, 68, 0.15)", border: "1px solid rgba(239, 68, 68, 0.4)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>
+                    🚑
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#f8fafc", margin: 0 }}>
+                      108 Ambulance & Trauma
+                    </h3>
+                    <span style={{ fontSize: "0.72rem", color: "#fca5a5", fontWeight: 700 }}>
+                      National Medical Emergency Relay
+                    </span>
+                  </div>
+                </div>
+                <p style={{ fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.5, margin: "0 0 1.25rem" }}>
+                  Instant 108 ALS Ambulance dispatch, verified trauma center locator (AIIMS, Safdarjung, Manipal), live oxygen tracking, and 1-tap call.
+                </p>
+              </div>
+
+              <button
+                onClick={() => openEmergencyHub("ambulance")}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: 14,
+                  background: "linear-gradient(135deg, #ef4444, #dc2626)",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                  color: "#fff",
+                  fontSize: "0.88rem",
+                  fontWeight: 800,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                  boxShadow: "0 4px 15px rgba(239, 68, 68, 0.35)",
+                }}
+              >
+                🚑 Dispatch Ambulance (108)
+              </button>
+            </div>
+
+            {/* 2. Police Card */}
+            <div style={{
+              background: "rgba(30, 41, 59, 0.45)",
+              border: "1px solid rgba(59, 130, 246, 0.3)",
+              borderRadius: 24,
+              padding: "1.75rem",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              backdropFilter: "blur(12px)",
+            }}>
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                  <div style={{ width: 44, height: 44, borderRadius: "50%", background: "rgba(59, 130, 246, 0.15)", border: "1px solid rgba(59, 130, 246, 0.4)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>
+                    👮
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#f8fafc", margin: 0 }}>
+                      112 ERSS Police Dispatch
+                    </h3>
+                    <span style={{ fontSize: "0.72rem", color: "#93c5fd", fontWeight: 700 }}>
+                      Police Control Room & Pink Booth
+                    </span>
+                  </div>
+                </div>
+                <p style={{ fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.5, margin: "0 0 1.25rem" }}>
+                  Relays live coordinates to State Police Command, assigns nearest PCR Van Romeo unit, and locates nearest Pink Booths for women safety.
+                </p>
+              </div>
+
+              <button
+                onClick={() => openEmergencyHub("police")}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: 14,
+                  background: "linear-gradient(135deg, #3b82f6, #2563eb)",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                  color: "#fff",
+                  fontSize: "0.88rem",
+                  fontWeight: 800,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                  boxShadow: "0 4px 15px rgba(59, 130, 246, 0.35)",
+                }}
+              >
+                👮 Dispatch Police (112)
+              </button>
+            </div>
+
+            {/* 3. Instant SOS Card */}
+            <div style={{
+              background: "rgba(30, 41, 59, 0.45)",
+              border: "1px solid rgba(234, 179, 8, 0.3)",
+              borderRadius: 24,
+              padding: "1.75rem",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "space-between",
+              backdropFilter: "blur(12px)",
+            }}>
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
+                  <div style={{ width: 44, height: 44, borderRadius: "50%", background: "rgba(234, 179, 8, 0.15)", border: "1px solid rgba(234, 179, 8, 0.4)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>
+                    🚨
+                  </div>
+                  <div>
+                    <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "#f8fafc", margin: 0 }}>
+                      Instant SOS & Siren Alarm
+                    </h3>
+                    <span style={{ fontSize: "0.72rem", color: "#fde047", fontWeight: 700 }}>
+                      Deterrent Synthesizer & Multi-Relay
+                    </span>
+                  </div>
+                </div>
+                <p style={{ fontSize: "0.82rem", color: "#94a3b8", lineHeight: 1.5, margin: "0 0 1.25rem" }}>
+                  Emits high-decibel audible emergency alarm from device speakers while broadcasting encrypted GPS beacon to family and authorities.
+                </p>
+              </div>
+
+              <button
+                onClick={() => openEmergencyHub("sos")}
+                style={{
+                  width: "100%",
+                  padding: "12px",
+                  borderRadius: 14,
+                  background: "linear-gradient(135deg, #eab308, #ca8a04)",
+                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                  color: "#000",
+                  fontSize: "0.88rem",
+                  fontWeight: 900,
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 8,
+                  boxShadow: "0 4px 15px rgba(234, 179, 8, 0.35)",
+                }}
+              >
+                🚨 Activate SOS & Siren Alarm
+              </button>
+            </div>
+          </div>
+        </section>
+
+        {/* ── 11. CARESYNC-STYLE BOTTOM PITCH BANNER ───────────────────────────── */}
         <section style={{
           background: "linear-gradient(135deg, rgba(59, 130, 246, 0.2) 0%, rgba(99, 102, 241, 0.15) 50%, rgba(15, 23, 42, 0.9) 100%)",
           border: "1px solid rgba(59, 130, 246, 0.4)",
@@ -1658,7 +1878,16 @@ export default function CitizenPortal() {
       <PlatformHealthDrawer />
 
       {/* Floating Emergency SOS Component */}
-      <SOSButton />
+      <SOSButton city={selectedCity} userCoords={startCoords} />
+
+      {/* Primary Emergency Hub Modal (Ambulance 108 • Police 112 • Instant SOS Siren) */}
+      <EmergencyHubModal
+        isOpen={isEmergencyModalOpen}
+        onClose={() => setIsEmergencyModalOpen(false)}
+        city={selectedCity}
+        userCoords={startCoords}
+        initialTab={emergencyTab}
+      />
 
       {/* Community Incident Report Modal */}
       <ReportIncidentModal
