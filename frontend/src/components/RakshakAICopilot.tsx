@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { api } from "@/lib/api";
 import VoiceInputButton from "./VoiceInputButton";
+import { getLocalityCrimeScenes } from "@/lib/localityCrimeData";
 
 interface RakshakAICopilotProps {
   city: string;
@@ -259,16 +260,19 @@ function parseRouteQuery(query: string, currentCity: string) {
         );
       }
 
+      const localCrimes = getLocalityCrimeScenes(routeMatch.originName, routeMatch.destName, routeMatch.city);
+      const crimeSceneListText = localCrimes
+        .map((c, i) => `${i + 1}. 🔴 **${c.spot}:** ${c.crimeType} — ${c.incidents} (${c.lighting} lighting, ${c.cctv}).`)
+        .join("\n");
+
       const routeResponseText =
         `🛡️ **AI Safe Route Calculated & Applied on Live Map!**\n\n` +
         `🛣️ **Route:** ${routeMatch.originName} ➔ ${routeMatch.destName}\n` +
         `⏱️ **Estimated Travel Time:** **${routeMatch.travelTimeMins} mins** (Live ETA)\n` +
         `🛣️ **Total Distance:** ${routeMatch.distanceKm} km\n` +
         `⭐️ **Rakshak Safety Score:** ${routeMatch.safetyScore}/100 (Verified Safe Corridor)\n\n` +
-        `🚨 **Khatarnak Crime Scenes on Alternative Risky Route (Avoided):**\n` +
-        `1. 🔴 **Dark Bypass Alley:** 14 Snatching & Robbery cases reported after 9 PM (32% lighting).\n` +
-        `2. 🔴 **Outer Ring Road Underpass Service Lane:** 8 Harassment flags (Blindspot Zone, No CCTV).\n` +
-        `3. 🔴 **Isolated Connector:** High vehicle theft vulnerability & low footfall.\n\n` +
+        `🚨 **Khatarnak Crime Scenes on Alternative Risky Route (Avoided around this specific locality):**\n` +
+        `${crimeSceneListText}\n\n` +
         `💡 **Kyun Hum Ye Route Follow Kar Rahe Hain:**\n` +
         `Ye AI Safe Route in sabhi khatarnak spots ko bypass karta hai aur 95% well-lit main arterial road, CCTV network, aur police PCR patrolling corridor se le jata hai.`;
 
@@ -364,6 +368,10 @@ function parseRouteQuery(query: string, currentCity: string) {
         const score = routeData?.safest_route?.average_safety_score || 86;
         const distance = routeData?.safest_route?.distance_km || 14.2;
         const time = routeData?.safest_route?.estimated_time_minutes || 28;
+        const localCrimes = getLocalityCrimeScenes(originName, destName, city);
+        const crimeSceneListText = localCrimes
+          .map((c, i) => `${i + 1}. 🔴 **${c.spot}:** ${c.crimeType} (${c.incidents}).`)
+          .join("\n");
 
         responseText =
           `🛡️ **AI Safe Navigation & Intelligence Assistant (${city}):**\n\n` +
@@ -371,10 +379,8 @@ function parseRouteQuery(query: string, currentCity: string) {
           `⏱️ **Estimated Travel Time:** **~${time} mins** (Live ETA)\n` +
           `🛣️ **Distance:** ${distance} km\n` +
           `⭐️ **Safety Score:** ${score}/100 (Verified High Safety Zone)\n\n` +
-          `🚨 **Khatarnak Crime Scenes on Alternative Risky Route (Avoided):**\n` +
-          `1. 🔴 **Dark Bypass Alley:** 14 Snatching & Robbery cases reported after 9 PM (32% lighting).\n` +
-          `2. 🔴 **Outer Ring Road Underpass Service Lane:** 8 Harassment flags (Zero CCTV coverage).\n` +
-          `3. 🔴 **Isolated Connector:** High vehicle theft vulnerability.\n\n` +
+          `🚨 **Khatarnak Crime Scenes on Alternative Risky Route (Avoided around this specific locality):**\n` +
+          `${crimeSceneListText}\n\n` +
           `💡 **Kyun Hum Ye Route Follow Kar Rahe Hain:**\n` +
           `Ye AI Route in sabhi khatarnak spots ko bypass karke 95% well-lit arterial highways aur continuous PCR van patrol corridor se le jata hai (+84% lower crime exposure with just a 2.5 min safe detour).`;
       }

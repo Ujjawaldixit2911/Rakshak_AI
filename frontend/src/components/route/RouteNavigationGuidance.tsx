@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { api } from "@/lib/api";
+import { getLocalityCrimeScenes, LocalityCrimeScene } from "@/lib/localityCrimeData";
 
 interface RouteNavigationGuidanceProps {
   routePlan: any;
@@ -45,12 +46,13 @@ export default function RouteNavigationGuidance({
   const waypoints: string[] = safest?.waypoints || [];
   const coordinates: [number, number][] = safest?.coordinates || [];
 
+  const originName = waypoints[0] || "Origin Point";
+  const destName = waypoints[waypoints.length - 1] || "Destination Point";
+  const localCrimeScenes = getLocalityCrimeScenes(originName, destName, city);
+
   // Generate or fetch detailed route scenes
   useEffect(() => {
     if (!safest || !waypoints.length) return;
-
-    const originName = waypoints[0] || "Origin";
-    const destName = waypoints[waypoints.length - 1] || "Destination";
 
     // Build intelligent scene steps based on waypoints & coordinates
     const generatedScenes: RouteScene[] = waypoints.map((wp, idx) => {
@@ -133,7 +135,9 @@ export default function RouteNavigationGuidance({
       )
       .join("\n\n");
 
-    const header = `🛡️ RAKSHAK AI SAFE ROUTE DIRECTIONS (${city.toUpperCase()})\n` +
+    const header =
+      `🛡️ RAKSHAK AI SAFE ROUTE DIRECTIONS (${city.toUpperCase()})\n` +
+      `Route: ${originName} ➔ ${destName}\n` +
       `Total Distance: ${safest?.distance_km} km · ETA: ${safest?.estimated_time_minutes} mins · Safety Score: ${safest?.average_safety_score}/100\n` +
       `─────────────────────────────────────────────────\n\n`;
 
@@ -204,7 +208,7 @@ export default function RouteNavigationGuidance({
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
             <span style={{ fontSize: "1.3rem" }}>🗺️</span>
             <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#f8fafc", margin: 0 }}>
-              Route Scenes & Turn-by-Turn Navigation Data
+              Route Scenes & Navigation Intelligence
             </h3>
             <span
               style={{
@@ -221,7 +225,7 @@ export default function RouteNavigationGuidance({
             </span>
           </div>
           <span style={{ fontSize: "0.78rem", color: "#94a3b8" }}>
-            Step-by-step visual checkpoints, street illumination & crime-avoidance directions
+            {originName} ➔ {destName} · Step-by-step visual checkpoints, street illumination & crime-avoidance directions
           </span>
         </div>
 
@@ -505,136 +509,102 @@ export default function RouteNavigationGuidance({
         </div>
       )}
 
-      {/* ── Why We Avoided the Risky Route (Crime Scenes on Alternative Path) ── */}
+      {/* ── Locality-Specific High-Risk Crime Scenes on Alternative Paths ───── */}
       <div
         style={{
+          marginBottom: "1.5rem",
           padding: "1.25rem",
           borderRadius: 14,
-          background: "linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(15, 23, 42, 0.9) 100%)",
-          border: "1px solid rgba(239, 68, 68, 0.3)",
-          marginBottom: "1.5rem",
+          background: "rgba(239, 68, 68, 0.06)",
+          border: "1px solid rgba(239, 68, 68, 0.25)",
         }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 8 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: "1.3rem" }}>🚨</span>
-            <h4 style={{ fontSize: "1rem", fontWeight: 800, color: "#fca5a5", margin: 0 }}>
-              Kyun Ye Route Follow Kar Rahe Hain? (Risky Route ke Crime Scenes & Justification)
-            </h4>
+            <span style={{ fontSize: "1.2rem" }}>🚨</span>
+            <div>
+              <h4 style={{ fontSize: "0.95rem", fontWeight: 800, color: "#fca5a5", margin: 0 }}>
+                High-Risk Crime Hotspots on Alternative Routes ({originName} ➔ {destName})
+              </h4>
+              <span style={{ fontSize: "0.75rem", color: "#f87171" }}>
+                Humne ye rasta chuna kyunki alternative routes par ye specific khatarnak spots the:
+              </span>
+            </div>
           </div>
           <span
             style={{
-              padding: "3px 10px",
+              padding: "3px 8px",
               borderRadius: 6,
               background: "rgba(239, 68, 68, 0.2)",
               color: "#fca5a5",
-              fontSize: "0.72rem",
+              fontSize: "0.7rem",
               fontWeight: 800,
+              border: "1px solid rgba(239, 68, 68, 0.4)",
             }}
           >
-            ⚠️ DANGEROUS ALTERNATE ROUTE AVOIDED
+            {localCrimeScenes.length} LOCALITY HOTSPOTS BYPASSED
           </span>
         </div>
 
-        <p style={{ fontSize: "0.82rem", color: "#cbd5e1", lineHeight: 1.5, marginBottom: 14 }}>
-          {language === "hindi"
-            ? "Agar aap sabse fast ya direct shortcut route lete, toh wo rasta in high-risk crime spots aur andhere elaqon se hokar guzarta. AI ne in sabhi dangerous points ko calculate karke bypass kiya hai:"
-            : "If you had taken the shortest or fastest shortcut, it would have passed through high-density crime hotspots with poor illumination. The AI routing engine actively bypassed the following danger zones:"}
-        </p>
-
-        {/* Crime Scenes on Alternate Path Grid */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
-            gap: 12,
-            marginBottom: 14,
-          }}
-        >
-          {[
-            {
-              spot: `${city === "Delhi" ? "Paharganj / Station Bypass" : "Kurla Station Road"}`,
-              crimeType: "Mobile Snatching & Robbery Hotspot",
-              incidents: "14 reported incidents after 9 PM",
-              lighting: "32% (Dark Alleyways)",
-              cctv: "No Government CCTV Coverage",
-              riskTag: "CRITICAL RISK",
-            },
-            {
-              spot: `${city === "Delhi" ? "Outer Ring Road Underpass Service Lane" : "Sion-Dharavi Link Service Road"}`,
-              crimeType: "Late-Night Harassment & Unlit Stretch",
-              incidents: "8 reported safety distress flags",
-              lighting: "25% (Defective Streetlights)",
-              cctv: "Blindspot Zone (Zero Police Patrol)",
-              riskTag: "HIGH RISK",
-            },
-            {
-              spot: `${city === "Delhi" ? "Isolated Industrial Cut near Okhla Phase-1" : "Mankhurd Deserted Connector"}`,
-              crimeType: "Vehicle Theft & Stalking Vulnerability",
-              incidents: "High frequency night incidents",
-              lighting: "40% (Intermittent Lighting)",
-              cctv: "Low Footfall Zone",
-              riskTag: "HIGH RISK",
-            },
-          ].map((crime, i) => (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 10 }}>
+          {localCrimeScenes.map((cs, idx) => (
             <div
-              key={i}
+              key={idx}
               style={{
-                padding: "10px 12px",
+                padding: "12px",
                 borderRadius: 10,
-                background: "rgba(0, 0, 0, 0.4)",
-                border: "1px solid rgba(239, 68, 68, 0.25)",
+                background: "rgba(15, 23, 42, 0.6)",
+                border: "1px solid rgba(239, 68, 68, 0.2)",
+                display: "flex",
+                flexDirection: "column",
+                gap: 6,
               }}
             >
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
-                <span style={{ fontSize: "0.84rem", fontWeight: 800, color: "#f8fafc" }}>
-                  📍 {crime.spot}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 6 }}>
+                <span style={{ fontSize: "0.85rem", fontWeight: 800, color: "#fecaca" }}>
+                  📍 {cs.spot}
                 </span>
                 <span
                   style={{
                     padding: "2px 6px",
                     borderRadius: 4,
-                    background: "rgba(239, 68, 68, 0.3)",
-                    color: "#fca5a5",
-                    fontSize: "0.68rem",
+                    background: cs.riskTag === "CRITICAL DANGER" ? "rgba(220, 38, 38, 0.3)" : "rgba(245, 158, 11, 0.25)",
+                    color: cs.riskTag === "CRITICAL DANGER" ? "#fca5a5" : "#fde047",
+                    fontSize: "0.65rem",
                     fontWeight: 800,
+                    whiteSpace: "nowrap",
                   }}
                 >
-                  {crime.riskTag}
+                  {cs.riskTag}
                 </span>
               </div>
 
-              <div style={{ fontSize: "0.76rem", color: "#f87171", fontWeight: 700, marginBottom: 4 }}>
-                ⚠️ {crime.crimeType} ({crime.incidents})
+              <div style={{ fontSize: "0.78rem", color: "#f87171", fontWeight: 600 }}>
+                ⚠️ {cs.crimeType}
               </div>
 
-              <div style={{ fontSize: "0.72rem", color: "#94a3b8", display: "flex", flexDirection: "column", gap: 2 }}>
-                <div>💡 Street Illumination: <strong style={{ color: "#ef4444" }}>{crime.lighting}</strong></div>
-                <div>📹 Surveillance: <strong style={{ color: "#ef4444" }}>{crime.cctv}</strong></div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 3, fontSize: "0.72rem", color: "#cbd5e1" }}>
+                <div>📊 <strong>Recent Cases:</strong> {cs.incidents}</div>
+                <div>💡 <strong>Illumination:</strong> {cs.lighting}</div>
+                <div>📹 <strong>Surveillance:</strong> {cs.cctv}</div>
+              </div>
+
+              <div
+                style={{
+                  marginTop: 4,
+                  padding: "6px 8px",
+                  borderRadius: 6,
+                  background: "rgba(34, 197, 94, 0.1)",
+                  border: "1px solid rgba(34, 197, 94, 0.2)",
+                  fontSize: "0.72rem",
+                  color: "#86efac",
+                  lineHeight: 1.35,
+                }}
+              >
+                🛡️ <strong>Kyun Bypass Kiya:</strong> {cs.whyAvoided}
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Clear Final Justification Banner */}
-        <div
-          style={{
-            padding: "10px 14px",
-            borderRadius: 10,
-            background: "rgba(34, 197, 94, 0.12)",
-            border: "1px solid rgba(34, 197, 94, 0.3)",
-            display: "flex",
-            alignItems: "center",
-            gap: 10,
-          }}
-        >
-          <span style={{ fontSize: "1.3rem" }}>✅</span>
-          <div style={{ fontSize: "0.82rem", color: "#dcfce7", lineHeight: 1.4 }}>
-            <strong>Hamara Chuna Hua Safe Route Kyun Behtar Hai:</strong>{" "}
-            {language === "hindi"
-              ? `Ye route upar diye gaye dangerous crime scenes ko completely bypass karta hai aur 95% well-lit main highways, CCTV network, aur PCR van patrolling corridor se le jata hai. Safety Score: ${safest.average_safety_score}/100.`
-              : `This selected route completely avoids the dangerous crime scenes listed above, steering you through 95% well-lit main arterial corridors with active CCTV & police presence. Safety Score: ${safest.average_safety_score}/100.`}
-          </div>
         </div>
       </div>
 
