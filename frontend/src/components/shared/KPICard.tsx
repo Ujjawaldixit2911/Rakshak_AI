@@ -119,12 +119,70 @@ export function KPICard({
     return null;
   };
 
+  const ACCENT_STYLES: Record<string, {
+    border: string;
+    background: string;
+    iconBg: string;
+    iconColor: string;
+    shadow: string;
+  }> = {
+    green: {
+      border: "1.5px solid rgba(16, 185, 129, 0.35)",
+      background: "linear-gradient(180deg, rgba(16, 185, 129, 0.08) 0%, var(--bg-card) 100%)",
+      iconBg: "rgba(16, 185, 129, 0.16)",
+      iconColor: "#059669",
+      shadow: "0 4px 20px rgba(16, 185, 129, 0.08)",
+    },
+    blue: {
+      border: "1.5px solid rgba(37, 99, 235, 0.35)",
+      background: "linear-gradient(180deg, rgba(37, 99, 235, 0.08) 0%, var(--bg-card) 100%)",
+      iconBg: "rgba(37, 99, 235, 0.16)",
+      iconColor: "#2563eb",
+      shadow: "0 4px 20px rgba(37, 99, 235, 0.08)",
+    },
+    amber: {
+      border: "1.5px solid rgba(245, 158, 11, 0.38)",
+      background: "linear-gradient(180deg, rgba(245, 158, 11, 0.08) 0%, var(--bg-card) 100%)",
+      iconBg: "rgba(245, 158, 11, 0.16)",
+      iconColor: "#d97706",
+      shadow: "0 4px 20px rgba(245, 158, 11, 0.08)",
+    },
+    purple: {
+      border: "1.5px solid rgba(139, 92, 246, 0.35)",
+      background: "linear-gradient(180deg, rgba(139, 92, 246, 0.08) 0%, var(--bg-card) 100%)",
+      iconBg: "rgba(139, 92, 246, 0.16)",
+      iconColor: "#7c3aed",
+      shadow: "0 4px 20px rgba(139, 92, 246, 0.08)",
+    },
+    rose: {
+      border: "1.5px solid rgba(225, 29, 72, 0.35)",
+      background: "linear-gradient(180deg, rgba(225, 29, 72, 0.08) 0%, var(--bg-card) 100%)",
+      iconBg: "rgba(225, 29, 72, 0.16)",
+      iconColor: "#e11d48",
+      shadow: "0 4px 20px rgba(225, 29, 72, 0.08)",
+    },
+    cyan: {
+      border: "1.5px solid rgba(13, 148, 136, 0.35)",
+      background: "linear-gradient(180deg, rgba(13, 148, 136, 0.08) 0%, var(--bg-card) 100%)",
+      iconBg: "rgba(13, 148, 136, 0.16)",
+      iconColor: "#0f766e",
+      shadow: "0 4px 20px rgba(13, 148, 136, 0.08)",
+    },
+  };
+
+  const styleConfig = ACCENT_STYLES[accentColor] || ACCENT_STYLES.green;
+
   return (
     <Card
       hoverLift={!!onClick}
       severityColor={severity}
       onClick={onClick}
       className={`p-6 md:p-7 flex flex-col justify-between ${className}`}
+      style={{
+        border: styleConfig.border,
+        background: styleConfig.background,
+        boxShadow: styleConfig.shadow,
+      }}
     >
       {/* Top Row: Icon Chip + Label */}
       <div className="flex items-center gap-3.5 mb-4">
@@ -132,8 +190,8 @@ export function KPICard({
         <div
           className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition-transform duration-200"
           style={{
-            backgroundColor: iconBg || "var(--accent-dim)",
-            color: iconColor || "var(--accent-primary)",
+            backgroundColor: iconBg || styleConfig.iconBg,
+            color: iconColor || styleConfig.iconColor,
           }}
         >
           {renderIcon()}

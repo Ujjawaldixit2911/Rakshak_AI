@@ -217,38 +217,57 @@ export const JourneyLifecycleController: React.FC<JourneyControllerProps> = ({
       {/* STAGE 1: IDLE / CONFIGURATION */}
       {stage === "IDLE" && (
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-3 text-xs bg-slate-950/60 p-3 rounded-xl border border-slate-800">
-            <div>
-              <span className="text-slate-400 flex items-center gap-1 mb-1">
+          <div className="grid grid-cols-2 gap-3 text-xs">
+            <div className="bg-emerald-950/25 border border-emerald-500/35 p-3 rounded-xl">
+              <span className="text-emerald-400 font-semibold flex items-center gap-1 mb-1">
                 <MapPin className="w-3.5 h-3.5 text-emerald-400" /> Origin
               </span>
-              <span className="font-medium text-slate-200">{selectedOrigin}</span>
+              <span className="font-bold text-slate-100">{selectedOrigin}</span>
             </div>
-            <div>
-              <span className="text-slate-400 flex items-center gap-1 mb-1">
+            <div className="bg-amber-950/25 border border-amber-500/35 p-3 rounded-xl">
+              <span className="text-amber-400 font-semibold flex items-center gap-1 mb-1">
                 <Compass className="w-3.5 h-3.5 text-amber-400" /> Destination
               </span>
-              <span className="font-medium text-slate-200">{selectedDestination}</span>
+              <span className="font-bold text-slate-100">{selectedDestination}</span>
             </div>
           </div>
 
           <div>
             <label className="text-xs font-semibold text-slate-300 mb-1.5 block">Select Corridor Mode</label>
             <div className="grid grid-cols-3 gap-2">
-              {(["Safe", "Balanced", "Fast"] as const).map((mode) => (
-                <button
-                  key={mode}
-                  type="button"
-                  onClick={() => setRouteType(mode)}
-                  className={`py-2 px-3 rounded-xl text-xs font-medium border transition-all text-center ${
-                    routeType === mode
-                      ? "bg-emerald-600/30 border-emerald-500 text-emerald-300 shadow-sm"
-                      : "bg-slate-800/50 border-slate-700/60 text-slate-400 hover:text-slate-200"
-                  }`}
-                >
-                  {mode === "Safe" ? "🛡️ Safest" : mode === "Balanced" ? "⚖️ Balanced" : "⚡ Fastest"}
-                </button>
-              ))}
+              <button
+                type="button"
+                onClick={() => setRouteType("Safe")}
+                className={`py-2 px-3 rounded-xl text-xs font-medium border transition-all text-center ${
+                  routeType === "Safe"
+                    ? "bg-emerald-600/30 border-emerald-500 text-emerald-300 shadow-sm"
+                    : "bg-slate-800/50 border-slate-700/60 text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                🛡️ Safest
+              </button>
+              <button
+                type="button"
+                onClick={() => setRouteType("Balanced")}
+                className={`py-2 px-3 rounded-xl text-xs font-medium border transition-all text-center ${
+                  routeType === "Balanced"
+                    ? "bg-amber-600/30 border-amber-500 text-amber-300 shadow-sm"
+                    : "bg-slate-800/50 border-slate-700/60 text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                ⚖️ Balanced
+              </button>
+              <button
+                type="button"
+                onClick={() => setRouteType("Fast")}
+                className={`py-2 px-3 rounded-xl text-xs font-medium border transition-all text-center ${
+                  routeType === "Fast"
+                    ? "bg-indigo-600/30 border-indigo-500 text-indigo-300 shadow-sm"
+                    : "bg-slate-800/50 border-slate-700/60 text-slate-400 hover:text-slate-200"
+                }`}
+              >
+                ⚡ Fastest
+              </button>
             </div>
           </div>
 

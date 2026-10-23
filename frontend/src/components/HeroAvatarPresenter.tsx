@@ -383,29 +383,53 @@ export default function HeroAvatarPresenter({
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+                gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
                 gap: "10px",
                 marginTop: "12px",
                 paddingTop: "12px",
                 borderTop: "1px solid rgba(255, 255, 255, 0.08)",
               }}
             >
-              <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+              <div style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: 8,
+                padding: "8px 10px",
+                borderRadius: "10px",
+                background: "rgba(16, 185, 129, 0.08)",
+                border: "1px solid rgba(16, 185, 129, 0.25)",
+              }}>
                 <span style={{ fontSize: "1.1rem" }}>⏱️</span>
                 <div style={{ fontSize: "0.78rem", color: "#cbd5e1" }}>
-                  <strong style={{ color: "#f8fafc" }}>Fastest vs Safest:</strong> Low-risk, well-lit verified corridor prioritization.
+                  <strong style={{ color: "#34d399", display: "block" }}>Fastest vs Safest</strong> Low-risk, well-lit verified corridor prioritization.
                 </div>
               </div>
-              <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+              <div style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: 8,
+                padding: "8px 10px",
+                borderRadius: "10px",
+                background: "rgba(245, 158, 11, 0.08)",
+                border: "1px solid rgba(245, 158, 11, 0.25)",
+              }}>
                 <span style={{ fontSize: "1.1rem" }}>💡</span>
                 <div style={{ fontSize: "0.78rem", color: "#cbd5e1" }}>
-                  <strong style={{ color: "#f8fafc" }}>Street Illumination:</strong> Unlit aur isolated blindspots ko bypass.
+                  <strong style={{ color: "#fbbf24", display: "block" }}>Street Illumination</strong> Unlit aur isolated blindspots ko bypass.
                 </div>
               </div>
-              <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
+              <div style={{
+                display: "flex",
+                alignItems: "flex-start",
+                gap: 8,
+                padding: "8px 10px",
+                borderRadius: "10px",
+                background: "rgba(37, 99, 235, 0.08)",
+                border: "1px solid rgba(37, 99, 235, 0.25)",
+              }}>
                 <span style={{ fontSize: "1.1rem" }}>👮</span>
                 <div style={{ fontSize: "0.78rem", color: "#cbd5e1" }}>
-                  <strong style={{ color: "#f8fafc" }}>Police & CCTV Patrol:</strong> Verified 24x7 patrolled avenues.
+                  <strong style={{ color: "#60a5fa", display: "block" }}>Police & CCTV Patrol</strong> Verified 24x7 patrolled avenues.
                 </div>
               </div>
             </div>

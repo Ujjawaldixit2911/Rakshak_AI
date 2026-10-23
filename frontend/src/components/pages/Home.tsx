@@ -682,13 +682,13 @@ export default function CitizenPortal() {
             gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
             gap: "1.25rem",
           }}>
-            {/* Pillar 1: Spatial AI */}
+            {/* Pillar 1: Spatial AI (Rose / Crimson) */}
             <div style={{
-              background: "var(--bg-card)",
-              border: "1px solid var(--border-subtle)",
+              background: "linear-gradient(160deg, rgba(225, 29, 72, 0.08) 0%, var(--bg-card) 65%)",
+              border: "1.5px solid rgba(225, 29, 72, 0.3)",
               borderRadius: "20px",
               padding: "1.5rem",
-              boxShadow: "var(--shadow-card)",
+              boxShadow: "0 6px 20px rgba(225, 29, 72, 0.08)",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
@@ -699,8 +699,8 @@ export default function CitizenPortal() {
                   width: 44,
                   height: 44,
                   borderRadius: "12px",
-                  background: "rgba(225, 29, 72, 0.1)",
-                  border: "1px solid rgba(225, 29, 72, 0.25)",
+                  background: "rgba(225, 29, 72, 0.12)",
+                  border: "1px solid rgba(225, 29, 72, 0.3)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -728,12 +728,12 @@ export default function CitizenPortal() {
                 }}
                 style={{
                   width: "100%",
-                  padding: "9px 14px",
+                  padding: "10px 14px",
                   borderRadius: "10px",
-                  background: "rgba(225, 29, 72, 0.1)",
-                  border: "1px solid rgba(225, 29, 72, 0.3)",
+                  background: "linear-gradient(135deg, rgba(225, 29, 72, 0.15), rgba(225, 29, 72, 0.08))",
+                  border: "1px solid rgba(225, 29, 72, 0.35)",
                   color: "#e11d48",
-                  fontSize: "0.82rem",
+                  fontSize: "0.84rem",
                   fontWeight: 800,
                   cursor: "pointer",
                   display: "flex",
@@ -747,13 +747,13 @@ export default function CitizenPortal() {
               </button>
             </div>
 
-            {/* Pillar 2: Algorithmic Routing Engine */}
+            {/* Pillar 2: Algorithmic Routing Engine (Public Safety Emerald) */}
             <div style={{
-              background: "var(--bg-card)",
-              border: "1px solid var(--border-subtle)",
+              background: "linear-gradient(160deg, rgba(5, 150, 105, 0.08) 0%, var(--bg-card) 65%)",
+              border: "1.5px solid rgba(5, 150, 105, 0.3)",
               borderRadius: "20px",
               padding: "1.5rem",
-              boxShadow: "var(--shadow-card)",
+              boxShadow: "0 6px 20px rgba(5, 150, 105, 0.08)",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
@@ -764,8 +764,8 @@ export default function CitizenPortal() {
                   width: 44,
                   height: 44,
                   borderRadius: "12px",
-                  background: "rgba(5, 150, 105, 0.1)",
-                  border: "1px solid rgba(5, 150, 105, 0.25)",
+                  background: "rgba(5, 150, 105, 0.12)",
+                  border: "1px solid rgba(5, 150, 105, 0.3)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -792,12 +792,12 @@ export default function CitizenPortal() {
                 }}
                 style={{
                   width: "100%",
-                  padding: "9px 14px",
+                  padding: "10px 14px",
                   borderRadius: "10px",
-                  background: "rgba(5, 150, 105, 0.1)",
-                  border: "1px solid rgba(5, 150, 105, 0.3)",
+                  background: "linear-gradient(135deg, rgba(5, 150, 105, 0.15), rgba(5, 150, 105, 0.08))",
+                  border: "1px solid rgba(5, 150, 105, 0.35)",
                   color: "#059669",
-                  fontSize: "0.82rem",
+                  fontSize: "0.84rem",
                   fontWeight: 800,
                   cursor: "pointer",
                   display: "flex",
@@ -811,13 +811,13 @@ export default function CitizenPortal() {
               </button>
             </div>
 
-            {/* Pillar 3: Civic Infrastructure & SOS */}
+            {/* Pillar 3: Civic Infrastructure & SOS (Shield Amber & Gold) */}
             <div style={{
-              background: "var(--bg-card)",
-              border: "1px solid var(--border-subtle)",
+              background: "linear-gradient(160deg, rgba(217, 119, 6, 0.08) 0%, var(--bg-card) 65%)",
+              border: "1.5px solid rgba(217, 119, 6, 0.3)",
               borderRadius: "20px",
               padding: "1.5rem",
-              boxShadow: "var(--shadow-card)",
+              boxShadow: "0 6px 20px rgba(217, 119, 6, 0.08)",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
@@ -828,8 +828,8 @@ export default function CitizenPortal() {
                   width: 44,
                   height: 44,
                   borderRadius: "12px",
-                  background: "rgba(220, 38, 38, 0.1)",
-                  border: "1px solid rgba(220, 38, 38, 0.25)",
+                  background: "rgba(217, 119, 6, 0.12)",
+                  border: "1px solid rgba(217, 119, 6, 0.3)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -838,7 +838,7 @@ export default function CitizenPortal() {
                 }}>
                   🚨
                 </div>
-                <div style={{ fontSize: "0.72rem", color: "#dc2626", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
+                <div style={{ fontSize: "0.72rem", color: "#d97706", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
                   CIVIC & EMERGENCY NETWORK
                 </div>
                 <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: "8px" }}>
@@ -856,12 +856,12 @@ export default function CitizenPortal() {
                 }}
                 style={{
                   width: "100%",
-                  padding: "9px 14px",
+                  padding: "10px 14px",
                   borderRadius: "10px",
-                  background: "rgba(220, 38, 38, 0.1)",
-                  border: "1px solid rgba(220, 38, 38, 0.3)",
-                  color: "#dc2626",
-                  fontSize: "0.82rem",
+                  background: "linear-gradient(135deg, rgba(217, 119, 6, 0.15), rgba(217, 119, 6, 0.08))",
+                  border: "1px solid rgba(217, 119, 6, 0.35)",
+                  color: "#d97706",
+                  fontSize: "0.84rem",
                   fontWeight: 800,
                   cursor: "pointer",
                   display: "flex",
@@ -875,13 +875,13 @@ export default function CitizenPortal() {
               </button>
             </div>
 
-            {/* Pillar 4: Conversational Safety Assistant */}
+            {/* Pillar 4: Conversational Safety Assistant (Royal Amethyst / Violet) */}
             <div style={{
-              background: "var(--bg-card)",
-              border: "1px solid var(--border-subtle)",
+              background: "linear-gradient(160deg, rgba(124, 58, 237, 0.08) 0%, var(--bg-card) 65%)",
+              border: "1.5px solid rgba(124, 58, 237, 0.3)",
               borderRadius: "20px",
               padding: "1.5rem",
-              boxShadow: "var(--shadow-card)",
+              boxShadow: "0 6px 20px rgba(124, 58, 237, 0.08)",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
@@ -892,8 +892,8 @@ export default function CitizenPortal() {
                   width: 44,
                   height: 44,
                   borderRadius: "12px",
-                  background: "rgba(5, 150, 105, 0.1)",
-                  border: "1px solid rgba(5, 150, 105, 0.25)",
+                  background: "rgba(124, 58, 237, 0.12)",
+                  border: "1px solid rgba(124, 58, 237, 0.3)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -902,7 +902,7 @@ export default function CitizenPortal() {
                 }}>
                   🎙️
                 </div>
-                <div style={{ fontSize: "0.72rem", color: "#059669", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
+                <div style={{ fontSize: "0.72rem", color: "#7c3aed", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
                   VOICE NAVIGATION
                 </div>
                 <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: "8px" }}>
@@ -917,12 +917,12 @@ export default function CitizenPortal() {
                 onClick={openCopilot}
                 style={{
                   width: "100%",
-                  padding: "9px 14px",
+                  padding: "10px 14px",
                   borderRadius: "10px",
-                  background: "rgba(5, 150, 105, 0.1)",
-                  border: "1px solid rgba(5, 150, 105, 0.3)",
-                  color: "#059669",
-                  fontSize: "0.82rem",
+                  background: "linear-gradient(135deg, rgba(124, 58, 237, 0.15), rgba(124, 58, 237, 0.08))",
+                  border: "1px solid rgba(124, 58, 237, 0.35)",
+                  color: "#7c3aed",
+                  fontSize: "0.84rem",
                   fontWeight: 800,
                   cursor: "pointer",
                   display: "flex",
@@ -1204,10 +1204,11 @@ export default function CitizenPortal() {
             <div style={{ marginTop: "1.5rem", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16 }}>
               {/* AI Safety Explanation Banner */}
               <div style={{
-                background: "var(--bg-surface)",
-                border: "1px solid rgba(16, 185, 129, 0.3)",
+                background: "linear-gradient(160deg, rgba(16, 185, 129, 0.08) 0%, var(--bg-surface) 65%)",
+                border: "1.5px solid rgba(16, 185, 129, 0.35)",
                 borderRadius: "16px",
-                padding: "1.25rem"
+                padding: "1.25rem",
+                boxShadow: "0 4px 16px rgba(16, 185, 129, 0.08)",
               }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8 }}>
                   <span style={{ fontSize: "1.2rem" }}>🛡️</span>
@@ -1230,16 +1231,17 @@ export default function CitizenPortal() {
 
               {/* Emergency POIs Along Path */}
               <div style={{
-                background: "var(--bg-surface)",
-                border: "1px solid var(--border-subtle)",
+                background: "linear-gradient(160deg, rgba(37, 99, 235, 0.08) 0%, var(--bg-surface) 65%)",
+                border: "1.5px solid rgba(37, 99, 235, 0.35)",
                 borderRadius: "16px",
-                padding: "1.25rem"
+                padding: "1.25rem",
+                boxShadow: "0 4px 16px rgba(37, 99, 235, 0.08)",
               }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-                  <h3 style={{ fontSize: "0.92rem", fontWeight: 800, color: "var(--text-primary)", margin: 0 }}>
+                  <h3 style={{ fontSize: "0.92rem", fontWeight: 800, color: "#2563eb", margin: 0 }}>
                     🚨 Nearby Emergency Stations
                   </h3>
-                  <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Verified 24x7</span>
+                  <span style={{ fontSize: "0.72rem", color: "#2563eb", fontWeight: 700, background: "rgba(37, 99, 235, 0.1)", padding: "2px 8px", borderRadius: "6px" }}>Verified 24x7</span>
                 </div>
 
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
@@ -1300,13 +1302,13 @@ export default function CitizenPortal() {
             gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))",
             gap: "1.25rem",
           }}>
-            {/* Feature Studio Card 1: Family Safety Circle */}
+            {/* Feature Studio Card 1: Family Safety Circle (Emerald) */}
             <div style={{
-              background: "var(--bg-card)",
-              border: "1px solid var(--border-subtle)",
+              background: "linear-gradient(160deg, rgba(5, 150, 105, 0.08) 0%, var(--bg-card) 65%)",
+              border: "1.5px solid rgba(5, 150, 105, 0.32)",
               borderRadius: "20px",
               padding: "1.5rem",
-              boxShadow: "var(--shadow-card)",
+              boxShadow: "0 6px 20px rgba(5, 150, 105, 0.08)",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
@@ -1317,8 +1319,8 @@ export default function CitizenPortal() {
                     width: 44,
                     height: 44,
                     borderRadius: "12px",
-                    background: "var(--accent-dim)",
-                    border: "1px solid var(--border-subtle)",
+                    background: "rgba(5, 150, 105, 0.12)",
+                    border: "1px solid rgba(5, 150, 105, 0.3)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -1330,7 +1332,7 @@ export default function CitizenPortal() {
                     <h3 style={{ fontSize: "1.05rem", fontWeight: 800, color: "var(--text-primary)", margin: 0 }}>
                       Family Safety Live Circle
                     </h3>
-                    <span style={{ fontSize: "0.72rem", color: "var(--accent-primary)", fontWeight: 700 }}>
+                    <span style={{ fontSize: "0.72rem", color: "#059669", fontWeight: 700 }}>
                       REAL-TIME GEOFENCE MONITORING
                     </span>
                   </div>
@@ -1363,13 +1365,13 @@ export default function CitizenPortal() {
               </button>
             </div>
 
-            {/* Feature Studio Card 2: What-If Threat Simulator */}
+            {/* Feature Studio Card 2: What-If Threat Simulator (Amber & Gold) */}
             <div style={{
-              background: "var(--bg-card)",
-              border: "1px solid var(--border-subtle)",
+              background: "linear-gradient(160deg, rgba(245, 158, 11, 0.08) 0%, var(--bg-card) 65%)",
+              border: "1.5px solid rgba(245, 158, 11, 0.35)",
               borderRadius: "20px",
               padding: "1.5rem",
-              boxShadow: "var(--shadow-card)",
+              boxShadow: "0 6px 20px rgba(245, 158, 11, 0.08)",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
@@ -1380,8 +1382,8 @@ export default function CitizenPortal() {
                     width: 44,
                     height: 44,
                     borderRadius: "12px",
-                    background: "rgba(245, 158, 11, 0.1)",
-                    border: "1px solid rgba(245, 158, 11, 0.25)",
+                    background: "rgba(245, 158, 11, 0.12)",
+                    border: "1px solid rgba(245, 158, 11, 0.3)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -1426,13 +1428,13 @@ export default function CitizenPortal() {
               </button>
             </div>
 
-            {/* Feature Studio Card 3: Standalone Voice Agent */}
+            {/* Feature Studio Card 3: Standalone Voice Agent (Royal Violet) */}
             <div style={{
-              background: "var(--bg-card)",
-              border: "1px solid var(--border-subtle)",
+              background: "linear-gradient(160deg, rgba(124, 58, 237, 0.08) 0%, var(--bg-card) 65%)",
+              border: "1.5px solid rgba(124, 58, 237, 0.32)",
               borderRadius: "20px",
               padding: "1.5rem",
-              boxShadow: "var(--shadow-card)",
+              boxShadow: "0 6px 20px rgba(124, 58, 237, 0.08)",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
@@ -1443,8 +1445,8 @@ export default function CitizenPortal() {
                     width: 44,
                     height: 44,
                     borderRadius: "12px",
-                    background: "rgba(99, 102, 241, 0.1)",
-                    border: "1px solid rgba(99, 102, 241, 0.25)",
+                    background: "rgba(124, 58, 237, 0.12)",
+                    border: "1px solid rgba(124, 58, 237, 0.3)",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
@@ -1456,7 +1458,7 @@ export default function CitizenPortal() {
                     <h3 style={{ fontSize: "1.05rem", fontWeight: 800, color: "var(--text-primary)", margin: 0 }}>
                       Interactive Voice Agent
                     </h3>
-                    <span style={{ fontSize: "0.72rem", color: "#059669", fontWeight: 700 }}>
+                    <span style={{ fontSize: "0.72rem", color: "#7c3aed", fontWeight: 700 }}>
                       HANDS-FREE COMMUTE ESCORT
                     </span>
                   </div>
@@ -1472,7 +1474,7 @@ export default function CitizenPortal() {
                   width: "100%",
                   padding: "11px",
                   borderRadius: "10px",
-                  background: "linear-gradient(135deg, #059669, #047857)",
+                  background: "linear-gradient(135deg, #7c3aed, #6d28d9)",
                   border: "none",
                   color: "#fff",
                   fontSize: "0.86rem",
@@ -1482,7 +1484,7 @@ export default function CitizenPortal() {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 8,
-                  boxShadow: "0 4px 12px rgba(5, 150, 105, 0.25)",
+                  boxShadow: "0 4px 12px rgba(124, 58, 237, 0.25)",
                 }}
               >
                 <span>🎙️ Launch Voice Agent</span>
@@ -1520,9 +1522,9 @@ export default function CitizenPortal() {
               label="Average Safety Score"
               value={88}
               suffix=" / 100"
-              icon={<ShieldCheck className="w-5 h-5 text-[#059669]" />}
+              icon={<ShieldCheck className="w-5 h-5 text-[#2563eb]" />}
               caption="+34 points safer compared to unguided standard routes"
-              accentColor="green"
+              accentColor="blue"
               delta={{ value: "+34 pts vs default", isPositive: true }}
             />
 
@@ -1571,20 +1573,20 @@ export default function CitizenPortal() {
           />
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 20 }}>
-            {/* 1. Ambulance Card */}
+            {/* 1. Ambulance Card (Medical Crimson) */}
             <div style={{
-              background: "var(--bg-card)",
-              border: "1px solid var(--border-subtle)",
+              background: "linear-gradient(160deg, rgba(239, 68, 68, 0.09) 0%, var(--bg-card) 65%)",
+              border: "1.5px solid rgba(239, 68, 68, 0.38)",
               borderRadius: "20px",
               padding: "1.75rem",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
-              boxShadow: "var(--shadow-card)",
+              boxShadow: "0 8px 24px rgba(239, 68, 68, 0.12)",
             }}>
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: "12px", background: "rgba(239, 68, 68, 0.1)", border: "1px solid rgba(239, 68, 68, 0.25)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>
+                  <div style={{ width: 44, height: 44, borderRadius: "12px", background: "rgba(239, 68, 68, 0.14)", border: "1px solid rgba(239, 68, 68, 0.3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>
                     🚑
                   </div>
                   <div>
@@ -1624,27 +1626,27 @@ export default function CitizenPortal() {
               </button>
             </div>
 
-            {/* 2. Police Card */}
+            {/* 2. Police Card (Civic Police Navy & Deep Blue) */}
             <div style={{
-              background: "var(--bg-card)",
-              border: "1px solid var(--border-subtle)",
+              background: "linear-gradient(160deg, rgba(37, 99, 235, 0.09) 0%, var(--bg-card) 65%)",
+              border: "1.5px solid rgba(37, 99, 235, 0.38)",
               borderRadius: "20px",
               padding: "1.75rem",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
-              boxShadow: "var(--shadow-card)",
+              boxShadow: "0 8px 24px rgba(37, 99, 235, 0.12)",
             }}>
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: "12px", background: "var(--accent-dim)", border: "1px solid var(--border-subtle)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>
+                  <div style={{ width: 44, height: 44, borderRadius: "12px", background: "rgba(37, 99, 235, 0.14)", border: "1px solid rgba(37, 99, 235, 0.3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>
                     👮
                   </div>
                   <div>
                     <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)", margin: 0 }}>
                       112 ERSS Police Dispatch
                     </h3>
-                    <span style={{ fontSize: "0.72rem", color: "var(--accent-primary)", fontWeight: 700 }}>
+                    <span style={{ fontSize: "0.72rem", color: "#2563eb", fontWeight: 700 }}>
                       Police Control Room & Pink Booth
                     </span>
                   </div>
@@ -1660,7 +1662,7 @@ export default function CitizenPortal() {
                   width: "100%",
                   padding: "11px",
                   borderRadius: "10px",
-                  background: "linear-gradient(135deg, #0f766e, #115e59)",
+                  background: "linear-gradient(135deg, #2563eb, #1d4ed8)",
                   border: "none",
                   color: "#fff",
                   fontSize: "0.88rem",
@@ -1670,27 +1672,27 @@ export default function CitizenPortal() {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 8,
-                  boxShadow: "0 4px 12px rgba(15, 118, 110, 0.3)",
+                  boxShadow: "0 4px 12px rgba(37, 99, 235, 0.3)",
                 }}
               >
                 👮 Dispatch Police (112)
               </button>
             </div>
 
-            {/* 3. Instant SOS Card */}
+            {/* 3. Instant SOS Card (Emergency Siren Amber & Gold) */}
             <div style={{
-              background: "var(--bg-card)",
-              border: "1px solid var(--border-subtle)",
+              background: "linear-gradient(160deg, rgba(245, 158, 11, 0.09) 0%, var(--bg-card) 65%)",
+              border: "1.5px solid rgba(245, 158, 11, 0.38)",
               borderRadius: "20px",
               padding: "1.75rem",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
-              boxShadow: "var(--shadow-card)",
+              boxShadow: "0 8px 24px rgba(245, 158, 11, 0.12)",
             }}>
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: "12px", background: "rgba(245, 158, 11, 0.1)", border: "1px solid rgba(245, 158, 11, 0.25)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>
+                  <div style={{ width: 44, height: 44, borderRadius: "12px", background: "rgba(245, 158, 11, 0.14)", border: "1px solid rgba(245, 158, 11, 0.3)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>
                     🚨
                   </div>
                   <div>
@@ -1734,13 +1736,13 @@ export default function CitizenPortal() {
 
         {/* ── 11. CARESYNC-STYLE BOTTOM PITCH BANNER ───────────────────────────── */}
         <section style={{
-          background: "var(--bg-card)",
-          border: "1px solid var(--border-subtle)",
+          background: "linear-gradient(145deg, rgba(5, 150, 105, 0.08) 0%, var(--bg-card) 50%, rgba(37, 99, 235, 0.06) 100%)",
+          border: "1.5px solid rgba(5, 150, 105, 0.3)",
           borderRadius: "24px",
           padding: "3rem 2rem",
           textAlign: "center",
           marginBottom: "3rem",
-          boxShadow: "var(--shadow-card)",
+          boxShadow: "0 10px 30px rgba(0, 0, 0, 0.25), 0 0 20px rgba(5, 150, 105, 0.08)",
           position: "relative",
           overflow: "hidden",
         }}>
