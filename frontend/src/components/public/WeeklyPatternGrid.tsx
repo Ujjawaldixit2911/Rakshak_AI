@@ -23,12 +23,12 @@ const ICON: Record<string, string> = {
 };
 
 export default function WeeklyPatternGrid({ data }: Props) {
-  const maxConf = Math.max(...data.weekly_pattern.map(d => d.confidence));
+  const maxConf = Math.max(...(data.weekly_pattern || []).map((d: any) => d.confidence));
 
   return (
     <div>
       <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 8 }}>
-        {data.weekly_pattern.map((day) => (
+        {(data.weekly_pattern || []).map((day: any) => (
           <div key={day.day} style={{
             padding: "12px 8px", borderRadius: 10, textAlign: "center",
             background: BG[day.risk_level],

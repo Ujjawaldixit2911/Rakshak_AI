@@ -43,17 +43,17 @@ export default function GoogleAuthGateway() {
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   const hindiDialogue = [
-    "Namaste! Main hoon aapka Rakshak AI Safety Navigator.",
+    "Namaste! Main hoon aapka Rakshak Safety Guide.",
     "Conventional maps aapko sirf sabse chhota ya fastest rasta dikhate hain, chahe wo kitna bhi sunsaan ya khatarnak kyu na ho.",
-    "Lekin Rakshak AI par hum real-time crime incidents, unlit blindspots, aur accident zones ko bypass karte hain.",
+    "Lekin Rakshak par hum real-time crime incidents, unlit blindspots, aur accident zones ko bypass karte hain.",
     "Chahe do minute extra lagein, par hum aapko sabse safe aur fully illuminated route provide karenge!",
     "Now you can login and explore the live safety map. Chaliye shuru karte hain!"
   ];
 
   const englishDialogue = [
-    "Hello! I am your Rakshak AI Safety Navigator.",
+    "Hello! I am your Rakshak Safety Guide.",
     "Standard navigation apps only focus on the shortest or fastest path, even if it takes you through dark and risky alleys.",
-    "Rakshak AI analyzes real crime hotspots, street lighting, and police patrolling to compute the safest possible route.",
+    "Rakshak analyzes real crime hotspots, street lighting, and police patrolling to compute the safest possible route.",
     "Even if it takes 2 minutes more, we ensure you always reach your destination safely and securely.",
     "Now you can log in to explore the live safety platform. Let's get started!"
   ];
@@ -119,7 +119,7 @@ export default function GoogleAuthGateway() {
         email: payload.email,
         avatar:
           payload.picture ||
-          `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(payload.email)}`,
+          `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(payload.email)}&backgroundColor=059669,047857`,
       });
       setStep(2);
     } catch (e) {
@@ -244,14 +244,14 @@ export default function GoogleAuthGateway() {
       setSelectedAccount({
         name: nameInput || DEMO_CREDENTIALS.name,
         email: emailInput,
-        avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(emailInput)}`,
+        avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(emailInput)}&backgroundColor=059669,047857`,
       });
       setStep(2);
     } else if (emailInput.includes("@")) {
       setSelectedAccount({
         name: nameInput || emailInput.split("@")[0],
         email: emailInput,
-        avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(emailInput)}`,
+        avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(emailInput)}&backgroundColor=059669,047857`,
       });
       setStep(2);
     } else {
@@ -280,7 +280,7 @@ export default function GoogleAuthGateway() {
     <div
       style={{
         minHeight: "100vh",
-        background: "radial-gradient(circle at 50% 20%, rgba(30, 58, 138, 0.45) 0%, rgba(15, 23, 42, 0.98) 70%, #030712 100%)",
+        background: "radial-gradient(circle at 50% 15%, rgba(16, 185, 129, 0.12) 0%, #0d131a 50%, #070a0e 100%)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -297,7 +297,7 @@ export default function GoogleAuthGateway() {
           left: "-100px",
           width: "500px",
           height: "500px",
-          background: "radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%)",
           filter: "blur(80px)",
           pointerEvents: "none",
         }}
@@ -309,7 +309,7 @@ export default function GoogleAuthGateway() {
           right: "-100px",
           width: "500px",
           height: "500px",
-          background: "radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(217, 119, 6, 0.10) 0%, transparent 70%)",
           filter: "blur(80px)",
           pointerEvents: "none",
         }}
@@ -320,11 +320,11 @@ export default function GoogleAuthGateway() {
         style={{
           width: "100%",
           maxWidth: "1200px",
-          background: "rgba(15, 23, 42, 0.85)",
-          border: "1px solid rgba(79, 124, 255, 0.35)",
+          background: "rgba(18, 24, 32, 0.92)",
+          border: "1px solid rgba(255, 255, 255, 0.10)",
           backdropFilter: "blur(24px)",
           borderRadius: "28px",
-          boxShadow: "0 25px 60px rgba(0, 0, 0, 0.7), 0 0 50px rgba(59, 130, 246, 0.15)",
+          boxShadow: "0 25px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(16, 185, 129, 0.08)",
           overflow: "hidden",
           position: "relative",
           zIndex: 1,
@@ -357,14 +357,14 @@ export default function GoogleAuthGateway() {
                     style={{
                       padding: "4px 10px",
                       borderRadius: 8,
-                      background: "rgba(59, 130, 246, 0.2)",
-                      color: "#60a5fa",
+                      background: "rgba(16, 185, 129, 0.14)",
+                      color: "#34d399",
                       fontSize: "0.76rem",
                       fontWeight: 800,
-                      border: "1px solid rgba(59, 130, 246, 0.35)",
+                      border: "1px solid rgba(16, 185, 129, 0.3)",
                     }}
                   >
-                    🛡️ RAKSHAK AI PLATFORM
+                    🛡️ RAKSHAK SAFETY PLATFORM
                   </span>
                 </div>
 
@@ -386,7 +386,7 @@ export default function GoogleAuthGateway() {
                       padding: "4px 10px",
                       borderRadius: 6,
                       border: "none",
-                      background: voiceLanguage === "hindi" ? "#3b82f6" : "transparent",
+                      background: voiceLanguage === "hindi" ? "#059669" : "transparent",
                       color: voiceLanguage === "hindi" ? "#fff" : "#94a3b8",
                       fontSize: "0.75rem",
                       fontWeight: 700,
@@ -404,7 +404,7 @@ export default function GoogleAuthGateway() {
                       padding: "4px 10px",
                       borderRadius: 6,
                       border: "none",
-                      background: voiceLanguage === "english" ? "#3b82f6" : "transparent",
+                      background: voiceLanguage === "english" ? "#059669" : "transparent",
                       color: voiceLanguage === "english" ? "#fff" : "#94a3b8",
                       fontSize: "0.75rem",
                       fontWeight: 700,
@@ -432,11 +432,11 @@ export default function GoogleAuthGateway() {
                     flexShrink: 0,
                     borderRadius: "18px",
                     overflow: "hidden",
-                    border: isPlayingVoice ? "2.5px solid #38bdf8" : "2px solid rgba(79, 124, 255, 0.4)",
+                    border: isPlayingVoice ? "2.5px solid #10b981" : "2px solid rgba(255, 255, 255, 0.14)",
                     boxShadow: isPlayingVoice
-                      ? "0 0 30px rgba(56, 189, 248, 0.5), 0 10px 25px rgba(0,0,0,0.6)"
+                      ? "0 0 25px rgba(16, 185, 129, 0.45), 0 10px 25px rgba(0,0,0,0.6)"
                       : "0 10px 25px rgba(0,0,0,0.5)",
-                    background: "#0f172a",
+                    background: "#0d131a",
                     position: "relative",
                   }}
                 >
@@ -477,7 +477,7 @@ export default function GoogleAuthGateway() {
                     "Navigate Smart. Stay Safe."
                   </h2>
                   <p style={{ fontSize: "0.82rem", color: "#94a3b8", margin: 0, lineHeight: 1.45 }}>
-                    Meet your personal AI Safety Navigator. We replace risky shortcuts with verified, well-lit, police-patrolled safe corridors.
+                    Meet your personal Safety Guide. We replace risky shortcuts with verified, well-lit, police-patrolled safe corridors.
                   </p>
                 </div>
               </div>
@@ -487,23 +487,23 @@ export default function GoogleAuthGateway() {
                 style={{
                   padding: "1.25rem",
                   borderRadius: "16px",
-                  background: "rgba(30, 41, 59, 0.45)",
+                  background: "rgba(24, 32, 43, 0.65)",
                   border: "1px solid rgba(255, 255, 255, 0.08)",
                   marginBottom: "1.5rem",
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
                   <span style={{ fontSize: "1.1rem" }}>🎙️</span>
-                  <span style={{ fontSize: "0.78rem", fontWeight: 800, color: "#38bdf8", textTransform: "uppercase" }}>
-                    {voiceLanguage === "hindi" ? "Safety Navigator ka Sandesh" : "Navigator Message"}
+                  <span style={{ fontSize: "0.78rem", fontWeight: 800, color: "#34d399", textTransform: "uppercase" }}>
+                    {voiceLanguage === "hindi" ? "Safety Guide ka Sandesh" : "Safety Briefing"}
                   </span>
                 </div>
                 <div style={{ fontSize: "0.95rem", color: "#f1f5f9", lineHeight: 1.55, fontWeight: 500, minHeight: "75px" }}>
-                  <span style={{ color: "#38bdf8", fontWeight: 800 }}>"</span>
+                  <span style={{ color: "#10b981", fontWeight: 800 }}>"</span>
                   <span style={{ color: "#e2e8f0" }}>
                     {activeDialogue[captionIdx] || activeDialogue[0]}
                   </span>
-                  <span style={{ color: "#38bdf8", fontWeight: 800 }}>"</span>
+                  <span style={{ color: "#10b981", fontWeight: 800 }}>"</span>
                 </div>
               </div>
             </div>
@@ -518,8 +518,8 @@ export default function GoogleAuthGateway() {
                   borderRadius: "12px",
                   background: isPlayingVoice
                     ? "linear-gradient(135deg, #ef4444, #dc2626)"
-                    : "linear-gradient(135deg, #3b82f6, #2563eb)",
-                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                    : "linear-gradient(135deg, #059669, #047857)",
+                  border: "1px solid rgba(255, 255, 255, 0.15)",
                   color: "#fff",
                   fontWeight: 800,
                   fontSize: "0.88rem",
@@ -528,7 +528,7 @@ export default function GoogleAuthGateway() {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 8,
-                  boxShadow: "0 4px 15px rgba(59, 130, 246, 0.35)",
+                  boxShadow: "0 4px 15px rgba(5, 150, 105, 0.35)",
                 }}
               >
                 <span>{isPlayingVoice ? "⏹️ Stop Audio" : "🔊 Listen to Voice Message"}</span>
@@ -551,12 +551,12 @@ export default function GoogleAuthGateway() {
                 {/* Header */}
                 <div style={{ marginBottom: "1.5rem" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
-                    <span style={{ padding: "2px 8px", borderRadius: 6, background: "rgba(59, 130, 246, 0.2)", color: "#60a5fa", fontSize: "0.72rem", fontWeight: 800 }}>
+                    <span style={{ padding: "2px 8px", borderRadius: 6, background: "rgba(5, 150, 105, 0.2)", color: "#34d399", fontSize: "0.72rem", fontWeight: 800 }}>
                       GOOGLE CLOUD OAUTH CONNECTED
                     </span>
                   </div>
                   <h3 style={{ fontSize: "1.35rem", fontWeight: 800, color: "#f8fafc", margin: "4px 0" }}>
-                    Sign in to Rakshak AI
+                    Sign in to Rakshak Network
                   </h3>
                   <p style={{ fontSize: "0.82rem", color: "#94a3b8", margin: 0 }}>
                     Official Google OAuth 2.0 Client active.
@@ -710,13 +710,14 @@ export default function GoogleAuthGateway() {
                       width: "100%",
                       padding: "11px",
                       borderRadius: "10px",
-                      background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
+                      background: "linear-gradient(135deg, #059669, #047857)",
                       border: "none",
                       color: "#fff",
                       fontWeight: 700,
                       fontSize: "0.88rem",
                       cursor: "pointer",
                       marginBottom: "0.75rem",
+                      boxShadow: "0 4px 14px rgba(5, 150, 105, 0.3)",
                     }}
                   >
                     {isLoggingIn ? "Signing in..." : "Sign In with Email"}
@@ -756,14 +757,14 @@ export default function GoogleAuthGateway() {
               /* Step 2: Select Field of Use */
               <div>
                 <div style={{ marginBottom: "1.25rem" }}>
-                  <span style={{ fontSize: "0.72rem", color: "#60a5fa", fontWeight: 800, textTransform: "uppercase" }}>
+                  <span style={{ fontSize: "0.72rem", color: "#10b981", fontWeight: 800, textTransform: "uppercase" }}>
                     STEP 2 OF 2
                   </span>
                   <h3 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#f8fafc", margin: "4px 0" }}>
                     Choose Your Field of Use
                   </h3>
                   <p style={{ fontSize: "0.8rem", color: "#94a3b8", margin: 0 }}>
-                    Select how you intend to use Rakshak AI to personalize your safety intelligence:
+                    Select how you intend to use Rakshak to personalize your safe navigation:
                   </p>
                 </div>
 

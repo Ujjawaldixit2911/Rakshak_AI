@@ -58,7 +58,7 @@ function getFallbackCrimeSearchResult(areaName: string): CrimeSearchResult {
     },
     hotspots: [
       {
-        id: 1,
+        id: "1",
         location: `${areaName} Metro Gate 2`,
         lat: lat + 0.003,
         lng: lng - 0.002,
@@ -69,7 +69,7 @@ function getFallbackCrimeSearchResult(areaName: string): CrimeSearchResult {
         top_crime_types: ["Snatching", "Pickpocketing"],
       },
       {
-        id: 2,
+        id: "2",
         location: `${areaName} Market Service Lane`,
         lat: lat - 0.004,
         lng: lng + 0.003,
@@ -185,7 +185,7 @@ export default function CrimeSearchPage() {
 
   useEffect(() => {
     api.getAreas()
-      .then(res => setAllAreas(res.areas || []))
+      .then((res: any) => setAllAreas(res.areas || res || []))
       .catch(() => {});
     doSearch("Connaught Place");
   }, []);
@@ -249,13 +249,13 @@ export default function CrimeSearchPage() {
 
       {/* ── Hero Search ────────────────────────────────────────────────────── */}
       <div className="fade-in-up" style={{ marginBottom: "2.5rem", textAlign: "center" }}>
-        <div style={{ display: "inline-block", padding: "3px 10px", background: "rgba(59, 130, 246, 0.15)", border: "1px solid rgba(59, 130, 246, 0.3)", borderRadius: "20px", fontSize: "0.75rem", color: "#93c5fd", fontWeight: 700, marginBottom: "8px" }}>
-          MODULE 3: NATURAL LANGUAGE CRIME INTELLIGENCE
+        <div style={{ display: "inline-block", padding: "4px 12px", background: "rgba(16, 185, 129, 0.12)", border: "1px solid rgba(16, 185, 129, 0.3)", borderRadius: "20px", fontSize: "0.75rem", color: "#34d399", fontWeight: 700, marginBottom: "8px" }}>
+          CIVIC CRIME TELEMETRY & SPATIAL RISK FORENSICS
         </div>
         <h1 style={{ fontSize: "clamp(1.8rem, 4vw, 2.5rem)", fontWeight: 900, letterSpacing: "-0.02em", marginBottom: 8 }}>
           Area Safety Intelligence ·{" "}
-          <span style={{ background: "linear-gradient(135deg, #4f7cff, #818cf8)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-            Rakshak AI
+          <span style={{ background: "linear-gradient(135deg, #059669, #10b981)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            Rakshak Safety Portal
           </span>
         </h1>
         <p style={{ color: "var(--color-text-secondary)", fontSize: "1rem", marginBottom: "1.75rem" }}>
@@ -411,7 +411,7 @@ export default function CrimeSearchPage() {
                 badge={<span className="badge badge-critical">{result.hotspots.length} clusters detected</span>}
               />
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
-                {result.hotspots.map((h, i) => <HotspotCard key={h.id} hotspot={h} index={i} />)}
+                {result.hotspots.map((h: any, i: number) => <HotspotCard key={h.id || i} hotspot={h} index={i} />)}
               </div>
             </div>
           )}

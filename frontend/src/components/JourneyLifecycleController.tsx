@@ -226,7 +226,7 @@ export const JourneyLifecycleController: React.FC<JourneyControllerProps> = ({
             </div>
             <div>
               <span className="text-slate-400 flex items-center gap-1 mb-1">
-                <Compass className="w-3.5 h-3.5 text-blue-400" /> Destination
+                <Compass className="w-3.5 h-3.5 text-amber-400" /> Destination
               </span>
               <span className="font-medium text-slate-200">{selectedDestination}</span>
             </div>
@@ -367,7 +367,7 @@ export const JourneyLifecycleController: React.FC<JourneyControllerProps> = ({
             type="button"
             onClick={handleCompleteJourney}
             disabled={loading}
-            className="w-full py-2.5 px-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg transition-all flex items-center justify-center gap-2"
+            className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 border border-emerald-500/40"
           >
             <CheckCircle2 className="w-4 h-4" /> Reach Destination (Complete Trip)
           </button>

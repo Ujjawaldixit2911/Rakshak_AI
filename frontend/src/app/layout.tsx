@@ -6,8 +6,8 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import Navbar from "@/components/Navbar";
 
 export const metadata: Metadata = {
-  title: "Rakshak AI — Public Safety Intelligence Platform",
-  description: "AI-powered crime analytics, safe route navigation, and safety intelligence for citizens and responders.",
+  title: "Rakshak — Public Safety & Safe Route Navigation Platform",
+  description: "Real-time incident analytics, illuminated safe route navigation, and emergency response coordination for citizens and law enforcement.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

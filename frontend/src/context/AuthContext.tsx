@@ -32,12 +32,12 @@ export const USER_FIELDS: Record<UserFieldKey, UserFieldInfo> = {
     tagline: "Safe routes for everyday travel",
     description: "Designed for individuals and families seeking the safest travel routes, real-time hotspot avoidance, and instant SOS alerts.",
     primaryFeatures: [
-      "AI Safe Route Navigator with risk scoring",
-      "Live DBSCAN Crime Hotspots & Heatmaps",
+      "Safe Route Navigator with multi-factor risk scoring",
+      "Live Crime Hotspots & Municipal Safety Heatmaps",
       "One-Touch SOS & Family Live Tracking",
     ],
-    color: "#0071e3",
-    bgGlow: "rgba(0, 113, 227, 0.2)",
+    color: "#059669",
+    bgGlow: "rgba(5, 150, 105, 0.15)",
   },
   corporate: {
     key: "corporate",
@@ -51,8 +51,8 @@ export const USER_FIELDS: Record<UserFieldKey, UserFieldInfo> = {
       "What-If Departure Hour vs Risk Simulator",
       "Automated Safe Arrival Ping to Emergency Contacts",
     ],
-    color: "#06b6d4",
-    bgGlow: "rgba(6, 182, 212, 0.2)",
+    color: "#0f766e",
+    bgGlow: "rgba(15, 118, 110, 0.15)",
   },
   emergency: {
     key: "emergency",
@@ -67,7 +67,7 @@ export const USER_FIELDS: Record<UserFieldKey, UserFieldInfo> = {
       "Live Route Risk & Incident Proximity Alerts",
     ],
     color: "#10b981",
-    bgGlow: "rgba(16, 185, 129, 0.2)",
+    bgGlow: "rgba(16, 185, 129, 0.15)",
   },
   police: {
     key: "police",
@@ -82,7 +82,7 @@ export const USER_FIELDS: Record<UserFieldKey, UserFieldInfo> = {
       "Direct link to Command Dispatch Center",
     ],
     color: "#ef4444",
-    bgGlow: "rgba(239, 68, 68, 0.2)",
+    bgGlow: "rgba(239, 68, 68, 0.15)",
   },
   student: {
     key: "student",
@@ -96,23 +96,23 @@ export const USER_FIELDS: Record<UserFieldKey, UserFieldInfo> = {
       "Well-lit Transit Corridors",
       "Quick Companion SOS",
     ],
-    color: "#a855f7",
-    bgGlow: "rgba(168, 85, 247, 0.2)",
+    color: "#d97706",
+    bgGlow: "rgba(217, 119, 6, 0.15)",
   },
   researcher: {
     key: "researcher",
     title: "Urban Safety Researcher",
     badge: "🏙️ Safety Analytics",
     icon: "🏙️",
-    tagline: "Crime pattern analysis & spatial AI.",
+    tagline: "Crime pattern analysis & spatial analytics.",
     description: "For civic analysts and urban planners investigating safety metrics.",
     primaryFeatures: [
       "Spatial Clustering",
       "Temporal Peak Risk",
       "Grid Intelligence",
     ],
-    color: "#f59e0b",
-    bgGlow: "rgba(245, 158, 11, 0.2)",
+    color: "#b45309",
+    bgGlow: "rgba(180, 83, 9, 0.15)",
   },
 };
 
@@ -210,7 +210,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loginWithGoogle = (profile?: Partial<GoogleUserProfile>, initialRole: UserFieldKey | null = null) => {
     const email = profile?.email || "ujjawal.rakshak@gmail.com";
-    const defaultAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(email)}`;
+    const defaultAvatar = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(email)}&backgroundColor=059669,047857,0f766e`;
 
     const fullProfile: GoogleUserProfile = {
       googleId: profile?.googleId || `g_${Date.now()}`,

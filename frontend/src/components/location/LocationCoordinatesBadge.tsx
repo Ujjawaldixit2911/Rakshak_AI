@@ -32,9 +32,9 @@ export const LocationCoordinatesBadge: React.FC<LocationCoordinatesBadgeProps> =
     <div
       className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900/80 border border-slate-700/80 text-xs font-mono text-slate-300 shadow-sm backdrop-blur-md ${className}`}
     >
-      <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+      <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
       {label && <span className="font-sans font-semibold text-slate-400">{label}:</span>}
-      <span className="text-cyan-300">{formatted}</span>
+      <span className="text-slate-200">{formatted}</span>
       {accuracy !== undefined && (
         <span className="text-[10px] text-slate-500">±{Math.round(accuracy)}m</span>
       )}

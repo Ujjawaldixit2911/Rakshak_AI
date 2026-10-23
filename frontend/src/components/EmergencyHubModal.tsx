@@ -374,10 +374,10 @@ export default function EmergencyHubModal({
             onClick={() => setActiveTab("police")}
             style={{
               padding: "14px 12px",
-              background: activeTab === "police" ? "rgba(59, 130, 246, 0.15)" : "transparent",
+              background: activeTab === "police" ? "rgba(15, 118, 110, 0.2)" : "transparent",
               border: "none",
-              borderBottom: `2px solid ${activeTab === "police" ? "#3b82f6" : "transparent"}`,
-              color: activeTab === "police" ? "#93c5fd" : "#94a3b8",
+              borderBottom: `2px solid ${activeTab === "police" ? "#0f766e" : "transparent"}`,
+              color: activeTab === "police" ? "#5eead4" : "#94a3b8",
               fontSize: "0.88rem",
               fontWeight: 800,
               cursor: "pointer",
@@ -602,7 +602,7 @@ export default function EmergencyHubModal({
                     >
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <span style={{ fontSize: "0.82rem", fontWeight: 800, color: "#fff" }}>{h.name}</span>
-                        <span style={{ fontSize: "0.7rem", color: "#38bdf8", fontWeight: 700 }}>{h.distanceKm}</span>
+                        <span style={{ fontSize: "0.7rem", color: "#10b981", fontWeight: 700 }}>{h.distanceKm}</span>
                       </div>
                       <span style={{ fontSize: "0.72rem", color: "#94a3b8" }}>{h.address}</span>
                       <a
@@ -654,7 +654,7 @@ export default function EmergencyHubModal({
                     href="tel:112"
                     style={{
                       padding: "8px 14px",
-                      background: "linear-gradient(135deg, #3b82f6, #2563eb)",
+                      background: "linear-gradient(135deg, #0f766e, #115e59)",
                       color: "#fff",
                       borderRadius: 9999,
                       textDecoration: "none",
@@ -722,7 +722,7 @@ export default function EmergencyHubModal({
                   style={{
                     padding: "14px",
                     borderRadius: 14,
-                    background: "linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)",
+                    background: "linear-gradient(135deg, #0f766e 0%, #115e59 100%)",
                     border: "1px solid rgba(255, 255, 255, 0.2)",
                     color: "#fff",
                     fontSize: "0.95rem",
@@ -732,7 +732,7 @@ export default function EmergencyHubModal({
                     alignItems: "center",
                     justifyContent: "center",
                     gap: 10,
-                    boxShadow: "0 0 20px rgba(59, 130, 246, 0.4)",
+                    boxShadow: "0 0 20px rgba(15, 118, 110, 0.4)",
                   }}
                 >
                   👮 Transmit GPS & Dispatch PCR Van / Pink Hoysala
@@ -744,10 +744,10 @@ export default function EmergencyHubModal({
                   style={{
                     padding: "16px",
                     borderRadius: 14,
-                    background: "rgba(59, 130, 246, 0.15)",
-                    border: "1px solid #3b82f6",
+                    background: "rgba(15, 118, 110, 0.15)",
+                    border: "1px solid #0f766e",
                     textAlign: "center",
-                    color: "#93c5fd",
+                    color: "#5eead4",
                     fontWeight: 800,
                     fontSize: "0.92rem",
                   }}
@@ -801,7 +801,7 @@ export default function EmergencyHubModal({
                         <span style={{ fontSize: "0.82rem", fontWeight: 800, color: "#fff" }}>
                           {p.type === "pink_booth" ? "🌸 " : "👮 "} {p.name}
                         </span>
-                        <span style={{ fontSize: "0.7rem", color: "#38bdf8", fontWeight: 700 }}>{p.distanceKm}</span>
+                        <span style={{ fontSize: "0.7rem", color: "#10b981", fontWeight: 700 }}>{p.distanceKm}</span>
                       </div>
                       <span style={{ fontSize: "0.72rem", color: "#94a3b8" }}>{p.address}</span>
                       <a
@@ -809,7 +809,7 @@ export default function EmergencyHubModal({
                         style={{
                           marginTop: 4,
                           fontSize: "0.74rem",
-                          color: "#60a5fa",
+                          color: "#34d399",
                           fontWeight: 700,
                           textDecoration: "none",
                         }}

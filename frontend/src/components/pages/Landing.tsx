@@ -41,17 +41,17 @@ export function Landing({ onSignInSuccess }: LandingProps) {
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   const hindiDialogue = [
-    "Namaste! Main hoon aapka Rakshak AI Safety Navigator.",
+    "Namaste! Main hoon aapka Rakshak Safety Guide.",
     "Conventional maps aapko sirf sabse chhota ya fastest rasta dikhate hain, chahe wo kitna bhi sunsaan ya khatarnak kyu na ho.",
-    "Lekin Rakshak AI par hum real-time crime incidents, unlit blindspots, aur accident zones ko bypass karte hain.",
+    "Lekin Rakshak par hum real-time crime incidents, unlit blindspots, aur accident zones ko bypass karte hain.",
     "Chahe do minute extra lagein, par hum aapko sabse safe aur fully illuminated route provide karenge!",
     "Now you can login and explore the live safety map. Chaliye shuru karte hain!"
   ];
 
   const englishDialogue = [
-    "Hello! I am your Rakshak AI Safety Navigator.",
+    "Hello! I am your Rakshak Safety Guide.",
     "Standard navigation apps only focus on the shortest or fastest path, even if it takes you through dark and risky alleys.",
-    "Rakshak AI analyzes real crime hotspots, street lighting, and police patrolling to compute the safest possible route.",
+    "Rakshak analyzes real crime hotspots, street lighting, and police patrolling to compute the safest possible route.",
     "Even if it takes 2 minutes more, we ensure you always reach your destination safely and securely.",
     "Now you can log in to explore the live safety platform. Let's get started!"
   ];
@@ -141,7 +141,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
     setSelectedAccount({
       name: "Ujjawal Dixit",
       email: "ujjawal.rakshak@gmail.com",
-      avatar: "https://api.dicebear.com/7.x/bottts/svg?seed=ujjawal",
+      avatar: "https://api.dicebear.com/7.x/initials/svg?seed=ujjawal&backgroundColor=059669,047857",
     });
     setStep(2);
   };
@@ -161,14 +161,14 @@ export function Landing({ onSignInSuccess }: LandingProps) {
       setSelectedAccount({
         name: nameInput || DEMO_CREDENTIALS.name,
         email: emailInput,
-        avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(emailInput)}`,
+        avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(emailInput)}&backgroundColor=059669,047857`,
       });
       setStep(2);
     } else if (emailInput.includes("@")) {
       setSelectedAccount({
         name: nameInput || emailInput.split("@")[0],
         email: emailInput,
-        avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(emailInput)}`,
+        avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(emailInput)}&backgroundColor=059669,047857`,
       });
       setStep(2);
     } else {
@@ -199,7 +199,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
     <div
       style={{
         minHeight: "100vh",
-        background: "radial-gradient(circle at 50% 20%, rgba(30, 58, 138, 0.45) 0%, rgba(15, 23, 42, 0.98) 70%, #030712 100%)",
+        background: "radial-gradient(circle at 50% 15%, rgba(16, 185, 129, 0.12) 0%, #0d131a 50%, #070a0e 100%)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -209,7 +209,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
         fontFamily: "'Inter', -apple-system, sans-serif",
       }}
     >
-      {/* Background Animated Blobs */}
+      {/* Background Ambient Tonal Blobs */}
       <div
         style={{
           position: "absolute",
@@ -217,7 +217,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
           left: "-100px",
           width: "500px",
           height: "500px",
-          background: "radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%)",
           filter: "blur(80px)",
           pointerEvents: "none",
         }}
@@ -229,23 +229,23 @@ export function Landing({ onSignInSuccess }: LandingProps) {
           right: "-100px",
           width: "500px",
           height: "500px",
-          background: "radial-gradient(circle, rgba(168, 85, 247, 0.25) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(217, 119, 6, 0.10) 0%, transparent 70%)",
           filter: "blur(80px)",
           pointerEvents: "none",
         }}
       />
 
-      {/* Main Large Dual Stage Container (1200px Big Box) */}
+      {/* Main Large Dual Stage Container */}
       <div
         style={{
           width: "100%",
           maxWidth: "1200px",
-          background: "rgba(15, 23, 42, 0.85)",
-          border: "1px solid rgba(79, 124, 255, 0.35)",
+          background: "rgba(18, 24, 32, 0.92)",
+          border: "1px solid rgba(255, 255, 255, 0.10)",
           backdropFilter: "blur(24px)",
           WebkitBackdropFilter: "blur(24px)",
           borderRadius: "28px",
-          boxShadow: "0 25px 60px rgba(0, 0, 0, 0.7), 0 0 50px rgba(59, 130, 246, 0.15)",
+          boxShadow: "0 25px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(16, 185, 129, 0.08)",
           overflow: "hidden",
           position: "relative",
           zIndex: 1,
@@ -278,14 +278,14 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                     style={{
                       padding: "4px 10px",
                       borderRadius: 8,
-                      background: "rgba(59, 130, 246, 0.2)",
-                      color: "#60a5fa",
+                      background: "rgba(16, 185, 129, 0.14)",
+                      color: "#34d399",
                       fontSize: "0.76rem",
                       fontWeight: 800,
-                      border: "1px solid rgba(59, 130, 246, 0.35)",
+                      border: "1px solid rgba(16, 185, 129, 0.3)",
                     }}
                   >
-                    🛡️ RAKSHAK AI PLATFORM
+                    🛡️ RAKSHAK SAFETY PLATFORM
                   </span>
                 </div>
 
@@ -307,7 +307,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                       padding: "4px 10px",
                       borderRadius: 6,
                       border: "none",
-                      background: voiceLanguage === "hindi" ? "#3b82f6" : "transparent",
+                      background: voiceLanguage === "hindi" ? "#059669" : "transparent",
                       color: voiceLanguage === "hindi" ? "#fff" : "#94a3b8",
                       fontSize: "0.75rem",
                       fontWeight: 700,
@@ -325,7 +325,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                       padding: "4px 10px",
                       borderRadius: 6,
                       border: "none",
-                      background: voiceLanguage === "english" ? "#3b82f6" : "transparent",
+                      background: voiceLanguage === "english" ? "#059669" : "transparent",
                       color: voiceLanguage === "english" ? "#fff" : "#94a3b8",
                       fontSize: "0.75rem",
                       fontWeight: 700,
@@ -353,17 +353,17 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                     flexShrink: 0,
                     borderRadius: "18px",
                     overflow: "hidden",
-                    border: isPlayingVoice ? "2.5px solid #38bdf8" : "2px solid rgba(79, 124, 255, 0.4)",
+                    border: isPlayingVoice ? "2.5px solid #10b981" : "2px solid rgba(255, 255, 255, 0.14)",
                     boxShadow: isPlayingVoice
-                      ? "0 0 30px rgba(56, 189, 248, 0.5), 0 10px 25px rgba(0,0,0,0.6)"
+                      ? "0 0 25px rgba(16, 185, 129, 0.45), 0 10px 25px rgba(0,0,0,0.6)"
                       : "0 10px 25px rgba(0,0,0,0.5)",
-                    background: "#0f172a",
+                    background: "#0d131a",
                     position: "relative",
                   }}
                 >
                   <img
                     src="/assets/presenter_character.jpg"
-                    alt="Rakshak AI Presenter"
+                    alt="Rakshak Safety Guide"
                     style={{
                       width: "100%",
                       height: "100%",
@@ -381,7 +381,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                         left: "50%",
                         transform: "translateX(-50%)",
                         padding: "2px 8px",
-                        background: "rgba(16, 185, 129, 0.9)",
+                        background: "rgba(16, 185, 129, 0.95)",
                         borderRadius: 10,
                         fontSize: "0.65rem",
                         fontWeight: 800,
@@ -398,7 +398,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                     "Navigate Smart. Stay Safe."
                   </h2>
                   <p style={{ fontSize: "0.82rem", color: "#94a3b8", margin: 0, lineHeight: 1.45 }}>
-                    Meet your personal AI Safety Navigator. We replace risky shortcuts with verified, well-lit, police-patrolled safe corridors.
+                    Meet your personal Safety Guide. We replace risky shortcuts with verified, well-lit, police-patrolled safe corridors.
                   </p>
                 </div>
               </div>
@@ -408,23 +408,23 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                 style={{
                   padding: "1.25rem",
                   borderRadius: "16px",
-                  background: "rgba(30, 41, 59, 0.45)",
+                  background: "rgba(24, 32, 43, 0.65)",
                   border: "1px solid rgba(255, 255, 255, 0.08)",
                   marginBottom: "1.5rem",
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
                   <span style={{ fontSize: "1.1rem" }}>🎙️</span>
-                  <span style={{ fontSize: "0.78rem", fontWeight: 800, color: "#38bdf8", textTransform: "uppercase" }}>
-                    {voiceLanguage === "hindi" ? "Safety Navigator ka Sandesh" : "Navigator Message"}
+                  <span style={{ fontSize: "0.78rem", fontWeight: 800, color: "#34d399", textTransform: "uppercase" }}>
+                    {voiceLanguage === "hindi" ? "Safety Guide ka Sandesh" : "Safety Briefing"}
                   </span>
                 </div>
                 <div style={{ fontSize: "0.95rem", color: "#f1f5f9", lineHeight: 1.55, fontWeight: 500, minHeight: "75px" }}>
-                  <span style={{ color: "#38bdf8", fontWeight: 800 }}>"</span>
+                  <span style={{ color: "#10b981", fontWeight: 800 }}>"</span>
                   <span style={{ color: "#e2e8f0" }}>
                     {activeDialogue[captionIdx] || activeDialogue[0]}
                   </span>
-                  <span style={{ color: "#38bdf8", fontWeight: 800 }}>"</span>
+                  <span style={{ color: "#10b981", fontWeight: 800 }}>"</span>
                 </div>
               </div>
             </div>
@@ -439,8 +439,8 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                   borderRadius: "12px",
                   background: isPlayingVoice
                     ? "linear-gradient(135deg, #ef4444, #dc2626)"
-                    : "linear-gradient(135deg, #3b82f6, #2563eb)",
-                  border: "1px solid rgba(255, 255, 255, 0.2)",
+                    : "linear-gradient(135deg, #059669, #047857)",
+                  border: "1px solid rgba(255, 255, 255, 0.15)",
                   color: "#fff",
                   fontWeight: 800,
                   fontSize: "0.88rem",
@@ -449,7 +449,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 8,
-                  boxShadow: "0 4px 15px rgba(59, 130, 246, 0.35)",
+                  boxShadow: "0 4px 15px rgba(5, 150, 105, 0.35)",
                 }}
               >
                 <span>{isPlayingVoice ? "⏹️ Stop Audio" : "🔊 Listen to Voice Message"}</span>
@@ -472,12 +472,12 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                 {/* Header */}
                 <div style={{ marginBottom: "1.25rem" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
-                    <span style={{ padding: "2px 8px", borderRadius: 6, background: "rgba(59, 130, 246, 0.2)", color: "#60a5fa", fontSize: "0.72rem", fontWeight: 800 }}>
-                      IDENTITY & ACCESS GATEWAY
+                    <span style={{ padding: "2px 8px", borderRadius: 6, background: "rgba(16, 185, 129, 0.15)", color: "#34d399", fontSize: "0.72rem", fontWeight: 800 }}>
+                      CITIZEN & RESPONDER ACCESS
                     </span>
                   </div>
                   <h3 style={{ fontSize: "1.35rem", fontWeight: 800, color: "#f8fafc", margin: "4px 0" }}>
-                    Sign in to Rakshak AI
+                    Sign in to Rakshak
                   </h3>
                   <p style={{ fontSize: "0.82rem", color: "#94a3b8", margin: 0 }}>
                     Enter credentials or use 1-click demo autofill, then continue.
@@ -498,9 +498,9 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                     width: "100%",
                     padding: "9px 12px",
                     borderRadius: "10px",
-                    background: "rgba(34, 197, 94, 0.14)",
-                    border: "1px solid rgba(34, 197, 94, 0.35)",
-                    color: "#4ade80",
+                    background: "rgba(16, 185, 129, 0.12)",
+                    border: "1px solid rgba(16, 185, 129, 0.3)",
+                    color: "#34d399",
                     fontWeight: 700,
                     fontSize: "0.8rem",
                     cursor: "pointer",
@@ -597,13 +597,14 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                       width: "100%",
                       padding: "11px",
                       borderRadius: "10px",
-                      background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
+                      background: "linear-gradient(135deg, #059669, #047857)",
                       border: "none",
                       color: "#fff",
                       fontWeight: 700,
                       fontSize: "0.88rem",
                       cursor: "pointer",
                       marginBottom: "0.5rem",
+                      boxShadow: "0 4px 14px rgba(5, 150, 105, 0.3)",
                     }}
                   >
                     {isLoggingIn ? "Signing in..." : "Sign In with Email"}
@@ -672,7 +673,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
               /* Step 2: Role & Purpose Selection */
               <div>
                 <div style={{ marginBottom: "1.25rem" }}>
-                  <span style={{ padding: "2px 8px", borderRadius: 6, background: "rgba(59, 130, 246, 0.2)", color: "#60a5fa", fontSize: "0.72rem", fontWeight: 800 }}>
+                  <span style={{ padding: "2px 8px", borderRadius: 6, background: "rgba(16, 185, 129, 0.15)", color: "#34d399", fontSize: "0.72rem", fontWeight: 800 }}>
                     STEP 2 OF 2 • PURPOSE SELECTION
                   </span>
                   <h3 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#f8fafc", margin: "6px 0 2px" }}>
@@ -717,16 +718,16 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                     width: "100%",
                     padding: "12px",
                     borderRadius: "12px",
-                    background: "linear-gradient(135deg, #3b82f6, #2563eb)",
+                    background: "linear-gradient(135deg, #059669, #047857)",
                     border: "none",
                     color: "#fff",
                     fontWeight: 800,
                     fontSize: "0.95rem",
                     cursor: "pointer",
-                    boxShadow: "0 4px 15px rgba(59, 130, 246, 0.4)",
+                    boxShadow: "0 4px 15px rgba(5, 150, 105, 0.35)",
                   }}
                 >
-                  {isLoggingIn ? "Launching Platform..." : "🚀 Enter Rakshak AI Dashboard"}
+                  {isLoggingIn ? "Launching Platform..." : "🛡️ Enter Rakshak Safety Dashboard"}
                 </button>
               </div>
             )}

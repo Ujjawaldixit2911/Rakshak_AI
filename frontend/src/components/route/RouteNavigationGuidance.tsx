@@ -247,7 +247,7 @@ export default function RouteNavigationGuidance({
                 padding: "4px 10px",
                 borderRadius: 6,
                 border: "none",
-                background: language === "hindi" ? "#4f7cff" : "transparent",
+                background: language === "hindi" ? "#059669" : "transparent",
                 color: language === "hindi" ? "#fff" : "#94a3b8",
                 fontSize: "0.75rem",
                 fontWeight: 700,
@@ -262,7 +262,7 @@ export default function RouteNavigationGuidance({
                 padding: "4px 10px",
                 borderRadius: 6,
                 border: "none",
-                background: language === "english" ? "#4f7cff" : "transparent",
+                background: language === "english" ? "#059669" : "transparent",
                 color: language === "english" ? "#fff" : "#94a3b8",
                 fontSize: "0.75rem",
                 fontWeight: 700,
@@ -331,7 +331,7 @@ export default function RouteNavigationGuidance({
 
         <div style={{ padding: "10px", borderRadius: 10, background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.06)" }}>
           <div style={{ fontSize: "0.7rem", color: "#94a3b8", textTransform: "uppercase", fontWeight: 700 }}>Estimated Travel Time</div>
-          <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "#60a5fa", marginTop: 2 }}>{safest.estimated_time_minutes} mins</div>
+          <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "#34d399", marginTop: 2 }}>{safest.estimated_time_minutes} mins</div>
         </div>
 
         <div style={{ padding: "10px", borderRadius: 10, background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.06)" }}>
@@ -341,7 +341,7 @@ export default function RouteNavigationGuidance({
 
         <div style={{ padding: "10px", borderRadius: 10, background: "rgba(255, 255, 255, 0.03)", border: "1px solid rgba(255, 255, 255, 0.06)" }}>
           <div style={{ fontSize: "0.7rem", color: "#94a3b8", textTransform: "uppercase", fontWeight: 700 }}>Key Checkpoints</div>
-          <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "#c084fc", marginTop: 2 }}>{scenes.length} Scenes</div>
+          <div style={{ fontSize: "1.2rem", fontWeight: 800, color: "#059669", marginTop: 2 }}>{scenes.length} Scenes</div>
         </div>
       </div>
 
@@ -351,7 +351,7 @@ export default function RouteNavigationGuidance({
           <span style={{ fontSize: "0.75rem", color: "#94a3b8", fontWeight: 700, textTransform: "uppercase" }}>
             📍 Interactive Route Scene Timeline (Click checkpoint to view)
           </span>
-          <span style={{ fontSize: "0.75rem", color: "#60a5fa", fontWeight: 700 }}>
+          <span style={{ fontSize: "0.75rem", color: "#10b981", fontWeight: 700 }}>
             Scene {activeSceneIndex + 1} of {scenes.length}
           </span>
         </div>
@@ -373,8 +373,8 @@ export default function RouteNavigationGuidance({
                   flex: "0 0 auto",
                   padding: "8px 14px",
                   borderRadius: 10,
-                  border: `1.5px solid ${isActive ? "#4f7cff" : "rgba(255, 255, 255, 0.08)"}`,
-                  background: isActive ? "rgba(79, 124, 255, 0.2)" : "rgba(255, 255, 255, 0.02)",
+                  border: `1.5px solid ${isActive ? "#10b981" : "rgba(255, 255, 255, 0.08)"}`,
+                  background: isActive ? "rgba(16, 185, 129, 0.2)" : "rgba(255, 255, 255, 0.02)",
                   color: isActive ? "#fff" : "#94a3b8",
                   cursor: "pointer",
                   display: "flex",
@@ -476,9 +476,9 @@ export default function RouteNavigationGuidance({
             }}
           >
             {language === "hindi" ? (
-              <div dangerouslySetInnerHTML={{ __html: currentScene.hindiInstruction.replace(/\*\*(.*?)\*\*/g, "<strong style='color:#60a5fa;'>$1</strong>") }} />
+              <div dangerouslySetInnerHTML={{ __html: currentScene.hindiInstruction.replace(/\*\*(.*?)\*\*/g, "<strong style='color:#34d399;'>$1</strong>") }} />
             ) : (
-              <div dangerouslySetInnerHTML={{ __html: currentScene.englishInstruction.replace(/\*\*(.*?)\*\*/g, "<strong style='color:#60a5fa;'>$1</strong>") }} />
+              <div dangerouslySetInnerHTML={{ __html: currentScene.englishInstruction.replace(/\*\*(.*?)\*\*/g, "<strong style='color:#34d399;'>$1</strong>") }} />
             )}
           </div>
 
@@ -634,8 +634,8 @@ export default function RouteNavigationGuidance({
                 style={{
                   padding: "10px 14px",
                   borderRadius: 10,
-                  background: isSelected ? "rgba(79, 124, 255, 0.1)" : "rgba(255, 255, 255, 0.02)",
-                  border: `1px solid ${isSelected ? "#4f7cff" : "rgba(255, 255, 255, 0.05)"}`,
+                  background: isSelected ? "rgba(5, 150, 105, 0.12)" : "rgba(255, 255, 255, 0.02)",
+                  border: `1px solid ${isSelected ? "#059669" : "rgba(255, 255, 255, 0.05)"}`,
                   cursor: "pointer",
                   transition: "all 0.2s",
                 }}
@@ -647,7 +647,7 @@ export default function RouteNavigationGuidance({
                         width: 22,
                         height: 22,
                         borderRadius: "50%",
-                        background: isSelected ? "#4f7cff" : "rgba(255,255,255,0.1)",
+                        background: isSelected ? "#059669" : "rgba(255,255,255,0.1)",
                         color: "#fff",
                         display: "flex",
                         alignItems: "center",

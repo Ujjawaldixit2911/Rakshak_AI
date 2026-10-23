@@ -107,7 +107,7 @@ export default function FamilySafetyModal({
               <div style={{ fontSize: "0.9rem", fontWeight: 700, color: "#f1f5f9" }}>
                 📍 {origin || "Connaught Place"} → {destination || "Saket"} ({city})
               </div>
-              <div style={{ fontSize: "0.78rem", color: "#38bdf8", marginTop: 4 }}>
+              <div style={{ fontSize: "0.78rem", color: "#34d399", marginTop: 4 }}>
                 Estimated Transit ETA: ~25 minutes
               </div>
             </div>
@@ -118,16 +118,17 @@ export default function FamilySafetyModal({
               style={{
                 width: "100%",
                 padding: "12px",
-                background: "linear-gradient(135deg, #3b82f6, #2563eb)",
+                background: "linear-gradient(135deg, #059669, #047857)",
                 border: "none",
                 borderRadius: "10px",
                 color: "#fff",
                 fontWeight: 700,
                 fontSize: "0.9rem",
                 cursor: "pointer",
+                boxShadow: "0 4px 14px rgba(5, 150, 105, 0.35)",
               }}
             >
-              {loading ? "Generating Live Safety Link..." : "🚀 Generate Live Family Tracking Link"}
+              {loading ? "Generating Live Safety Link..." : "🛡️ Generate Live Family Tracking Link"}
             </button>
           </div>
         ) : (
@@ -135,14 +136,14 @@ export default function FamilySafetyModal({
             <div
               style={{
                 padding: "14px",
-                background: "rgba(34, 197, 94, 0.15)",
-                border: "1px solid rgba(34, 197, 94, 0.3)",
+                background: "rgba(5, 150, 105, 0.15)",
+                border: "1px solid rgba(5, 150, 105, 0.3)",
                 borderRadius: "10px",
                 marginBottom: "1rem",
               }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#86efac" }}>
+                <span style={{ fontSize: "0.75rem", fontWeight: 800, color: "#6ee7b7" }}>
                   ● LIVE TRACKING ACTIVE
                 </span>
                 <span style={{ fontSize: "0.72rem", color: "#94a3b8" }}>
@@ -170,7 +171,7 @@ export default function FamilySafetyModal({
                   onClick={copyShareLink}
                   style={{
                     padding: "8px 14px",
-                    background: copied ? "#22c55e" : "#3b82f6",
+                    background: copied ? "#059669" : "#0f766e",
                     border: "none",
                     borderRadius: "8px",
                     color: "#fff",

@@ -18,19 +18,19 @@ export default function HeroAvatarPresenter({
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
   const hindiDialogue = [
-    "Namaste! Main hoon aapka Rakshak AI Safety Navigator.",
+    "Namaste! Main hoon aapka Rakshak Safety Guide.",
     "Conventional maps aapko sirf sabse chhota ya fastest rasta dikhate hain, chahe wo kitna bhi sunsaan ya khatarnak kyu na ho.",
-    "Lekin Rakshak AI par hum real-time crime incidents, unlit blindspots, aur accident zones ko bypass karte hain.",
+    "Lekin Rakshak par hum real-time crime incidents, unlit blindspots, aur accident zones ko bypass karte hain.",
     "Chahe do minute extra lagein, par hum aapko sabse safe aur fully illuminated route provide karenge!",
-    "Now you can login and explore the live safety map. Chaliye shuru karte hain!"
+    "Now you can explore the live safety map. Chaliye shuru karte hain!"
   ];
 
   const englishDialogue = [
-    "Hello! I am your Rakshak AI Safety Navigator.",
+    "Hello! I am your Rakshak Safety Guide.",
     "Standard navigation apps only focus on the shortest or fastest path, even if it takes you through dark and risky alleys.",
-    "Rakshak AI analyzes real crime hotspots, street lighting, and police patrolling to compute the safest possible route.",
+    "Rakshak analyzes real crime hotspots, street lighting, and police patrolling to compute the safest possible route.",
     "Even if it takes 2 minutes more, we ensure you always reach your destination safely and securely.",
-    "Now you can log in to explore the live safety platform. Let's get started!"
+    "Now you can explore the live safety platform. Let's get started!"
   ];
 
   const activeDialogue = language === "hindi" ? hindiDialogue : englishDialogue;
@@ -114,12 +114,12 @@ export default function HeroAvatarPresenter({
     <div
       style={{
         position: "relative",
-        background: "linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(13, 24, 41, 0.98) 50%, rgba(8, 15, 29, 1) 100%)",
-        border: "1px solid rgba(79, 124, 255, 0.35)",
+        background: "linear-gradient(135deg, rgba(18, 24, 32, 0.98) 0%, rgba(13, 19, 26, 0.98) 50%, rgba(10, 14, 20, 1) 100%)",
+        border: "1px solid rgba(255, 255, 255, 0.10)",
         borderRadius: "24px",
         padding: "2rem",
         marginBottom: "2rem",
-        boxShadow: "0 20px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(59, 130, 246, 0.15)",
+        boxShadow: "0 20px 50px rgba(0, 0, 0, 0.6), 0 0 35px rgba(16, 185, 129, 0.08)",
         overflow: "hidden",
       }}
     >
@@ -131,7 +131,7 @@ export default function HeroAvatarPresenter({
           left: "20%",
           width: "350px",
           height: "350px",
-          background: "radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%)",
           filter: "blur(60px)",
           pointerEvents: "none",
         }}
@@ -143,7 +143,7 @@ export default function HeroAvatarPresenter({
           right: "10%",
           width: "300px",
           height: "300px",
-          background: "radial-gradient(circle, rgba(168, 85, 247, 0.2) 0%, transparent 70%)",
+          background: "radial-gradient(circle, rgba(217, 119, 6, 0.10) 0%, transparent 70%)",
           filter: "blur(50px)",
           pointerEvents: "none",
         }}
@@ -177,17 +177,17 @@ export default function HeroAvatarPresenter({
               height: "420px",
               borderRadius: "20px",
               overflow: "hidden",
-              border: isPlaying ? "2px solid #38bdf8" : "2px solid rgba(79, 124, 255, 0.4)",
+              border: isPlaying ? "2px solid #10b981" : "2px solid rgba(255, 255, 255, 0.14)",
               boxShadow: isPlaying
-                ? "0 0 35px rgba(56, 189, 248, 0.5), 0 15px 30px rgba(0, 0, 0, 0.7)"
+                ? "0 0 25px rgba(16, 185, 129, 0.45), 0 15px 30px rgba(0, 0, 0, 0.7)"
                 : "0 15px 35px rgba(0, 0, 0, 0.6)",
-              background: "linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.95) 100%)",
+              background: "linear-gradient(180deg, rgba(24, 32, 43, 0.7) 0%, rgba(13, 19, 26, 0.95) 100%)",
               transition: "all 0.3s ease",
             }}
           >
             <img
               src="/assets/presenter_character.jpg"
-              alt="Rakshak AI Safety Presenter"
+              alt="Rakshak Safety Guide"
               style={{
                 width: "100%",
                 height: "100%",
@@ -206,7 +206,7 @@ export default function HeroAvatarPresenter({
                 left: "14px",
                 padding: "4px 12px",
                 borderRadius: "20px",
-                background: isPlaying ? "rgba(16, 185, 129, 0.9)" : "rgba(15, 23, 42, 0.8)",
+                background: isPlaying ? "rgba(16, 185, 129, 0.95)" : "rgba(18, 24, 32, 0.85)",
                 border: "1px solid rgba(255, 255, 255, 0.2)",
                 backdropFilter: "blur(8px)",
                 color: "#fff",
@@ -223,11 +223,11 @@ export default function HeroAvatarPresenter({
                   width: "8px",
                   height: "8px",
                   borderRadius: "50%",
-                  background: isPlaying ? "#fff" : "#38bdf8",
+                  background: isPlaying ? "#fff" : "#10b981",
                   animation: isPlaying ? "pulse 1.2s infinite" : "none",
                 }}
               />
-              <span>{isPlaying ? "🎙️ SPEAKING LIVE" : "👤 AI SAFETY GUIDE"}</span>
+              <span>{isPlaying ? "🎙️ SPEAKING LIVE" : "🛡️ SAFETY GUIDE"}</span>
             </div>
 
             {/* Audio Waveform Animation when playing */}
@@ -243,18 +243,18 @@ export default function HeroAvatarPresenter({
                   gap: "4px",
                   padding: "6px 14px",
                   borderRadius: "20px",
-                  background: "rgba(15, 23, 42, 0.85)",
+                  background: "rgba(18, 24, 32, 0.90)",
                   backdropFilter: "blur(10px)",
-                  border: "1px solid rgba(56, 189, 248, 0.4)",
+                  border: "1px solid rgba(16, 185, 129, 0.4)",
                 }}
               >
-                <div style={{ width: 3, height: 16, background: "#38bdf8", borderRadius: 2, animation: "wave 0.8s infinite" }} />
-                <div style={{ width: 3, height: 24, background: "#818cf8", borderRadius: 2, animation: "wave 0.6s infinite 0.1s" }} />
-                <div style={{ width: 3, height: 12, background: "#38bdf8", borderRadius: 2, animation: "wave 0.9s infinite 0.2s" }} />
-                <div style={{ width: 3, height: 20, background: "#c084fc", borderRadius: 2, animation: "wave 0.7s infinite 0.15s" }} />
-                <div style={{ width: 3, height: 14, background: "#38bdf8", borderRadius: 2, animation: "wave 0.85s infinite 0.05s" }} />
+                <div style={{ width: 3, height: 16, background: "#10b981", borderRadius: 2, animation: "wave 0.8s infinite" }} />
+                <div style={{ width: 3, height: 24, background: "#34d399", borderRadius: 2, animation: "wave 0.6s infinite 0.1s" }} />
+                <div style={{ width: 3, height: 12, background: "#059669", borderRadius: 2, animation: "wave 0.9s infinite 0.2s" }} />
+                <div style={{ width: 3, height: 20, background: "#6ee7b7", borderRadius: 2, animation: "wave 0.7s infinite 0.15s" }} />
+                <div style={{ width: 3, height: 14, background: "#10b981", borderRadius: 2, animation: "wave 0.85s infinite 0.05s" }} />
                 <span style={{ fontSize: "0.72rem", color: "#e2e8f0", fontWeight: 700, marginLeft: 4 }}>
-                  Human Voice Active
+                  Voice Briefing
                 </span>
               </div>
             )}
@@ -279,14 +279,14 @@ export default function HeroAvatarPresenter({
                 style={{
                   padding: "4px 10px",
                   borderRadius: 8,
-                  background: "rgba(59, 130, 246, 0.2)",
-                  color: "#60a5fa",
+                  background: "rgba(16, 185, 129, 0.14)",
+                  color: "#34d399",
                   fontSize: "0.78rem",
                   fontWeight: 800,
-                  border: "1px solid rgba(59, 130, 246, 0.35)",
+                  border: "1px solid rgba(16, 185, 129, 0.3)",
                 }}
               >
-                🛡️ RAKSHAK AI PLATFORM MISSION
+                🛡️ RAKSHAK PUBLIC SAFETY NETWORK
               </span>
               <span style={{ fontSize: "0.8rem", color: "#94a3b8" }}>
                 "Navigate Smart. Stay Safe."
@@ -312,7 +312,7 @@ export default function HeroAvatarPresenter({
                   padding: "5px 12px",
                   borderRadius: 7,
                   border: "none",
-                  background: language === "hindi" ? "#3b82f6" : "transparent",
+                  background: language === "hindi" ? "#059669" : "transparent",
                   color: language === "hindi" ? "#fff" : "#94a3b8",
                   fontSize: "0.78rem",
                   fontWeight: 700,
@@ -330,7 +330,7 @@ export default function HeroAvatarPresenter({
                   padding: "5px 12px",
                   borderRadius: 7,
                   border: "none",
-                  background: language === "english" ? "#3b82f6" : "transparent",
+                  background: language === "english" ? "#059669" : "transparent",
                   color: language === "english" ? "#fff" : "#94a3b8",
                   fontSize: "0.78rem",
                   fontWeight: 700,
@@ -347,7 +347,7 @@ export default function HeroAvatarPresenter({
             style={{
               padding: "1.5rem",
               borderRadius: "18px",
-              background: "rgba(30, 41, 59, 0.5)",
+              background: "rgba(24, 32, 43, 0.65)",
               border: "1px solid rgba(255, 255, 255, 0.1)",
               backdropFilter: "blur(12px)",
               marginBottom: "1.5rem",
@@ -356,7 +356,7 @@ export default function HeroAvatarPresenter({
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
               <span style={{ fontSize: "1.2rem" }}>💬</span>
               <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#f8fafc", margin: 0 }}>
-                {language === "hindi" ? "Safety Navigator ka Sandesh:" : "Message from Safety Navigator:"}
+                {language === "hindi" ? "Safety Guide ka Sandesh:" : "Message from Safety Guide:"}
               </h3>
             </div>
 
@@ -371,11 +371,11 @@ export default function HeroAvatarPresenter({
               }}
             >
               <p style={{ margin: "0 0 10px 0" }}>
-                <strong style={{ color: "#38bdf8" }}>"</strong>
+                <strong style={{ color: "#10b981" }}>"</strong>
                 <span style={{ color: "#e2e8f0", fontWeight: 600 }}>
                   {activeDialogue[currentCaptionIndex] || activeDialogue[0]}
                 </span>
-                <strong style={{ color: "#38bdf8" }}>"</strong>
+                <strong style={{ color: "#10b981" }}>"</strong>
               </p>
             </div>
 
@@ -393,19 +393,19 @@ export default function HeroAvatarPresenter({
               <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
                 <span style={{ fontSize: "1.1rem" }}>⏱️</span>
                 <div style={{ fontSize: "0.78rem", color: "#cbd5e1" }}>
-                  <strong style={{ color: "#f8fafc" }}>Fastest vs Safest:</strong> Shortest route nahi, balki low-crime corridor guarantee.
+                  <strong style={{ color: "#f8fafc" }}>Fastest vs Safest:</strong> Low-risk, well-lit verified corridor prioritization.
                 </div>
               </div>
               <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
                 <span style={{ fontSize: "1.1rem" }}>💡</span>
                 <div style={{ fontSize: "0.78rem", color: "#cbd5e1" }}>
-                  <strong style={{ color: "#f8fafc" }}>Street Illumination:</strong> Unlit aur isolated blindspots ko 100% bypass.
+                  <strong style={{ color: "#f8fafc" }}>Street Illumination:</strong> Unlit aur isolated blindspots ko bypass.
                 </div>
               </div>
               <div style={{ display: "flex", alignItems: "flex-start", gap: 8 }}>
                 <span style={{ fontSize: "1.1rem" }}>👮</span>
                 <div style={{ fontSize: "0.78rem", color: "#cbd5e1" }}>
-                  <strong style={{ color: "#f8fafc" }}>Police & CCTV Patrol:</strong> 24x7 monitored arterial highways priority.
+                  <strong style={{ color: "#f8fafc" }}>Police & CCTV Patrol:</strong> Verified 24x7 patrolled avenues.
                 </div>
               </div>
             </div>
@@ -421,8 +421,8 @@ export default function HeroAvatarPresenter({
                 borderRadius: "12px",
                 background: isPlaying
                   ? "linear-gradient(135deg, #ef4444, #dc2626)"
-                  : "linear-gradient(135deg, #3b82f6, #2563eb)",
-                border: "1px solid rgba(255, 255, 255, 0.25)",
+                  : "linear-gradient(135deg, #059669, #047857)",
+                border: "1px solid rgba(255, 255, 255, 0.2)",
                 color: "#fff",
                 fontWeight: 800,
                 fontSize: "0.92rem",
@@ -432,11 +432,11 @@ export default function HeroAvatarPresenter({
                 gap: 8,
                 boxShadow: isPlaying
                   ? "0 6px 20px rgba(239, 68, 68, 0.4)"
-                  : "0 6px 20px rgba(59, 130, 246, 0.4)",
+                  : "0 6px 20px rgba(5, 150, 105, 0.35)",
                 transition: "all 0.2s ease",
               }}
             >
-              <span>{isPlaying ? "⏹️ Stop Audio" : "🔊 Listen to Avatar (Human Voice)"}</span>
+              <span>{isPlaying ? "⏹️ Stop Audio" : "🔊 Listen to Safety Guide"}</span>
             </button>
 
             {/* Explore Safe Navigation Button */}
@@ -462,7 +462,7 @@ export default function HeroAvatarPresenter({
               </button>
             )}
 
-            {/* Talk with AI Copilot Button */}
+            {/* Talk with Assistant Button */}
             {onOpenCopilot && (
               <button
                 onClick={onOpenCopilot}
@@ -480,7 +480,7 @@ export default function HeroAvatarPresenter({
                   gap: 8,
                 }}
               >
-                <span>🤖 Ask AI Copilot</span>
+                <span>🛡️ Open Safety Assistant</span>
               </button>
             )}
           </div>

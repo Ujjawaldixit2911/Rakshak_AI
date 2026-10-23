@@ -45,9 +45,9 @@ export const ThreeRouteSelector: React.FC<ThreeRouteSelectorProps> = ({
       type: "balanced",
       route: comparisonData.balanced,
       icon: Scale,
-      themeColor: "text-cyan-400",
-      borderActive: "border-cyan-500 shadow-cyan-950/40",
-      bgBadge: "bg-cyan-950/80 text-cyan-300 border-cyan-800",
+      themeColor: "text-sky-400",
+      borderActive: "border-sky-500 shadow-slate-950/40",
+      bgBadge: "bg-slate-800 text-sky-200 border-slate-700",
     },
   ];
 
@@ -64,7 +64,7 @@ export const ThreeRouteSelector: React.FC<ThreeRouteSelectorProps> = ({
         <h4 className="text-xs font-bold uppercase tracking-wider text-slate-400">
           Select Optimized Navigation Route
         </h4>
-        <span className="text-[10px] font-mono text-cyan-400">
+        <span className="text-[10px] font-mono text-slate-400">
           {comparisonData.evaluatedAlternativesCount} Alternatives Evaluated
         </span>
       </div>
@@ -84,7 +84,7 @@ export const ThreeRouteSelector: React.FC<ThreeRouteSelectorProps> = ({
               }`}
             >
               {isSelected && (
-                <div className="absolute top-3 right-3 p-1 rounded-full bg-cyan-500 text-slate-950">
+                <div className="absolute top-3 right-3 p-1 rounded-full bg-emerald-600 text-white">
                   <Check className="w-3 h-3 stroke-[3]" />
                 </div>
               )}

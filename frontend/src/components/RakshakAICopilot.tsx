@@ -45,8 +45,8 @@ export default function RakshakAICopilot({
     {
       id: "welcome",
       sender: "bot",
-      text: "👋 **Namaste! Main Rakshak AI Copilot (Supervisor Agent) hoon.**\n\nMain real-time database tools call karke safety analysis, safe route trade-offs, pre-journey briefings, aur natural-language form filling provide karta hoon.\n\nBolkar ya type karke try karein: *'CP se Saket safe route at 10 PM'* ya *'Mera phone Karol Bagh me snatch hua'*. 🎙️",
-      dataConfidence: "High (Verified PostGIS & ML Stack)",
+      text: "👋 **Namaste! Main Rakshak Safety Assistant hoon.**\n\nAapki suraksha ke liye verified crime data, safe corridors, emergency navigation, aur hazard incident reporting me sahayata ke liye tayyar hoon.\n\nBolkar ya type karke puchein: *'CP se Saket safe route at 10 PM'* ya *'Mera phone Karol Bagh me snatch hua'*. 🛡️",
+      dataConfidence: "High (Verified PostGIS & GIS Stack)",
     },
   ]);
   const [inputValue, setInputValue] = useState("");
@@ -460,7 +460,7 @@ function parseRouteQuery(query: string, currentCity: string) {
       <button
         id="rakshak-copilot-launcher"
         onClick={() => setIsOpen(!isOpen)}
-        title="Open Rakshak AI Copilot"
+        title="Open Rakshak Safety Assistant"
         style={{
           position: "fixed",
           bottom: "24px",
@@ -470,11 +470,11 @@ function parseRouteQuery(query: string, currentCity: string) {
           alignItems: "center",
           gap: "10px",
           padding: "12px 20px",
-          background: "linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #ec4899 100%)",
+          background: "linear-gradient(135deg, #059669 0%, #047857 100%)",
           color: "#fff",
           border: "1px solid rgba(255, 255, 255, 0.3)",
           borderRadius: "50px",
-          boxShadow: "0 8px 32px rgba(59, 130, 246, 0.4)",
+          boxShadow: "0 8px 24px rgba(5, 150, 105, 0.4)",
           cursor: "pointer",
           fontWeight: 700,
           fontSize: "14px",
@@ -483,13 +483,13 @@ function parseRouteQuery(query: string, currentCity: string) {
           transform: isOpen ? "scale(0.95)" : "scale(1)",
         }}
       >
-        <span style={{ fontSize: "18px" }}>🤖</span>
-        <span>Rakshak AI Copilot</span>
+        <span style={{ fontSize: "18px" }}>🛡️</span>
+        <span>Rakshak Assistant</span>
         {routeData && (
           <span
             style={{
               padding: "2px 7px",
-              background: "#22c55e",
+              background: "#10b981",
               borderRadius: "10px",
               fontSize: "10px",
               fontWeight: 800,
@@ -542,34 +542,34 @@ function parseRouteQuery(query: string, currentCity: string) {
                   height: "38px",
                   borderRadius: "10px",
                   overflow: "hidden",
-                  border: "1.5px solid rgba(79, 124, 255, 0.6)",
-                  boxShadow: "0 2px 8px rgba(79, 124, 255, 0.4)",
+                  border: "1.5px solid rgba(16, 185, 129, 0.6)",
+                  boxShadow: "0 2px 8px rgba(16, 185, 129, 0.4)",
                   background: "#1e293b",
                 }}
               >
                 <img
                   src="/assets/presenter_character.jpg"
-                  alt="AI Avatar"
+                  alt="Safety Guide"
                   style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "top" }}
                 />
               </div>
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <h3 style={{ margin: 0, fontSize: "14px", fontWeight: 700 }}>Rakshak AI Copilot</h3>
+                  <h3 style={{ margin: 0, fontSize: "14px", fontWeight: 700 }}>Rakshak Assistant</h3>
                   <span
                     style={{
                       fontSize: "9px",
                       padding: "2px 6px",
                       borderRadius: "4px",
-                      background: adminMode ? "#ef4444" : "#10b981",
+                      background: adminMode ? "#ef4444" : "#059669",
                       fontWeight: 800,
                     }}
                   >
-                    {adminMode ? "POLICE INTEL" : "SUPERVISOR"}
+                    {adminMode ? "POLICE INTEL" : "SAFETY NETWORK"}
                   </span>
                 </div>
                 <span style={{ fontSize: "11px", color: "#94a3b8" }}>
-                  Multi-Agent · Zero-Hallucination Tools · PostGIS
+                  Autonomous Routing · Verified Incident Network · Real-Time GIS
                 </span>
               </div>
             </div>
@@ -597,7 +597,7 @@ function parseRouteQuery(query: string, currentCity: string) {
                 style={{
                   background: "transparent",
                   border: "none",
-                  color: ttsEnabled ? "#38bdf8" : "#64748b",
+                  color: ttsEnabled ? "#10b981" : "#64748b",
                   cursor: "pointer",
                   fontSize: "15px",
                   padding: "4px",
@@ -640,14 +640,14 @@ function parseRouteQuery(query: string, currentCity: string) {
                 padding: "7px",
                 borderRadius: "8px",
                 border: "none",
-                background: activeTab === "chat" ? "rgba(59, 130, 246, 0.25)" : "transparent",
-                color: activeTab === "chat" ? "#60a5fa" : "#94a3b8",
+                background: activeTab === "chat" ? "rgba(5, 150, 105, 0.25)" : "transparent",
+                color: activeTab === "chat" ? "#34d399" : "#94a3b8",
                 fontWeight: 600,
                 fontSize: "12px",
                 cursor: "pointer",
               }}
             >
-              💬 Supervisor Chat
+              💬 Safety Advisory
             </button>
             <button
               onClick={() => setActiveTab("traverser")}
@@ -691,7 +691,7 @@ function parseRouteQuery(query: string, currentCity: string) {
                           m.sender === "user" ? "16px 16px 4px 16px" : "16px 16px 16px 4px",
                         background:
                           m.sender === "user"
-                            ? "linear-gradient(135deg, #3b82f6, #2563eb)"
+                            ? "linear-gradient(135deg, #059669, #047857)"
                             : "rgba(30, 41, 59, 0.9)",
                         border: "1px solid rgba(255, 255, 255, 0.1)",
                         fontSize: "13px",
@@ -723,10 +723,10 @@ function parseRouteQuery(query: string, currentCity: string) {
                                 style={{
                                   fontSize: "9.5px",
                                   padding: "2px 6px",
-                                  background: "rgba(59, 130, 246, 0.2)",
-                                  color: "#93c5fd",
+                                  background: "rgba(5, 150, 105, 0.2)",
+                                  color: "#6ee7b7",
                                   borderRadius: "4px",
-                                  border: "1px solid rgba(59, 130, 246, 0.3)",
+                                  border: "1px solid rgba(5, 150, 105, 0.3)",
                                 }}
                               >
                                 {t.tool}() ✓
@@ -753,7 +753,7 @@ function parseRouteQuery(query: string, currentCity: string) {
                                 background: "rgba(255, 255, 255, 0.08)",
                                 border: "1px solid rgba(255, 255, 255, 0.15)",
                                 borderRadius: "6px",
-                                color: "#38bdf8",
+                                color: "#10b981",
                                 padding: "2px 6px",
                                 fontSize: "10.5px",
                                 cursor: "pointer",
@@ -802,13 +802,13 @@ function parseRouteQuery(query: string, currentCity: string) {
                   <div
                     style={{
                       padding: "14px",
-                      background: "rgba(59, 130, 246, 0.15)",
-                      border: "1px solid rgba(59, 130, 246, 0.4)",
+                      background: "rgba(5, 150, 105, 0.15)",
+                      border: "1px solid rgba(5, 150, 105, 0.4)",
                       borderRadius: "12px",
                       fontSize: "12.5px",
                     }}
                   >
-                    <div style={{ fontWeight: 800, color: "#60a5fa", marginBottom: "6px" }}>
+                    <div style={{ fontWeight: 800, color: "#34d399", marginBottom: "6px" }}>
                       📝 Review Auto-Filled Incident Report
                     </div>
                     <div style={{ color: "#cbd5e1", lineHeight: 1.4, marginBottom: "10px" }}>
@@ -822,7 +822,7 @@ function parseRouteQuery(query: string, currentCity: string) {
                         style={{
                           flex: 1,
                           padding: "8px",
-                          background: "#3b82f6",
+                          background: "#059669",
                           border: "none",
                           borderRadius: "8px",
                           color: "#fff",
@@ -996,7 +996,7 @@ function parseRouteQuery(query: string, currentCity: string) {
                   disabled={!inputValue.trim() || loading}
                   style={{
                     padding: "9px 15px",
-                    background: "#3b82f6",
+                    background: "#059669",
                     border: "none",
                     borderRadius: "10px",
                     color: "#fff",
@@ -1056,7 +1056,7 @@ function parseRouteQuery(query: string, currentCity: string) {
                       style={{
                         padding: "16px",
                         background: "rgba(30, 41, 59, 0.9)",
-                        border: "1px solid rgba(59, 130, 246, 0.4)",
+                        border: "1px solid rgba(5, 150, 105, 0.4)",
                         borderRadius: "14px",
                       }}
                     >
@@ -1071,7 +1071,7 @@ function parseRouteQuery(query: string, currentCity: string) {
                         <span
                           style={{
                             padding: "2px 7px",
-                            background: "#3b82f6",
+                            background: "#059669",
                             borderRadius: "6px",
                             fontSize: "10px",
                             fontWeight: 700,
@@ -1097,7 +1097,7 @@ function parseRouteQuery(query: string, currentCity: string) {
                           background: "rgba(255, 255, 255, 0.05)",
                           borderRadius: "8px",
                           fontSize: "11.5px",
-                          color: "#93c5fd",
+                          color: "#6ee7b7",
                         }}
                       >
                         🧭 <strong>Advisory:</strong> {routeSteps[currentStepIdx].action_prompt}
@@ -1117,7 +1117,7 @@ function parseRouteQuery(query: string, currentCity: string) {
                         style={{
                           flex: 1,
                           padding: "10px",
-                          background: "#22c55e",
+                          background: "#059669",
                           color: "#fff",
                           border: "none",
                           borderRadius: "10px",
@@ -1135,7 +1135,7 @@ function parseRouteQuery(query: string, currentCity: string) {
                           style={{
                             flex: 1,
                             padding: "10px",
-                            background: "#3b82f6",
+                            background: "#059669",
                             color: "#fff",
                             border: "none",
                             borderRadius: "10px",

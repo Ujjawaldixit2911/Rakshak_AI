@@ -33,9 +33,9 @@ const createPoliceIcon = () =>
     html: `
       <div style="
         width: 34px; height: 34px; border-radius: 8px;
-        background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        background: linear-gradient(135deg, #0f766e, #0d9488);
         border: 2px solid #ffffff;
-        box-shadow: 0 4px 14px rgba(30, 58, 138, 0.6);
+        box-shadow: 0 4px 14px rgba(15, 118, 110, 0.6);
         display: flex; align-items: center; justify-content: center;
         font-size: 16px; color: white;
       ">

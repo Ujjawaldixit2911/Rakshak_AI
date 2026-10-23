@@ -153,9 +153,9 @@ export const RouteMapView: React.FC<RouteMapViewProps> = ({
             <Polyline
               positions={polylineCoords}
               pathOptions={{
-                color: "#0284c7",
+                color: "#059669",
                 weight: 8,
-                opacity: 0.4,
+                opacity: 0.35,
                 lineCap: "round",
                 lineJoin: "round",
               }}
@@ -164,7 +164,7 @@ export const RouteMapView: React.FC<RouteMapViewProps> = ({
             <Polyline
               positions={polylineCoords}
               pathOptions={{
-                color: "#06b6d4",
+                color: "#10b981",
                 weight: 4,
                 opacity: 0.95,
                 lineCap: "round",

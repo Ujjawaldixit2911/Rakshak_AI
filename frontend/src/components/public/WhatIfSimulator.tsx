@@ -204,7 +204,7 @@ export default function WhatIfSimulator({
                   padding: "6px 4px",
                   borderRadius: "6px",
                   border: "none",
-                  background: selectedMode === m ? (m === "safest" ? "#10b981" : "#3b82f6") : "rgba(255, 255, 255, 0.05)",
+                  background: selectedMode === m ? (m === "safest" ? "#10b981" : "#475569") : "rgba(255, 255, 255, 0.05)",
                   color: "#fff",
                   fontSize: "0.75rem",
                   fontWeight: 600,

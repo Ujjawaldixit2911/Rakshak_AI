@@ -50,7 +50,7 @@ export default function AIInsightsPanel({ spike, anomalies, patterns }: Props) {
           <p style={{ fontSize: "0.85rem", color: "#4ade80" }}>✓ No significant anomalies detected in recent data.</p>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-            {anomalies.anomalies.slice(0, 3).map((a, i) => (
+            {anomalies.anomalies.slice(0, 3).map((a: any, i: number) => (
               <div key={i} style={{
                 display: "flex", justifyContent: "space-between", alignItems: "center",
                 padding: "8px 12px", borderRadius: 8,

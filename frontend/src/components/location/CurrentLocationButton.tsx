@@ -41,10 +41,10 @@ export const CurrentLocationButton: React.FC<CurrentLocationButtonProps> = ({
         onClick={handleClick}
         disabled={loading}
         title="Locate Current Position"
-        className={`p-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 hover:border-cyan-500/60 text-cyan-400 hover:text-cyan-300 hover:bg-slate-800 transition-all shadow-md active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+        className={`p-2.5 rounded-xl bg-slate-900/90 border border-slate-700/80 hover:border-amber-500/60 text-amber-400 hover:text-amber-300 hover:bg-slate-800 transition-all shadow-sm active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
       >
         {loading ? (
-          <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
+          <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
         ) : (
           <Crosshair className="w-4 h-4" />
         )}
@@ -58,21 +58,21 @@ export const CurrentLocationButton: React.FC<CurrentLocationButtonProps> = ({
         type="button"
         onClick={handleClick}
         disabled={loading}
-        className="group relative flex items-center justify-center gap-2.5 px-4 py-3 rounded-xl bg-gradient-to-r from-cyan-600/20 to-blue-600/20 hover:from-cyan-500/30 hover:to-blue-500/30 border border-cyan-500/40 hover:border-cyan-400/80 text-cyan-300 hover:text-cyan-100 font-medium text-xs tracking-wide transition-all duration-200 shadow-lg shadow-cyan-950/40 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
+        className="group relative flex items-center justify-center gap-2.5 px-4 py-3 rounded-xl bg-slate-900/90 hover:bg-slate-800/90 border border-amber-500/40 hover:border-amber-400 text-amber-200 hover:text-white font-medium text-xs tracking-wide transition-all duration-200 shadow-md active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
       >
         {/* Radar pulsing ring when loading */}
         {loading && (
           <span className="absolute inset-0 flex items-center justify-center">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-xl bg-cyan-400 opacity-20"></span>
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-xl bg-amber-400 opacity-20"></span>
           </span>
         )}
 
         {loading ? (
-          <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
+          <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
         ) : coordinates ? (
           <Check className="w-4 h-4 text-emerald-400" />
         ) : (
-          <Navigation className="w-4 h-4 text-cyan-400 group-hover:rotate-45 transition-transform duration-200" />
+          <Navigation className="w-4 h-4 text-amber-400 group-hover:rotate-45 transition-transform duration-200" />
         )}
 
         <span>
@@ -84,7 +84,7 @@ export const CurrentLocationButton: React.FC<CurrentLocationButtonProps> = ({
         </span>
 
         {coordinates && (
-          <span className="ml-auto text-[10px] font-mono px-2 py-0.5 rounded bg-cyan-950/80 text-cyan-400 border border-cyan-800/60">
+          <span className="ml-auto text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950/60 text-amber-300 border border-amber-800/60">
             ±{Math.round(coordinates.accuracy)}m
           </span>
         )}
@@ -95,7 +95,7 @@ export const CurrentLocationButton: React.FC<CurrentLocationButtonProps> = ({
         <div className="px-3 py-2 rounded-lg bg-slate-900/60 border border-slate-800 text-[11px] text-slate-300 font-mono flex items-center gap-2">
           {reverseGeocoding ? (
             <>
-              <Loader2 className="w-3 h-3 animate-spin text-cyan-400" />
+              <Loader2 className="w-3 h-3 animate-spin text-amber-400" />
               <span className="text-slate-400">Resolving street address...</span>
             </>
           ) : address ? (

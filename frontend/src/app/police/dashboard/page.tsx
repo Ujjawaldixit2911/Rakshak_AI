@@ -37,7 +37,7 @@ import { KPICard } from "@/components/shared/KPICard";
 
 type Tab = "analytics" | "hotspots" | "moderation" | "sos_monitor" | "patrol_map";
 
-const CHART_PALETTE = ["#0284c7", "#6366f1", "#8b5cf6", "#ec4899", "#f59e0b", "#10b981", "#06b6d4"];
+const CHART_PALETTE = ["#059669", "#0f766e", "#10b981", "#d97706", "#f59e0b", "#e11d48", "#64748b"];
 
 function getFallbackPoliceDashboard(cityName: string) {
   return {
@@ -373,9 +373,9 @@ export default function PoliceCommandDashboard() {
           <KPICard
             label="Recorded Crimes"
             value={summary.total_crimes_recorded || 4820}
-            icon={<BarChart3 className="w-5 h-5 text-[#0284c7]" />}
+            icon={<BarChart3 className="w-5 h-5 text-[#0f766e]" />}
             caption="FIRs & Law Enforcement logs"
-            accentColor="blue"
+            accentColor="green"
             delta={{ value: "Historical dataset", isPositive: true }}
           />
 
@@ -393,9 +393,9 @@ export default function PoliceCommandDashboard() {
             value={Number(summary.avg_police_response_time_minutes || 6.8)}
             suffix=" min"
             decimals={1}
-            icon={<Clock className="w-5 h-5 text-[#0284c7]" />}
+            icon={<Clock className="w-5 h-5 text-[#059669]" />}
             caption="From SOS trigger to scene"
-            accentColor="blue"
+            accentColor="green"
             delta={{ value: "-1.2 min efficiency", isPositive: true }}
           />
 

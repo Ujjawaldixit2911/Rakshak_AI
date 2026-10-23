@@ -64,14 +64,14 @@ export default function Navbar() {
               width: 36,
               height: 36,
               borderRadius: "50%",
-              background: "linear-gradient(135deg, #0284c7, #2563eb)",
+              background: "linear-gradient(135deg, #059669, #047857)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               fontSize: 17,
               fontWeight: 900,
               color: "#fff",
-              boxShadow: "0 2px 10px rgba(2, 132, 199, 0.35)",
+              boxShadow: "0 2px 10px rgba(5, 150, 105, 0.35)",
               border: "1px solid rgba(255, 255, 255, 0.2)",
             }}>
               🛡️
@@ -79,11 +79,11 @@ export default function Navbar() {
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                 <span style={{ fontWeight: 900, fontSize: "1.05rem", color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
-                  Rakshak<span style={{ color: "var(--accent-primary)" }}>AI</span>
+                  Rakshak<span style={{ color: "var(--accent-primary)", marginLeft: 2, fontSize: "0.78rem", fontWeight: 700, opacity: 0.9 }}>NETWORK</span>
                 </span>
               </div>
               <span style={{ display: "block", fontSize: "0.64rem", color: "var(--text-muted)", fontWeight: 600, letterSpacing: "0.02em", marginTop: -2 }}>
-                Safety & Smart Navigation
+                Public Safety & Safe Navigation
               </span>
             </div>
           </Link>

@@ -115,7 +115,7 @@ export const PlatformHealthDrawer: React.FC = () => {
 
                   <div className="bg-slate-900/70 border border-slate-800 p-3 rounded-xl flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2.5">
-                      <Cpu className="w-4 h-4 text-blue-400" />
+                      <Cpu className="w-4 h-4 text-emerald-400" />
                       <div>
                         <span className="font-semibold text-slate-200 block">Gaussian Risk Engine</span>
                         <span className="text-[11px] text-slate-400 font-mono">Deterministic formula</span>
@@ -126,7 +126,7 @@ export const PlatformHealthDrawer: React.FC = () => {
 
                   <div className="bg-slate-900/70 border border-slate-800 p-3 rounded-xl flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2.5">
-                      <Route className="w-4 h-4 text-indigo-400" />
+                      <Route className="w-4 h-4 text-amber-400" />
                       <div>
                         <span className="font-semibold text-slate-200 block">OSRM Safe Routing</span>
                         <span className="text-[11px] text-slate-400 font-mono">Safe / Fast / Balanced</span>
@@ -190,11 +190,11 @@ export const PlatformHealthDrawer: React.FC = () => {
                     Read & Navigation
                   </div>
                   <div className="bg-slate-900/60 p-2 rounded-lg border border-slate-800 text-slate-300">
-                    <span className="text-blue-400 block font-bold">POLICE_OFFICER</span>
+                    <span className="text-amber-400 block font-bold">POLICE_OFFICER</span>
                     Cases & Patrol HUD
                   </div>
                   <div className="bg-slate-900/60 p-2 rounded-lg border border-slate-800 text-slate-300">
-                    <span className="text-indigo-400 block font-bold">COMMANDER</span>
+                    <span className="text-teal-400 block font-bold">COMMANDER</span>
                     Resource Allocation
                   </div>
                   <div className="bg-slate-900/60 p-2 rounded-lg border border-slate-800 text-slate-300">

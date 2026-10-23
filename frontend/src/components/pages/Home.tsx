@@ -114,7 +114,7 @@ function generateFallbackRoutePlan(
       police_booth_count: 1,
       route_label: "Direct Inner Bypass",
     },
-    safety_explanation: "Rakshak AI selected the Arterial Safe Corridor routing via well-lit main boulevards with 5 active PCR patrolling units, bypassing 2 low-lighting alleyway clusters.",
+    safety_explanation: "Rakshak Safe Navigation selected the Arterial Safe Corridor routing via well-lit main boulevards with 5 active PCR patrolling units, bypassing 2 low-lighting alleyway clusters.",
     trade_off: {
       safety_benefit_pct: 84,
       time_overhead_mins: 4.0,
@@ -447,8 +447,8 @@ export default function CitizenPortal() {
           <div style={{
             width: 48,
             height: 48,
-            border: "3px solid rgba(79, 124, 255, 0.2)",
-            borderTopColor: "#4f7cff",
+            border: "3px solid rgba(5, 150, 105, 0.2)",
+            borderTopColor: "#059669",
             borderRadius: "50%",
             animation: "spin 0.8s linear infinite",
             margin: "0 auto 16px",
@@ -494,7 +494,7 @@ export default function CitizenPortal() {
                 background: "var(--accent-primary)",
                 boxShadow: "0 0 8px var(--accent-primary)",
               }} />
-              <span>🛡️ Rakshak AI • Real-Time AI Public Safety & Route Intelligence</span>
+              <span>🛡️ Rakshak Public Safety • Real-Time Route Protection & Incident Avoidance</span>
             </div>
 
             {/* CareSync Style Bold Headline */}
@@ -509,7 +509,7 @@ export default function CitizenPortal() {
             }}>
               Navigate Smart.<br />
               <span style={{
-                background: "linear-gradient(135deg, #0284c7 0%, #2563eb 50%, #7c3aed 100%)",
+                background: "linear-gradient(135deg, #059669 0%, #0d9488 50%, #10b981 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
               }}>
@@ -543,7 +543,7 @@ export default function CitizenPortal() {
                 style={{
                   padding: "12px 24px",
                   borderRadius: "12px",
-                  background: "linear-gradient(135deg, #0284c7 0%, #0369a1 100%)",
+                  background: "linear-gradient(135deg, #059669 0%, #047857 100%)",
                   border: "none",
                   color: "#fff",
                   fontSize: "0.92rem",
@@ -552,7 +552,7 @@ export default function CitizenPortal() {
                   display: "flex",
                   alignItems: "center",
                   gap: 8,
-                  boxShadow: "0 4px 14px rgba(2, 132, 199, 0.35)",
+                  boxShadow: "0 4px 14px rgba(5, 150, 105, 0.35)",
                   transition: "all 0.15s ease",
                 }}
               >
@@ -560,7 +560,7 @@ export default function CitizenPortal() {
                 <span style={{ fontSize: "1.05rem" }}>→</span>
               </button>
 
-              {/* Feature 2: AI Voice Copilot */}
+              {/* Feature 2: Safety Assistant */}
               <button
                 onClick={openCopilot}
                 style={{
@@ -578,7 +578,7 @@ export default function CitizenPortal() {
                   boxShadow: "var(--shadow-card)",
                 }}
               >
-                <span>🤖 Open AI Copilot</span>
+                <span>🛡️ Open Safety Assistant</span>
               </button>
 
               {/* Feature 3: Emergency Action Hub */}
@@ -622,7 +622,7 @@ export default function CitizenPortal() {
                   gap: 8,
                 }}
               >
-                <span>🎙️ AI Presenter</span>
+                <span>🎙️ Safety Guide</span>
               </button>
             </div>
 
@@ -654,7 +654,7 @@ export default function CitizenPortal() {
               </div>
               <span style={{ color: "var(--text-muted)" }}>•</span>
               <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: "0.82rem", color: "var(--text-secondary)" }}>
-                <span style={{ color: "#7c3aed", fontWeight: 800 }}>⚡ 0.4s</span> AI Optimization
+                <span style={{ color: "#059669", fontWeight: 800 }}>⚡ 0.4s</span> Route Optimization
               </div>
             </div>
           </div>
@@ -671,9 +671,9 @@ export default function CitizenPortal() {
         {/* ── 4. 4-PILLAR CORE SAFETY ARCHITECTURE ─────────────────────────────── */}
         <section id="four-pillars-section" style={{ marginBottom: "3rem" }}>
           <SectionHeader
-            badge="NEXT-GEN SAFETY ENGINE"
-            title="4-Pillar Autonomous Intelligence Stack"
-            description="Explore the four core modules powering Rakshak AI's threat neutralization architecture."
+            badge="SAFETY NAVIGATION ENGINE"
+            title="4-Pillar Incident & Route Intelligence Stack"
+            description="Explore the four core modules powering Rakshak's threat neutralization architecture."
             align="center"
           />
 
@@ -710,7 +710,7 @@ export default function CitizenPortal() {
                   📍
                 </div>
                 <div style={{ fontSize: "0.72rem", color: "#e11d48", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
-                  SPATIAL AI
+                  SPATIAL INTELLIGENCE
                 </div>
                 <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: "8px" }}>
                   DBSCAN Hotspot Clustering
@@ -875,7 +875,7 @@ export default function CitizenPortal() {
               </button>
             </div>
 
-            {/* Pillar 4: Conversational AI Copilot */}
+            {/* Pillar 4: Conversational Safety Assistant */}
             <div style={{
               background: "var(--bg-card)",
               border: "1px solid var(--border-subtle)",
@@ -892,8 +892,8 @@ export default function CitizenPortal() {
                   width: 44,
                   height: 44,
                   borderRadius: "12px",
-                  background: "rgba(124, 58, 237, 0.1)",
-                  border: "1px solid rgba(124, 58, 237, 0.25)",
+                  background: "rgba(5, 150, 105, 0.1)",
+                  border: "1px solid rgba(5, 150, 105, 0.25)",
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
@@ -902,11 +902,11 @@ export default function CitizenPortal() {
                 }}>
                   🎙️
                 </div>
-                <div style={{ fontSize: "0.72rem", color: "#7c3aed", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
-                  CONVERSATIONAL AI
+                <div style={{ fontSize: "0.72rem", color: "#059669", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 4 }}>
+                  VOICE NAVIGATION
                 </div>
                 <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-primary)", marginBottom: "8px" }}>
-                  Multilingual Voice Copilot
+                  Multilingual Safety Assistant
                 </h3>
                 <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: 1.5, marginBottom: "1.25rem" }}>
                   Hands-free natural Hindi & English voice assistant for instant route computation, hazard reporting & SOS.
@@ -919,9 +919,9 @@ export default function CitizenPortal() {
                   width: "100%",
                   padding: "9px 14px",
                   borderRadius: "10px",
-                  background: "rgba(124, 58, 237, 0.1)",
-                  border: "1px solid rgba(124, 58, 237, 0.3)",
-                  color: "#7c3aed",
+                  background: "rgba(5, 150, 105, 0.1)",
+                  border: "1px solid rgba(5, 150, 105, 0.3)",
+                  color: "#059669",
                   fontSize: "0.82rem",
                   fontWeight: 800,
                   cursor: "pointer",
@@ -932,7 +932,7 @@ export default function CitizenPortal() {
                   transition: "all 0.15s ease",
                 }}
               >
-                <span>🤖 Chat with AI Voice Copilot</span>
+                <span>🛡️ Speak with Safety Assistant</span>
               </button>
             </div>
           </div>
@@ -967,7 +967,7 @@ export default function CitizenPortal() {
                   color: "var(--accent-primary)",
                   border: "1px solid var(--border-subtle)",
                 }}>
-                  🛡️ AI Hotspot & Safe Navigation Platform
+                  🛡️ Civic Hazard Mapping & Safe Corridor Engine
                 </span>
                 <span style={{
                   fontSize: "0.72rem",
@@ -1005,9 +1005,9 @@ export default function CitizenPortal() {
                     cursor: "pointer",
                     fontSize: "0.85rem",
                     fontWeight: 700,
-                    background: selectedCity === c.name ? "linear-gradient(135deg, #0284c7, #0369a1)" : "transparent",
+                    background: selectedCity === c.name ? "linear-gradient(135deg, #059669, #047857)" : "transparent",
                     color: selectedCity === c.name ? "#fff" : "var(--text-secondary)",
-                    boxShadow: selectedCity === c.name ? "0 2px 8px rgba(2,132,199,0.3)" : "none",
+                    boxShadow: selectedCity === c.name ? "0 2px 8px rgba(5,150,105,0.3)" : "none",
                     transition: "all 0.15s ease"
                   }}
                 >
@@ -1346,7 +1346,7 @@ export default function CitizenPortal() {
                   width: "100%",
                   padding: "11px",
                   borderRadius: "10px",
-                  background: "linear-gradient(135deg, #0284c7, #0369a1)",
+                  background: "linear-gradient(135deg, #059669, #047857)",
                   border: "none",
                   color: "#fff",
                   fontSize: "0.86rem",
@@ -1356,7 +1356,7 @@ export default function CitizenPortal() {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 8,
-                  boxShadow: "0 4px 12px rgba(2, 132, 199, 0.3)",
+                  boxShadow: "0 4px 12px rgba(5, 150, 105, 0.3)",
                 }}
               >
                 <span>🛡️ Launch Family Safety Mode</span>
@@ -1456,7 +1456,7 @@ export default function CitizenPortal() {
                     <h3 style={{ fontSize: "1.05rem", fontWeight: 800, color: "var(--text-primary)", margin: 0 }}>
                       Interactive Voice Agent
                     </h3>
-                    <span style={{ fontSize: "0.72rem", color: "#6366f1", fontWeight: 700 }}>
+                    <span style={{ fontSize: "0.72rem", color: "#059669", fontWeight: 700 }}>
                       HANDS-FREE COMMUTE ESCORT
                     </span>
                   </div>
@@ -1472,7 +1472,7 @@ export default function CitizenPortal() {
                   width: "100%",
                   padding: "11px",
                   borderRadius: "10px",
-                  background: "linear-gradient(135deg, #6366f1, #4f46e5)",
+                  background: "linear-gradient(135deg, #059669, #047857)",
                   border: "none",
                   color: "#fff",
                   fontSize: "0.86rem",
@@ -1482,7 +1482,7 @@ export default function CitizenPortal() {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 8,
-                  boxShadow: "0 4px 12px rgba(99, 102, 241, 0.3)",
+                  boxShadow: "0 4px 12px rgba(5, 150, 105, 0.25)",
                 }}
               >
                 <span>🎙️ Launch Voice Agent</span>
@@ -1510,9 +1510,9 @@ export default function CitizenPortal() {
               value={14.2}
               suffix=" km"
               decimals={1}
-              icon={<MapPin className="w-5 h-5 text-[#0284c7]" />}
+              icon={<MapPin className="w-5 h-5 text-[#059669]" />}
               caption="High-density arterial highways with 100% illumination coverage"
-              accentColor="blue"
+              accentColor="green"
               delta={{ value: "+3.2 km newly illuminated", isPositive: true }}
             />
 
@@ -1660,7 +1660,7 @@ export default function CitizenPortal() {
                   width: "100%",
                   padding: "11px",
                   borderRadius: "10px",
-                  background: "linear-gradient(135deg, #0284c7, #0369a1)",
+                  background: "linear-gradient(135deg, #0f766e, #115e59)",
                   border: "none",
                   color: "#fff",
                   fontSize: "0.88rem",
@@ -1670,7 +1670,7 @@ export default function CitizenPortal() {
                   alignItems: "center",
                   justifyContent: "center",
                   gap: 8,
-                  boxShadow: "0 4px 12px rgba(2, 132, 199, 0.3)",
+                  boxShadow: "0 4px 12px rgba(15, 118, 110, 0.3)",
                 }}
               >
                 👮 Dispatch Police (112)
@@ -1769,13 +1769,13 @@ export default function CitizenPortal() {
               style={{
                 padding: "13px 26px",
                 borderRadius: "12px",
-                background: "linear-gradient(135deg, #0284c7, #0369a1)",
+                background: "linear-gradient(135deg, #059669, #047857)",
                 border: "none",
                 color: "#fff",
                 fontSize: "0.95rem",
                 fontWeight: 800,
                 cursor: "pointer",
-                boxShadow: "0 4px 14px rgba(2, 132, 199, 0.35)",
+                boxShadow: "0 4px 14px rgba(5, 150, 105, 0.35)",
               }}
             >
               🚀 Explore Safe Routes Now
@@ -1815,7 +1815,7 @@ export default function CitizenPortal() {
                 width: 32,
                 height: 32,
                 borderRadius: "50%",
-                background: "linear-gradient(135deg, #0284c7, #2563eb)",
+                background: "linear-gradient(135deg, #059669, #047857)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -1824,11 +1824,11 @@ export default function CitizenPortal() {
                 🛡️
               </div>
               <span style={{ fontWeight: 900, fontSize: "1.05rem", color: "var(--text-primary)" }}>
-                Rakshak<span style={{ color: "var(--accent-primary)" }}>AI</span>
+                Rakshak<span style={{ color: "var(--accent-primary)" }}>NETWORK</span>
               </span>
             </div>
             <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", lineHeight: 1.6 }}>
-              India's Autonomous AI Crime Intelligence & Safe Route Navigation Platform. Empowering citizens with real-time threat avoidance.
+              India's Public Safety & Safe Route Navigation Platform. Empowering citizens with real-time threat avoidance.
             </p>
           </div>
 
@@ -1841,7 +1841,7 @@ export default function CitizenPortal() {
               <span style={{ cursor: "pointer" }} onClick={() => { setSafetyMode("fastest"); scrollToMap(); }}>⚡ Fastest / Night Safety Mode</span>
               <span style={{ cursor: "pointer" }} onClick={() => { setSafetyMode("balanced"); scrollToMap(); }}>⚖️ Balanced Corridor</span>
               <span style={{ cursor: "pointer" }} onClick={scrollToMap}>🔥 Live Spatial Heatmap</span>
-              <span style={{ cursor: "pointer" }} onClick={openCopilot}>🤖 Multilingual AI Copilot</span>
+              <span style={{ cursor: "pointer" }} onClick={openCopilot}>🛡️ Multilingual Safety Assistant</span>
             </div>
           </div>
 

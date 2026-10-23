@@ -108,9 +108,9 @@ export default function PoliceLoginPage() {
               id="police-login-btn"
               type="submit"
               disabled={loading}
-              className="w-full h-12 rounded-xl text-white font-bold text-[15px] shadow-[0_4px_14px_rgba(2,132,199,0.35)] transition-all cursor-pointer disabled:opacity-50 mt-2"
+              className="w-full h-12 rounded-xl text-white font-bold text-[15px] shadow-[0_4px_14px_rgba(15,118,110,0.35)] transition-all cursor-pointer disabled:opacity-50 mt-2"
               style={{
-                background: "linear-gradient(135deg, #0284c7 0%, #0369a1 100%)",
+                background: "linear-gradient(135deg, #0f766e 0%, #0d9488 100%)",
               }}
             >
               {loading ? "Authenticating..." : "Authenticate & Access"}

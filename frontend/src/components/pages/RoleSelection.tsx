@@ -31,8 +31,8 @@ const ROLE_OPTIONS: RoleOption[] = [
     title: "Citizen",
     badge: "Daily Commutes",
     description: "Safe routes for everyday travel & family tracking",
-    color: "#0284c7",
-    accentBg: "rgba(2, 132, 199, 0.1)",
+    color: "#059669",
+    accentBg: "rgba(5, 150, 105, 0.1)",
   },
   {
     key: "corporate",
@@ -40,8 +40,8 @@ const ROLE_OPTIONS: RoleOption[] = [
     title: "Working Professional",
     badge: "Late Shifts & Cabs",
     description: "Safe transit for late shifts, cabs & departure simulation",
-    color: "#0891b2",
-    accentBg: "rgba(8, 145, 178, 0.1)",
+    color: "#0f766e",
+    accentBg: "rgba(15, 118, 110, 0.1)",
   },
   {
     key: "emergency",
@@ -49,8 +49,8 @@ const ROLE_OPTIONS: RoleOption[] = [
     title: "Ambulance / Responder",
     badge: "Emergency Medical",
     description: "Rapid response routing, hospital POIs & safe corridors",
-    color: "#059669",
-    accentBg: "rgba(5, 150, 105, 0.1)",
+    color: "#10b981",
+    accentBg: "rgba(16, 185, 129, 0.1)",
   },
   {
     key: "police",
@@ -137,7 +137,7 @@ export function RoleSelection({ onContinue }: RoleSelectionProps) {
                   transition-all duration-200 outline-none
                   ${
                     isSelected
-                      ? "bg-[var(--bg-card)] border-[var(--accent-primary)] shadow-[0_4px_20px_rgba(2,132,199,0.18)] ring-2 ring-[var(--accent-primary)]"
+                      ? "bg-[var(--bg-card)] border-[var(--accent-primary)] shadow-[0_4px_20px_rgba(5,150,105,0.18)] ring-2 ring-[var(--accent-primary)]"
                       : "bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] border-[var(--border-subtle)] hover:border-[var(--border-focus)] shadow-[var(--shadow-card)]"
                   }
                   border group
@@ -191,9 +191,9 @@ export function RoleSelection({ onContinue }: RoleSelectionProps) {
             type="button"
             disabled={!selectedRole || isSubmitting}
             onClick={handleConfirmRole}
-            className="w-full min-h-[50px] text-[15px] font-bold text-white rounded-xl flex items-center justify-center gap-2 shadow-[0_4px_16px_rgba(2,132,199,0.35)] transition-all cursor-pointer disabled:opacity-50"
+            className="w-full min-h-[50px] text-[15px] font-bold text-white rounded-xl flex items-center justify-center gap-2 shadow-[0_4px_16px_rgba(5,150,105,0.35)] transition-all cursor-pointer disabled:opacity-50"
             style={{
-              background: "linear-gradient(135deg, #0284c7 0%, #0369a1 100%)",
+              background: "linear-gradient(135deg, #059669 0%, #047857 100%)",
             }}
           >
             {isSubmitting ? (
@@ -203,7 +203,7 @@ export function RoleSelection({ onContinue }: RoleSelectionProps) {
               </>
             ) : (
               <>
-                <span>Continue to Rakshak AI</span>
+                <span>Continue to Rakshak Dashboard</span>
                 <ArrowRight className="w-4 h-4" />
               </>
             )}
@@ -217,7 +217,7 @@ export function RoleSelection({ onContinue }: RoleSelectionProps) {
 
       {/* Footer */}
       <footer className="w-full text-center py-2 z-10 text-[11px] text-[var(--text-muted)]">
-        Rakshak AI • Role-Based Safety Platform
+        Rakshak • Role-Based Safety Platform
       </footer>
     </PageBackground>
   );

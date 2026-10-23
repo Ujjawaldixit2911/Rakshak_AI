@@ -25,8 +25,8 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 export default function ForecastChart({ data }: Props) {
   // Merge historical + forecast into one series
   const allPoints = [
-    ...data.historical.map(p => ({ date: p.date.slice(5), actual: p.incidents, forecast: null, low: null, high: null })),
-    ...data.forecast.map(p => ({ date: p.date.slice(5), actual: null, forecast: p.incidents, low: p.conf_low, high: p.conf_high })),
+    ...data.historical.map((p: any) => ({ date: p.date.slice(5), actual: p.incidents, forecast: null, low: null, high: null })),
+    ...data.forecast.map((p: any) => ({ date: p.date.slice(5), actual: null, forecast: p.incidents, low: p.conf_low, high: p.conf_high })),
   ];
 
   const splitIdx = data.historical.length;
@@ -61,8 +61,8 @@ export default function ForecastChart({ data }: Props) {
           <ComposedChart data={allPoints} margin={{ left: 0, right: 8, top: 4, bottom: 0 }}>
             <defs>
               <linearGradient id="confBand" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%"  stopColor="#4f7cff" stopOpacity={0.25} />
-                <stop offset="95%" stopColor="#4f7cff" stopOpacity={0.03} />
+                <stop offset="5%"  stopColor="#d97706" stopOpacity={0.25} />
+                <stop offset="95%" stopColor="#d97706" stopOpacity={0.03} />
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" vertical={false} />
@@ -76,8 +76,8 @@ export default function ForecastChart({ data }: Props) {
             <Area dataKey="high" stroke="none" fill="url(#confBand)" legendType="none" />
             <Area dataKey="low" stroke="none" fill="#070d1a" legendType="none" />
             {/* Lines */}
-            <Line dataKey="actual" name="Historical" stroke="#60a5fa" strokeWidth={2} dot={false} connectNulls={false} />
-            <Line dataKey="forecast" name="Forecast" stroke="#4f7cff" strokeWidth={2.5} strokeDasharray="6 3" dot={{ fill: "#4f7cff", r: 3 }} connectNulls={false} />
+            <Line dataKey="actual" name="Historical" stroke="#059669" strokeWidth={2} dot={false} connectNulls={false} />
+            <Line dataKey="forecast" name="Forecast" stroke="#d97706" strokeWidth={2.5} strokeDasharray="6 3" dot={{ fill: "#d97706", r: 3 }} connectNulls={false} />
             <Legend
               formatter={(v) => <span style={{ color: "#8899bb", fontSize: "0.78rem" }}>{v}</span>}
               iconType="circle" iconSize={8}

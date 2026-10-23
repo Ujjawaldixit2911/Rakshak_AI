@@ -74,12 +74,12 @@ export const LocationSearchAutocomplete: React.FC<LocationSearchAutocompleteProp
   return (
     <div ref={containerRef} className={`relative w-full ${className}`}>
       {/* Search Input Box */}
-      <div className="relative flex items-center w-full bg-slate-900/90 border border-slate-700/80 hover:border-cyan-500/50 focus-within:border-cyan-500 rounded-xl transition-all duration-200 shadow-lg shadow-black/40 backdrop-blur-md">
-        <div className="pl-4 pr-2 text-cyan-400">
+      <div className="relative flex items-center w-full bg-slate-900/90 border border-slate-700/80 hover:border-amber-500/50 focus-within:border-amber-500 rounded-xl transition-all duration-200 shadow-lg shadow-black/40 backdrop-blur-md">
+        <div className="pl-4 pr-2 text-amber-400">
           {loading ? (
-            <Loader2 className="w-5 h-5 animate-spin text-cyan-400" />
+            <Loader2 className="w-5 h-5 animate-spin text-amber-400" />
           ) : (
-            <Search className="w-5 h-5 text-slate-400 group-hover:text-cyan-400 transition-colors" />
+            <Search className="w-5 h-5 text-slate-400 group-hover:text-amber-400 transition-colors" />
           )}
         </div>
 
@@ -116,8 +116,8 @@ export const LocationSearchAutocomplete: React.FC<LocationSearchAutocompleteProp
       {isOpen && query.trim().length >= 2 && (
         <div className="absolute z-50 left-0 right-0 mt-2 bg-slate-900/95 border border-slate-700 rounded-xl shadow-2xl backdrop-blur-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
           {loading && !result && (
-            <div className="flex items-center gap-3 px-4 py-4 text-xs font-mono text-cyan-300/80">
-              <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
+            <div className="flex items-center gap-3 px-4 py-4 text-xs font-mono text-slate-300">
+              <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
               <span>Resolving coordinates via Nominatim proxy...</span>
             </div>
           )}
@@ -137,25 +137,25 @@ export const LocationSearchAutocomplete: React.FC<LocationSearchAutocompleteProp
               <button
                 type="button"
                 onClick={() => handleSelect(result)}
-                className="w-full text-left p-3 rounded-lg hover:bg-cyan-950/40 border border-transparent hover:border-cyan-500/30 transition-all duration-150 group flex items-start gap-3"
+                className="w-full text-left p-3 rounded-lg hover:bg-slate-800/80 border border-transparent hover:border-amber-500/30 transition-all duration-150 group flex items-start gap-3"
               >
-                <div className="p-2 rounded-lg bg-cyan-950/80 text-cyan-400 border border-cyan-800/50 group-hover:bg-cyan-500 group-hover:text-slate-950 transition-colors">
+                <div className="p-2 rounded-lg bg-slate-800 text-amber-400 border border-slate-700 group-hover:bg-amber-500 group-hover:text-slate-950 transition-colors">
                   <MapPin className="w-4 h-4" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="text-xs font-semibold text-slate-100 group-hover:text-cyan-300 transition-colors line-clamp-2">
+                  <div className="text-xs font-semibold text-slate-100 group-hover:text-amber-300 transition-colors line-clamp-2">
                     {result.address}
                   </div>
                   <div className="flex items-center gap-2 mt-1.5 font-mono text-[10px] text-slate-400">
-                    <span className="px-1.5 py-0.5 rounded bg-slate-800/80 text-cyan-300 border border-slate-700">
+                    <span className="px-1.5 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700">
                       Lat: {result.latitude.toFixed(4)}°
                     </span>
-                    <span className="px-1.5 py-0.5 rounded bg-slate-800/80 text-cyan-300 border border-slate-700">
+                    <span className="px-1.5 py-0.5 rounded bg-slate-800/80 text-slate-300 border border-slate-700">
                       Lon: {result.longitude.toFixed(4)}°
                     </span>
                   </div>
                 </div>
-                <CheckCircle2 className="w-4 h-4 text-slate-500 group-hover:text-cyan-400 shrink-0 mt-1" />
+                <CheckCircle2 className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 shrink-0 mt-1" />
               </button>
             </div>
           )}
@@ -163,7 +163,7 @@ export const LocationSearchAutocomplete: React.FC<LocationSearchAutocompleteProp
           {/* Rate-limit compliance note */}
           <div className="px-4 py-2 bg-slate-950/60 border-t border-slate-800/60 text-[10px] font-mono text-slate-400 flex items-center justify-between">
             <span>Nominatim Cached Proxy Engine</span>
-            <span className="text-cyan-400">Rakshak AI Location</span>
+            <span className="text-slate-400">Rakshak Civic Geocoding</span>
           </div>
         </div>
       )}

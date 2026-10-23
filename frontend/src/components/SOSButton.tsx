@@ -123,7 +123,7 @@ export default function SOSButton({
                 width: 48,
                 height: 48,
                 borderRadius: "50%",
-                background: "linear-gradient(135deg, #3b82f6, #1d4ed8)",
+                background: "linear-gradient(135deg, #0f766e, #115e59)",
                 border: "2px solid rgba(255,255,255,0.3)",
                 color: "#fff",
                 fontSize: "1.2rem",
@@ -131,7 +131,7 @@ export default function SOSButton({
                 alignItems: "center",
                 justifyContent: "center",
                 cursor: "pointer",
-                boxShadow: "0 4px 14px rgba(59, 130, 246, 0.5)",
+                boxShadow: "0 4px 14px rgba(15, 118, 110, 0.5)",
                 transition: "transform 0.15s",
               }}
               onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.15)")}

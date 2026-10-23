@@ -229,7 +229,7 @@ export default function InteractiveSafetyMap({
           <Polyline
             positions={fastestCoords}
             pathOptions={{
-              color: "#60a5fa",
+              color: "#64748b",
               weight: activeRouteTab === "fastest" ? 6 : 3,
               opacity: activeRouteTab === "fastest" ? 0.95 : 0.45,
               dashArray: activeRouteTab === "fastest" ? undefined : "6, 8",
@@ -286,7 +286,7 @@ export default function InteractiveSafetyMap({
               transition: "all 0.2s"
             }}
           >
-            🛡️ AI Safest Route ({routeData.safest_route?.average_safety_score}/100)
+            🛡️ Recommended Safe Corridor ({routeData.safest_route?.average_safety_score}/100)
           </button>
           <button
             onClick={() => setActiveRouteTab("fastest")}
@@ -297,7 +297,7 @@ export default function InteractiveSafetyMap({
               fontSize: "0.78rem",
               fontWeight: 700,
               cursor: "pointer",
-              background: activeRouteTab === "fastest" ? "#3b82f6" : "transparent",
+              background: activeRouteTab === "fastest" ? "#475569" : "transparent",
               color: activeRouteTab === "fastest" ? "#ffffff" : "#94a3b8",
               transition: "all 0.2s"
             }}
@@ -317,7 +317,7 @@ export default function InteractiveSafetyMap({
           zIndex: 1000,
           background: "rgba(15, 23, 42, 0.95)",
           backdropFilter: "blur(14px)",
-          border: `1px solid ${clickedScore.color || "#4f7cff"}55`,
+          border: `1px solid ${clickedScore.color || "#059669"}55`,
           borderRadius: "14px",
           padding: "1rem",
           boxShadow: "0 10px 30px rgba(0,0,0,0.6)",

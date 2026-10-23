@@ -51,7 +51,7 @@ export default function HotspotCard({ hotspot, index }: Props) {
 
       {topCrimeTypes.length > 0 && (
         <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-          {topCrimeTypes.map(t => (
+          {topCrimeTypes.map((t: string) => (
             <span key={t} style={{ fontSize: "0.72rem", padding: "2px 8px", borderRadius: 99, background: "rgba(255,255,255,0.07)", color: "var(--color-text-secondary)" }}>{t}</span>
           ))}
         </div>

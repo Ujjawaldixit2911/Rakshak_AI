@@ -17,7 +17,7 @@ const RouteMapView = dynamic(
     ssr: false,
     loading: () => (
       <div className="w-full h-[420px] rounded-2xl bg-slate-900 flex items-center justify-center border border-slate-800 text-slate-500 font-mono text-xs">
-        <Loader2 className="w-5 h-5 animate-spin mr-2 text-cyan-400" />
+        <Loader2 className="w-5 h-5 animate-spin mr-2 text-emerald-400" />
         Loading Leaflet Map Engine...
       </div>
     ),
@@ -51,7 +51,7 @@ export const RouteNavigationWidget: React.FC = () => {
       {/* Route Inputs Card */}
       <div className="p-6 rounded-2xl bg-slate-900/90 border border-slate-700/80 shadow-2xl backdrop-blur-xl space-y-4">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-xl bg-cyan-950/80 border border-cyan-800/60 text-cyan-400">
+          <div className="p-2 rounded-xl bg-emerald-950/60 border border-emerald-800/60 text-emerald-400">
             <Navigation className="w-5 h-5" />
           </div>
           <div>
@@ -109,11 +109,11 @@ export const RouteNavigationWidget: React.FC = () => {
             type="button"
             onClick={handleCalculate}
             disabled={!sourcePoint || !destPoint || loading}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-bold text-xs tracking-wide uppercase transition-all shadow-lg shadow-cyan-950/60 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95"
+            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs tracking-wide uppercase transition-all shadow-md shadow-emerald-950/50 border border-emerald-500/40 disabled:opacity-40 disabled:cursor-not-allowed active:scale-95"
           >
             {loading ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+                <Loader2 className="w-4 h-4 animate-spin text-white" />
                 <span>Computing OSRM Route...</span>
               </>
             ) : (

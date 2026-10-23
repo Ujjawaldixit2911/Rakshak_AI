@@ -1,56 +1,74 @@
 version: '3.8'
 
 services:
-  # ─── PostgreSQL + PostGIS Geospatial Database ──────────────────────────────
-  db:
-    image: postgis/postgis:15-3.3-alpine
-    container_name: rakshak_postgis_db
+  mongodb:
+    image: mongo:7.0
+    container_name: rakshak-mongodb
     restart: always
-    environment:
-      POSTGRES_USER: rakshak
-      POSTGRES_PASSWORD: rakshakpass
-      POSTGRES_DB: rakshak_db
     ports:
-      - "5432:5432"
+      - "27017:27017"
     volumes:
-      - pgdata:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U rakshak -d rakshak_db"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      - mongo_data:/data/db
+    networks:
+      - rakshak-net
 
-  # ─── FastAPI Backend & ML Engine ───────────────────────────────────────────
+  ml-service:
+    build:
+      context: ./ml
+      dockerfile: Dockerfile
+    container_name: rakshak-ml-service
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+    networks:
+      - rakshak-net
+
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: rakshak_backend
+    container_name: rakshak-backend
     restart: always
-    environment:
-      - DATABASE_URL=postgresql://rakshak:rakshakpass@db:5432/rakshak_db
-      - GROQ_API_KEY=${GROQ_API_KEY:-}
     ports:
-      - "8000:8000"
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - NODE_ENV=production
+      - MONGO_URI=mongodb://mongodb:27017/rakshak_ai
+      - JWT_SECRET=rakshak-ai-super-secret-jwt-key-prod-38491823
+      - JWT_EXPIRES_IN=7d
+      - CLIENT_URL=http://localhost:3000
+      - OSRM_URL=https://router.project-osrm.org
+      - NOMINATIM_URL=https://nominatim.openstreetmap.org
+      - ML_SERVICE_URL=http://ml-service:8000
+      - EMERGENCY_NUMBER=112
     depends_on:
-      db:
-        condition: service_healthy
-    volumes:
-      - ./backend/data:/app/data
+      - mongodb
+      - ml-service
+    networks:
+      - rakshak-net
 
-  # ─── Next.js Citizen Portal & Police Dashboard ─────────────────────────────
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: rakshak_frontend
+    container_name: rakshak-frontend
     restart: always
-    environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
     ports:
       - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000/api
+      - NEXT_PUBLIC_SOCKET_URL=http://localhost:5000
     depends_on:
       - backend
+    networks:
+      - rakshak-net
 
 volumes:
-  pgdata:
+  mongo_data:
+
+networks:
+  rakshak-net:
+    driver: bridge

@@ -62,7 +62,7 @@ export default function CrimeHeatmap({ center, heatmap, hotspots, zoom = 13 }: P
       };
       (hotspots || []).forEach(h => {
         if (!h || typeof h.lat !== "number" || typeof h.lng !== "number") return;
-        const color = RISK_COLORS[h.risk_level] || (h as any).color || "#f59e0b";
+        const color = (h.risk_level && RISK_COLORS[h.risk_level]) || (h as any).color || "#f59e0b";
         const count = (h as any)?.crime_count ?? (h as any)?.crimes_count ?? 0;
         const intensityPct = Math.round(((h as any)?.intensity ?? 0.5) * 100);
         const icon = L.divIcon({

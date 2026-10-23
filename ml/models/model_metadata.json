@@ -1,0 +1,28 @@
+{
+  "modelVersion": "1.0.0-rf-demo",
+  "modelType": "RandomForestRegressor",
+  "trainedAt": "2026-10-05T16:32:15.499072",
+  "datasetSize": 3000,
+  "features": [
+    "latitude",
+    "longitude",
+    "crimeDensity",
+    "historicalCrimeCount",
+    "hour",
+    "dayOfWeek",
+    "isWeekend",
+    "isNight"
+  ],
+  "metrics": {
+    "mae": 3.052,
+    "rmse": 3.847,
+    "r2": 0.9762
+  },
+  "hyperparameters": {
+    "n_estimators": 100,
+    "max_depth": 12,
+    "min_samples_split": 4
+  },
+  "isDemo": true,
+  "disclaimer": "DEMO MODEL - TRAINED FOR DEMO AND SYNTHETIC VALIDATION. NOT FOR REAL-WORLD LIFE-CRITICAL USE."
+}
