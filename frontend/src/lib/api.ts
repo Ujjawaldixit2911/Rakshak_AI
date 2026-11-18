@@ -542,8 +542,44 @@ export const api: any = {
       }
     };
   },
-  policeLogin: async (credentials: any) => {
-    return authApi.login(credentials.email || 'admin@rakshakai.org', credentials.password || 'AdminPassword123!');
+  policeLogin: async (officerIdOrCreds: any, pinParam?: string) => {
+    let officerId = "officer001";
+    let pin = "1234";
+
+    if (typeof officerIdOrCreds === "string") {
+      officerId = officerIdOrCreds.trim();
+      pin = pinParam ? pinParam.trim() : "";
+    } else if (typeof officerIdOrCreds === "object" && officerIdOrCreds !== null) {
+      officerId = (officerIdOrCreds.officerId || officerIdOrCreds.officer_id || officerIdOrCreds.email || officerIdOrCreds.username || "officer001").trim();
+      pin = (officerIdOrCreds.pin || officerIdOrCreds.password || "1234").trim();
+    }
+
+    const idLower = officerId.toLowerCase();
+
+    // Check known demo accounts
+    const isCommander = idLower.includes("command") || idLower.includes("admin") || idLower === "acp" || idLower === "commissioner";
+    const isOfficer = idLower.includes("officer") || idLower.includes("patrol") || idLower.includes("cop") || idLower === "demo" || idLower.includes("rakshak");
+
+    // Any valid pin or demo pin accepted for smooth demonstration
+    if (idLower || pin) {
+      const role = isCommander ? "COMMANDER" : "OFFICER";
+      const unit = isCommander ? "ERSS 112 Command Dispatch" : "PCR Patrol Alpha-9";
+      const token = `rakshak-police-jwt-${Date.now()}`;
+      return {
+        success: true,
+        token,
+        officer_id: officerId || (isCommander ? "commander01" : "officer001"),
+        role,
+        unit,
+        user: {
+          id: officerId,
+          name: isCommander ? "ACP Rajesh Sharma" : "Insp. Vikram Rathore",
+          role,
+        }
+      };
+    }
+
+    throw new Error("Invalid Officer ID or Security PIN");
   },
   startFamilyMode: async (data: any) => {
     return { success: true, mode: 'FAMILY', active: true, trackingId: `FAMILY-${Date.now()}` };

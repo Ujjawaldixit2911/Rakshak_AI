@@ -93,9 +93,11 @@ export default function RakshakAICopilot({
 
       const voices = window.speechSynthesis.getVoices();
       const preferredVoice =
-        voices.find((v) => v.lang === "hi-IN" || v.lang === "hi_IN" || v.lang.startsWith("en-IN")) ||
-        voices.find((v) => v.lang.startsWith("en"));
+        voices.find((v) => (v.lang === "en-IN" || v.lang.includes("India")) && (v.name.includes("Google") || v.name.includes("Natural") || v.name.includes("Rishi") || v.name.includes("Prabhat"))) ||
+        voices.find((v) => v.lang.startsWith("en-IN")) ||
+        voices.find((v) => v.lang.startsWith("en-US") || v.lang.startsWith("en-GB") || v.lang.startsWith("en"));
       if (preferredVoice) utterance.voice = preferredVoice;
+      utterance.lang = "en-IN";
       utterance.rate = 1.0;
       utterance.pitch = 1.0;
 

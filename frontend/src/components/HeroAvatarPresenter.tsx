@@ -12,18 +12,9 @@ export default function HeroAvatarPresenter({
   onOpenCopilot,
 }: HeroAvatarPresenterProps) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [language, setLanguage] = useState<"hindi" | "english">("hindi");
   const [currentCaptionIndex, setCurrentCaptionIndex] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
-
-  const hindiDialogue = [
-    "Namaste! Main hoon aapka Rakshak Safety Guide.",
-    "Conventional maps aapko sirf sabse chhota ya fastest rasta dikhate hain, chahe wo kitna bhi sunsaan ya khatarnak kyu na ho.",
-    "Lekin Rakshak par hum real-time crime incidents, unlit blindspots, aur accident zones ko bypass karte hain.",
-    "Chahe do minute extra lagein, par hum aapko sabse safe aur fully illuminated route provide karenge!",
-    "Now you can explore the live safety map. Chaliye shuru karte hain!"
-  ];
 
   const englishDialogue = [
     "Hello! I am your Rakshak Safety Guide.",
@@ -33,7 +24,7 @@ export default function HeroAvatarPresenter({
     "Now you can explore the live safety platform. Let's get started!"
   ];
 
-  const activeDialogue = language === "hindi" ? hindiDialogue : englishDialogue;
+  const activeDialogue = englishDialogue;
 
   // Speak function with natural human-like speech modulation
   const startSpeech = () => {
@@ -46,21 +37,19 @@ export default function HeroAvatarPresenter({
     const utterance = new SpeechSynthesisUtterance(fullSpeechText);
     utteranceRef.current = utterance;
 
-    // Natural Indian human voice preference
+    // Natural human voice preference (English)
     const voices = window.speechSynthesis.getVoices();
     const naturalVoice =
-      voices.find((v) => (v.lang === "hi-IN" || v.lang === "hi_IN") && (v.name.includes("Google") || v.name.includes("Natural") || v.name.includes("India"))) ||
-      voices.find((v) => v.lang.startsWith("hi")) ||
       voices.find((v) => (v.lang === "en-IN" || v.lang.includes("India")) && (v.name.includes("Google") || v.name.includes("Natural") || v.name.includes("Rishi") || v.name.includes("Prabhat"))) ||
       voices.find((v) => v.lang.startsWith("en-IN")) ||
-      voices.find((v) => v.lang.startsWith("en"));
+      voices.find((v) => v.lang.startsWith("en-US") || v.lang.startsWith("en-GB") || v.lang.startsWith("en"));
 
     if (naturalVoice) {
       utterance.voice = naturalVoice;
     }
 
     // Natural human cadence settings (not robotic)
-    utterance.lang = language === "hindi" ? "hi-IN" : "en-IN";
+    utterance.lang = "en-IN";
     utterance.rate = 0.92; // slightly slower natural speaking pace
     utterance.pitch = 1.02; // natural warm tone
 
@@ -114,12 +103,12 @@ export default function HeroAvatarPresenter({
     <div
       style={{
         position: "relative",
-        background: "linear-gradient(135deg, rgba(18, 24, 32, 0.98) 0%, rgba(13, 19, 26, 0.98) 50%, rgba(10, 14, 20, 1) 100%)",
-        border: "1px solid rgba(255, 255, 255, 0.10)",
+        background: "var(--bg-surface)",
+        border: "1px solid var(--border-subtle)",
         borderRadius: "24px",
         padding: "2rem",
         marginBottom: "2rem",
-        boxShadow: "0 20px 50px rgba(0, 0, 0, 0.6), 0 0 35px rgba(16, 185, 129, 0.08)",
+        boxShadow: "var(--shadow-card)",
         overflow: "hidden",
       }}
     >
@@ -131,7 +120,7 @@ export default function HeroAvatarPresenter({
           left: "20%",
           width: "350px",
           height: "350px",
-          background: "radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%)",
+          background: "radial-gradient(circle, var(--mesh-blob-1) 0%, transparent 70%)",
           filter: "blur(60px)",
           pointerEvents: "none",
         }}
@@ -143,7 +132,7 @@ export default function HeroAvatarPresenter({
           right: "10%",
           width: "300px",
           height: "300px",
-          background: "radial-gradient(circle, rgba(217, 119, 6, 0.10) 0%, transparent 70%)",
+          background: "radial-gradient(circle, var(--mesh-blob-2) 0%, transparent 70%)",
           filter: "blur(50px)",
           pointerEvents: "none",
         }}
@@ -177,11 +166,11 @@ export default function HeroAvatarPresenter({
               height: "420px",
               borderRadius: "20px",
               overflow: "hidden",
-              border: isPlaying ? "2px solid #10b981" : "2px solid rgba(255, 255, 255, 0.14)",
+              border: isPlaying ? "2.5px solid var(--accent-primary)" : "2px solid var(--border-subtle)",
               boxShadow: isPlaying
-                ? "0 0 25px rgba(16, 185, 129, 0.45), 0 15px 30px rgba(0, 0, 0, 0.7)"
-                : "0 15px 35px rgba(0, 0, 0, 0.6)",
-              background: "linear-gradient(180deg, rgba(24, 32, 43, 0.7) 0%, rgba(13, 19, 26, 0.95) 100%)",
+                ? "0 0 25px var(--accent-glow), var(--shadow-card-hover)"
+                : "var(--shadow-card)",
+              background: "var(--bg-card-hover)",
               transition: "all 0.3s ease",
             }}
           >
@@ -206,16 +195,16 @@ export default function HeroAvatarPresenter({
                 left: "14px",
                 padding: "4px 12px",
                 borderRadius: "20px",
-                background: isPlaying ? "rgba(16, 185, 129, 0.95)" : "rgba(18, 24, 32, 0.85)",
-                border: "1px solid rgba(255, 255, 255, 0.2)",
+                background: isPlaying ? "var(--accent-primary)" : "var(--bg-card)",
+                border: "1px solid var(--border-subtle)",
                 backdropFilter: "blur(8px)",
-                color: "#fff",
+                color: isPlaying ? "#fff" : "var(--text-primary)",
                 fontSize: "0.74rem",
                 fontWeight: 800,
                 display: "flex",
                 alignItems: "center",
                 gap: "6px",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+                boxShadow: "var(--shadow-sm)",
               }}
             >
               <span
@@ -223,7 +212,7 @@ export default function HeroAvatarPresenter({
                   width: "8px",
                   height: "8px",
                   borderRadius: "50%",
-                  background: isPlaying ? "#fff" : "#10b981",
+                  background: isPlaying ? "#fff" : "var(--accent-primary)",
                   animation: isPlaying ? "pulse 1.2s infinite" : "none",
                 }}
               />
@@ -243,17 +232,18 @@ export default function HeroAvatarPresenter({
                   gap: "4px",
                   padding: "6px 14px",
                   borderRadius: "20px",
-                  background: "rgba(18, 24, 32, 0.90)",
+                  background: "var(--bg-card)",
                   backdropFilter: "blur(10px)",
-                  border: "1px solid rgba(16, 185, 129, 0.4)",
+                  border: "1px solid var(--border-subtle)",
+                  boxShadow: "var(--shadow-sm)",
                 }}
               >
-                <div style={{ width: 3, height: 16, background: "#10b981", borderRadius: 2, animation: "wave 0.8s infinite" }} />
+                <div style={{ width: 3, height: 16, background: "var(--accent-primary)", borderRadius: 2, animation: "wave 0.8s infinite" }} />
                 <div style={{ width: 3, height: 24, background: "#34d399", borderRadius: 2, animation: "wave 0.6s infinite 0.1s" }} />
-                <div style={{ width: 3, height: 12, background: "#059669", borderRadius: 2, animation: "wave 0.9s infinite 0.2s" }} />
+                <div style={{ width: 3, height: 12, background: "var(--accent-primary)", borderRadius: 2, animation: "wave 0.9s infinite 0.2s" }} />
                 <div style={{ width: 3, height: 20, background: "#6ee7b7", borderRadius: 2, animation: "wave 0.7s infinite 0.15s" }} />
-                <div style={{ width: 3, height: 14, background: "#10b981", borderRadius: 2, animation: "wave 0.85s infinite 0.05s" }} />
-                <span style={{ fontSize: "0.72rem", color: "#e2e8f0", fontWeight: 700, marginLeft: 4 }}>
+                <div style={{ width: 3, height: 14, background: "var(--accent-primary)", borderRadius: 2, animation: "wave 0.85s infinite 0.05s" }} />
+                <span style={{ fontSize: "0.72rem", color: "var(--text-secondary)", fontWeight: 700, marginLeft: 4 }}>
                   Voice Briefing
                 </span>
               </div>
@@ -279,66 +269,36 @@ export default function HeroAvatarPresenter({
                 style={{
                   padding: "4px 10px",
                   borderRadius: 8,
-                  background: "rgba(16, 185, 129, 0.14)",
-                  color: "#34d399",
+                  background: "var(--accent-subtle)",
+                  color: "var(--accent-primary)",
                   fontSize: "0.78rem",
                   fontWeight: 800,
-                  border: "1px solid rgba(16, 185, 129, 0.3)",
+                  border: "1px solid rgba(5, 150, 105, 0.25)",
                 }}
               >
                 🛡️ RAKSHAK PUBLIC SAFETY NETWORK
               </span>
-              <span style={{ fontSize: "0.8rem", color: "#94a3b8" }}>
+              <span style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
                 "Navigate Smart. Stay Safe."
               </span>
             </div>
 
-            {/* Language Switcher */}
+            {/* Audio Indicator */}
             <div
               style={{
-                display: "flex",
-                background: "rgba(255, 255, 255, 0.06)",
-                borderRadius: 10,
-                padding: 3,
-                border: "1px solid rgba(255, 255, 255, 0.12)",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                background: "var(--bg-card-hover)",
+                borderRadius: 8,
+                padding: "4px 10px",
+                border: "1px solid var(--border-subtle)",
+                fontSize: "0.76rem",
+                fontWeight: 700,
+                color: "var(--text-secondary)",
               }}
             >
-              <button
-                onClick={() => {
-                  stopSpeech();
-                  setLanguage("hindi");
-                }}
-                style={{
-                  padding: "5px 12px",
-                  borderRadius: 7,
-                  border: "none",
-                  background: language === "hindi" ? "#059669" : "transparent",
-                  color: language === "hindi" ? "#fff" : "#94a3b8",
-                  fontSize: "0.78rem",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                }}
-              >
-                🇮🇳 हिंदी
-              </button>
-              <button
-                onClick={() => {
-                  stopSpeech();
-                  setLanguage("english");
-                }}
-                style={{
-                  padding: "5px 12px",
-                  borderRadius: 7,
-                  border: "none",
-                  background: language === "english" ? "#059669" : "transparent",
-                  color: language === "english" ? "#fff" : "#94a3b8",
-                  fontSize: "0.78rem",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                }}
-              >
-                🇬🇧 English
-              </button>
+              <span>🔊 English Audio</span>
             </div>
           </div>
 
@@ -347,16 +307,16 @@ export default function HeroAvatarPresenter({
             style={{
               padding: "1.5rem",
               borderRadius: "18px",
-              background: "rgba(24, 32, 43, 0.65)",
-              border: "1px solid rgba(255, 255, 255, 0.1)",
+              background: "var(--bg-card-hover)",
+              border: "1px solid var(--border-subtle)",
               backdropFilter: "blur(12px)",
               marginBottom: "1.5rem",
             }}
           >
             <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
               <span style={{ fontSize: "1.2rem" }}>💬</span>
-              <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "#f8fafc", margin: 0 }}>
-                {language === "hindi" ? "Safety Guide ka Sandesh:" : "Message from Safety Guide:"}
+              <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "var(--text-primary)", margin: 0 }}>
+                Message from Safety Guide:
               </h3>
             </div>
 
@@ -364,18 +324,18 @@ export default function HeroAvatarPresenter({
             <div
               style={{
                 fontSize: "1.05rem",
-                color: "#f1f5f9",
+                color: "var(--text-primary)",
                 lineHeight: 1.6,
                 fontWeight: 500,
                 minHeight: "80px",
               }}
             >
               <p style={{ margin: "0 0 10px 0" }}>
-                <strong style={{ color: "#10b981" }}>"</strong>
-                <span style={{ color: "#e2e8f0", fontWeight: 600 }}>
+                <strong style={{ color: "var(--accent-primary)" }}>"</strong>
+                <span style={{ color: "var(--text-secondary)", fontWeight: 600 }}>
                   {activeDialogue[currentCaptionIndex] || activeDialogue[0]}
                 </span>
-                <strong style={{ color: "#10b981" }}>"</strong>
+                <strong style={{ color: "var(--accent-primary)" }}>"</strong>
               </p>
             </div>
 
@@ -387,7 +347,7 @@ export default function HeroAvatarPresenter({
                 gap: "10px",
                 marginTop: "12px",
                 paddingTop: "12px",
-                borderTop: "1px solid rgba(255, 255, 255, 0.08)",
+                borderTop: "1px solid var(--border-subtle)",
               }}
             >
               <div style={{
@@ -396,12 +356,12 @@ export default function HeroAvatarPresenter({
                 gap: 8,
                 padding: "8px 10px",
                 borderRadius: "10px",
-                background: "rgba(16, 185, 129, 0.08)",
-                border: "1px solid rgba(16, 185, 129, 0.25)",
+                background: "var(--accent-subtle)",
+                border: "1px solid rgba(5, 150, 105, 0.2)",
               }}>
                 <span style={{ fontSize: "1.1rem" }}>⏱️</span>
-                <div style={{ fontSize: "0.78rem", color: "#cbd5e1" }}>
-                  <strong style={{ color: "#34d399", display: "block" }}>Fastest vs Safest</strong> Low-risk, well-lit verified corridor prioritization.
+                <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)" }}>
+                  <strong style={{ color: "var(--accent-primary)", display: "block" }}>Fastest vs Safest</strong> Low-risk, well-lit verified corridor prioritization.
                 </div>
               </div>
               <div style={{
@@ -411,11 +371,11 @@ export default function HeroAvatarPresenter({
                 padding: "8px 10px",
                 borderRadius: "10px",
                 background: "rgba(245, 158, 11, 0.08)",
-                border: "1px solid rgba(245, 158, 11, 0.25)",
+                border: "1px solid rgba(245, 158, 11, 0.2)",
               }}>
                 <span style={{ fontSize: "1.1rem" }}>💡</span>
-                <div style={{ fontSize: "0.78rem", color: "#cbd5e1" }}>
-                  <strong style={{ color: "#fbbf24", display: "block" }}>Street Illumination</strong> Unlit aur isolated blindspots ko bypass.
+                <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)" }}>
+                  <strong style={{ color: "#d97706", display: "block" }}>Street Illumination</strong> Bypasses unlit and isolated blindspots.
                 </div>
               </div>
               <div style={{
@@ -425,11 +385,11 @@ export default function HeroAvatarPresenter({
                 padding: "8px 10px",
                 borderRadius: "10px",
                 background: "rgba(37, 99, 235, 0.08)",
-                border: "1px solid rgba(37, 99, 235, 0.25)",
+                border: "1px solid rgba(37, 99, 235, 0.2)",
               }}>
                 <span style={{ fontSize: "1.1rem" }}>👮</span>
-                <div style={{ fontSize: "0.78rem", color: "#cbd5e1" }}>
-                  <strong style={{ color: "#60a5fa", display: "block" }}>Police & CCTV Patrol</strong> Verified 24x7 patrolled avenues.
+                <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)" }}>
+                  <strong style={{ color: "#2563eb", display: "block" }}>Police & CCTV Patrol</strong> Verified 24x7 patrolled avenues.
                 </div>
               </div>
             </div>
@@ -446,7 +406,7 @@ export default function HeroAvatarPresenter({
                 background: isPlaying
                   ? "linear-gradient(135deg, #ef4444, #dc2626)"
                   : "linear-gradient(135deg, #059669, #047857)",
-                border: "1px solid rgba(255, 255, 255, 0.2)",
+                border: "none",
                 color: "#fff",
                 fontWeight: 800,
                 fontSize: "0.92rem",
@@ -470,9 +430,9 @@ export default function HeroAvatarPresenter({
                 style={{
                   padding: "12px 20px",
                   borderRadius: "12px",
-                  background: "rgba(16, 185, 129, 0.15)",
-                  border: "1px solid rgba(16, 185, 129, 0.4)",
-                  color: "#4ade80",
+                  background: "var(--accent-subtle)",
+                  border: "1px solid rgba(5, 150, 105, 0.3)",
+                  color: "var(--accent-primary)",
                   fontWeight: 800,
                   fontSize: "0.92rem",
                   cursor: "pointer",
@@ -493,15 +453,16 @@ export default function HeroAvatarPresenter({
                 style={{
                   padding: "12px 20px",
                   borderRadius: "12px",
-                  background: "rgba(255, 255, 255, 0.06)",
-                  border: "1px solid rgba(255, 255, 255, 0.15)",
-                  color: "#cbd5e1",
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border-subtle)",
+                  color: "var(--text-primary)",
                   fontWeight: 700,
                   fontSize: "0.92rem",
                   cursor: "pointer",
                   display: "flex",
                   alignItems: "center",
                   gap: 8,
+                  boxShadow: "var(--shadow-sm)",
                 }}
               >
                 <span>🛡️ Open Safety Assistant</span>

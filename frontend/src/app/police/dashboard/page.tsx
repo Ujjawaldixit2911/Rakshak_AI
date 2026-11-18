@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   BarChart,
   Bar,
@@ -86,6 +87,8 @@ export default function PoliceCommandDashboard() {
   const [selectedCity, setSelectedCity] = useState("Delhi");
   const [activeTab, setActiveTab] = useState<Tab>("analytics");
   const [officerId, setOfficerId] = useState("officer001");
+  const [officerRole, setOfficerRole] = useState("OFFICER");
+  const [officerName, setOfficerName] = useState("Insp. Vikram Rathore");
   const [dashData, setDashData] = useState<any | null>(null);
   const [incidentQueue, setIncidentQueue] = useState<any[]>([]);
   const [sosAlerts, setSosAlerts] = useState<any[]>([]);
@@ -103,6 +106,8 @@ export default function PoliceCommandDashboard() {
       return;
     }
     setOfficerId(localStorage.getItem("rakshak_police_id") || "officer001");
+    setOfficerRole(localStorage.getItem("rakshak_police_role") || "OFFICER");
+    setOfficerName(localStorage.getItem("rakshak_police_name") || "Insp. Vikram Rathore");
   }, [router]);
 
   // Fetch Dashboard Stats & Incident Queue
@@ -272,12 +277,21 @@ export default function PoliceCommandDashboard() {
               <span>{wsConnected ? "Live Feed" : "Connecting..."}</span>
             </div>
 
+            {/* Citizen Map Link */}
+            <Link
+              href="/"
+              className="text-[12px] font-semibold text-[var(--text-secondary)] hover:text-[var(--text-primary)] px-2.5 py-1.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-card)] hidden sm:inline-flex items-center gap-1.5 no-underline transition-colors"
+            >
+              <span>🗺️ Citizen Map</span>
+            </Link>
+
             {/* Theme Toggle */}
             <ThemeToggle />
 
-            {/* Officer Tag */}
-            <Badge severity="brand" size="md" className="hidden lg:inline-flex">
-              Officer {officerId}
+            {/* Officer / Commander Tag */}
+            <Badge severity="brand" size="md" className="hidden lg:inline-flex items-center gap-1.5">
+              <span>{officerRole === "COMMANDER" ? "🏛️ Commander" : "👮 Officer"}</span>
+              <span className="font-mono text-xs">{officerId}</span>
             </Badge>
 
             {/* Refresh Button */}

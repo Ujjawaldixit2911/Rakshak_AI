@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useAuth, USER_FIELDS, UserFieldKey } from "@/context/AuthContext";
+import { ThemeToggle } from "@/components/shared/ThemeToggle";
 
 export const DEMO_CREDENTIALS = {
   email: "demo@rakshak.ai",
@@ -36,17 +37,8 @@ export function Landing({ onSignInSuccess }: LandingProps) {
 
   // Avatar Speech State
   const [isPlayingVoice, setIsPlayingVoice] = useState(false);
-  const [voiceLanguage, setVoiceLanguage] = useState<"hindi" | "english">("hindi");
   const [captionIdx, setCaptionIdx] = useState(0);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
-
-  const hindiDialogue = [
-    "Namaste! Main hoon aapka Rakshak Safety Guide.",
-    "Conventional maps aapko sirf sabse chhota ya fastest rasta dikhate hain, chahe wo kitna bhi sunsaan ya khatarnak kyu na ho.",
-    "Lekin Rakshak par hum real-time crime incidents, unlit blindspots, aur accident zones ko bypass karte hain.",
-    "Chahe do minute extra lagein, par hum aapko sabse safe aur fully illuminated route provide karenge!",
-    "Now you can login and explore the live safety map. Chaliye shuru karte hain!"
-  ];
 
   const englishDialogue = [
     "Hello! I am your Rakshak Safety Guide.",
@@ -56,7 +48,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
     "Now you can log in to explore the live safety platform. Let's get started!"
   ];
 
-  const activeDialogue = voiceLanguage === "hindi" ? hindiDialogue : englishDialogue;
+  const activeDialogue = englishDialogue;
 
   // Natural Human Speech Engine
   const handleStartSpeech = () => {
@@ -71,14 +63,12 @@ export function Landing({ onSignInSuccess }: LandingProps) {
 
     const voices = window.speechSynthesis.getVoices();
     const naturalVoice =
-      voices.find((v) => (v.lang === "hi-IN" || v.lang === "hi_IN") && (v.name.includes("Google") || v.name.includes("Natural") || v.name.includes("India"))) ||
-      voices.find((v) => v.lang.startsWith("hi")) ||
       voices.find((v) => (v.lang === "en-IN" || v.lang.includes("India")) && (v.name.includes("Google") || v.name.includes("Natural") || v.name.includes("Rishi") || v.name.includes("Prabhat"))) ||
       voices.find((v) => v.lang.startsWith("en-IN")) ||
-      voices.find((v) => v.lang.startsWith("en"));
+      voices.find((v) => v.lang.startsWith("en-US") || v.lang.startsWith("en-GB") || v.lang.startsWith("en"));
 
     if (naturalVoice) utterance.voice = naturalVoice;
-    utterance.lang = voiceLanguage === "hindi" ? "hi-IN" : "en-IN";
+    utterance.lang = "en-IN";
     utterance.rate = 0.92;
     utterance.pitch = 1.02;
 
@@ -133,7 +123,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
         window.speechSynthesis.cancel();
       }
     };
-  }, [voiceLanguage]);
+  }, []);
 
   // Direct Google Sign-In Trigger
   const triggerGooglePrompt = () => {
@@ -199,7 +189,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
     <div
       style={{
         minHeight: "100vh",
-        background: "radial-gradient(circle at 50% 15%, rgba(16, 185, 129, 0.12) 0%, #0d131a 50%, #070a0e 100%)",
+        background: "var(--bg-base)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -217,7 +207,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
           left: "-100px",
           width: "500px",
           height: "500px",
-          background: "radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%)",
+          background: "radial-gradient(circle, var(--mesh-blob-1) 0%, transparent 70%)",
           filter: "blur(80px)",
           pointerEvents: "none",
         }}
@@ -229,7 +219,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
           right: "-100px",
           width: "500px",
           height: "500px",
-          background: "radial-gradient(circle, rgba(217, 119, 6, 0.10) 0%, transparent 70%)",
+          background: "radial-gradient(circle, var(--mesh-blob-2) 0%, transparent 70%)",
           filter: "blur(80px)",
           pointerEvents: "none",
         }}
@@ -240,12 +230,12 @@ export function Landing({ onSignInSuccess }: LandingProps) {
         style={{
           width: "100%",
           maxWidth: "1200px",
-          background: "rgba(18, 24, 32, 0.92)",
-          border: "1px solid rgba(255, 255, 255, 0.10)",
+          background: "var(--bg-surface)",
+          border: "1px solid var(--border-subtle)",
           backdropFilter: "blur(24px)",
           WebkitBackdropFilter: "blur(24px)",
           borderRadius: "28px",
-          boxShadow: "0 25px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(16, 185, 129, 0.08)",
+          boxShadow: "var(--shadow-modal)",
           overflow: "hidden",
           position: "relative",
           zIndex: 1,
@@ -262,8 +252,8 @@ export function Landing({ onSignInSuccess }: LandingProps) {
           <div
             style={{
               padding: "2.5rem 2rem",
-              background: "linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.95) 100%)",
-              borderRight: "1px solid rgba(255, 255, 255, 0.1)",
+              background: "var(--bg-card)",
+              borderRight: "1px solid var(--border-subtle)",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
@@ -271,69 +261,39 @@ export function Landing({ onSignInSuccess }: LandingProps) {
             }}
           >
             <div>
-              {/* Top Mission Pill & Language Switcher */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
+              {/* Top Mission Pill & Language Switcher & Theme Toggle */}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", flexWrap: "wrap", gap: 10 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <span
                     style={{
                       padding: "4px 10px",
                       borderRadius: 8,
-                      background: "rgba(16, 185, 129, 0.14)",
-                      color: "#34d399",
+                      background: "var(--accent-subtle)",
+                      color: "var(--accent-primary)",
                       fontSize: "0.76rem",
                       fontWeight: 800,
-                      border: "1px solid rgba(16, 185, 129, 0.3)",
+                      border: "1px solid rgba(5, 150, 105, 0.25)",
                     }}
                   >
                     🛡️ RAKSHAK SAFETY PLATFORM
                   </span>
                 </div>
 
-                <div
-                  style={{
-                    display: "flex",
-                    background: "rgba(255, 255, 255, 0.06)",
-                    borderRadius: 8,
-                    padding: 2,
-                    border: "1px solid rgba(255, 255, 255, 0.1)",
-                  }}
-                >
-                  <button
-                    onClick={() => {
-                      handleStopSpeech();
-                      setVoiceLanguage("hindi");
-                    }}
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span
                     style={{
                       padding: "4px 10px",
-                      borderRadius: 6,
-                      border: "none",
-                      background: voiceLanguage === "hindi" ? "#059669" : "transparent",
-                      color: voiceLanguage === "hindi" ? "#fff" : "#94a3b8",
+                      borderRadius: 8,
+                      background: "var(--bg-card-hover)",
+                      border: "1px solid var(--border-subtle)",
+                      color: "var(--text-secondary)",
                       fontSize: "0.75rem",
                       fontWeight: 700,
-                      cursor: "pointer",
                     }}
                   >
-                    🇮🇳 हिंदी
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleStopSpeech();
-                      setVoiceLanguage("english");
-                    }}
-                    style={{
-                      padding: "4px 10px",
-                      borderRadius: 6,
-                      border: "none",
-                      background: voiceLanguage === "english" ? "#059669" : "transparent",
-                      color: voiceLanguage === "english" ? "#fff" : "#94a3b8",
-                      fontSize: "0.75rem",
-                      fontWeight: 700,
-                      cursor: "pointer",
-                    }}
-                  >
-                    🇬🇧 English
-                  </button>
+                    🔊 English Audio
+                  </span>
+                  <ThemeToggle size="sm" />
                 </div>
               </div>
 
@@ -353,11 +313,11 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                     flexShrink: 0,
                     borderRadius: "18px",
                     overflow: "hidden",
-                    border: isPlayingVoice ? "2.5px solid #10b981" : "2px solid rgba(255, 255, 255, 0.14)",
+                    border: isPlayingVoice ? "2.5px solid var(--accent-primary)" : "2px solid var(--border-subtle)",
                     boxShadow: isPlayingVoice
-                      ? "0 0 25px rgba(16, 185, 129, 0.45), 0 10px 25px rgba(0,0,0,0.6)"
-                      : "0 10px 25px rgba(0,0,0,0.5)",
-                    background: "#0d131a",
+                      ? "0 0 25px var(--accent-glow), var(--shadow-card-hover)"
+                      : "var(--shadow-card)",
+                    background: "var(--bg-card-hover)",
                     position: "relative",
                   }}
                 >
@@ -381,7 +341,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                         left: "50%",
                         transform: "translateX(-50%)",
                         padding: "2px 8px",
-                        background: "rgba(16, 185, 129, 0.95)",
+                        background: "var(--accent-primary)",
                         borderRadius: 10,
                         fontSize: "0.65rem",
                         fontWeight: 800,
@@ -394,10 +354,10 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                 </div>
 
                 <div>
-                  <h2 style={{ fontSize: "1.35rem", fontWeight: 800, color: "#f8fafc", margin: "0 0 6px 0", letterSpacing: "-0.02em" }}>
+                  <h2 style={{ fontSize: "1.35rem", fontWeight: 800, color: "var(--text-primary)", margin: "0 0 6px 0", letterSpacing: "-0.02em" }}>
                     "Navigate Smart. Stay Safe."
                   </h2>
-                  <p style={{ fontSize: "0.82rem", color: "#94a3b8", margin: 0, lineHeight: 1.45 }}>
+                  <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", margin: 0, lineHeight: 1.45 }}>
                     Meet your personal Safety Guide. We replace risky shortcuts with verified, well-lit, police-patrolled safe corridors.
                   </p>
                 </div>
@@ -408,23 +368,23 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                 style={{
                   padding: "1.25rem",
                   borderRadius: "16px",
-                  background: "rgba(24, 32, 43, 0.65)",
-                  border: "1px solid rgba(255, 255, 255, 0.08)",
+                  background: "var(--bg-card-hover)",
+                  border: "1px solid var(--border-subtle)",
                   marginBottom: "1.5rem",
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
                   <span style={{ fontSize: "1.1rem" }}>🎙️</span>
-                  <span style={{ fontSize: "0.78rem", fontWeight: 800, color: "#34d399", textTransform: "uppercase" }}>
-                    {voiceLanguage === "hindi" ? "Safety Guide ka Sandesh" : "Safety Briefing"}
+                  <span style={{ fontSize: "0.78rem", fontWeight: 800, color: "var(--accent-primary)", textTransform: "uppercase" }}>
+                    Safety Briefing
                   </span>
                 </div>
-                <div style={{ fontSize: "0.95rem", color: "#f1f5f9", lineHeight: 1.55, fontWeight: 500, minHeight: "75px" }}>
-                  <span style={{ color: "#10b981", fontWeight: 800 }}>"</span>
-                  <span style={{ color: "#e2e8f0" }}>
+                <div style={{ fontSize: "0.95rem", color: "var(--text-primary)", lineHeight: 1.55, fontWeight: 500, minHeight: "75px" }}>
+                  <span style={{ color: "var(--accent-primary)", fontWeight: 800 }}>"</span>
+                  <span style={{ color: "var(--text-secondary)" }}>
                     {activeDialogue[captionIdx] || activeDialogue[0]}
                   </span>
-                  <span style={{ color: "#10b981", fontWeight: 800 }}>"</span>
+                  <span style={{ color: "var(--accent-primary)", fontWeight: 800 }}>"</span>
                 </div>
               </div>
             </div>
@@ -440,7 +400,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                   background: isPlayingVoice
                     ? "linear-gradient(135deg, #ef4444, #dc2626)"
                     : "linear-gradient(135deg, #059669, #047857)",
-                  border: "1px solid rgba(255, 255, 255, 0.15)",
+                  border: "none",
                   color: "#fff",
                   fontWeight: 800,
                   fontSize: "0.88rem",
@@ -464,7 +424,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
-              background: "rgba(15, 23, 42, 0.5)",
+              background: "var(--bg-surface)",
             }}
           >
             {step === 1 ? (
@@ -472,14 +432,14 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                 {/* Header */}
                 <div style={{ marginBottom: "1.25rem" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
-                    <span style={{ padding: "2px 8px", borderRadius: 6, background: "rgba(16, 185, 129, 0.15)", color: "#34d399", fontSize: "0.72rem", fontWeight: 800 }}>
+                    <span style={{ padding: "2px 8px", borderRadius: 6, background: "var(--accent-subtle)", color: "var(--accent-primary)", fontSize: "0.72rem", fontWeight: 800 }}>
                       CITIZEN & RESPONDER ACCESS
                     </span>
                   </div>
-                  <h3 style={{ fontSize: "1.35rem", fontWeight: 800, color: "#f8fafc", margin: "4px 0" }}>
+                  <h3 style={{ fontSize: "1.35rem", fontWeight: 800, color: "var(--text-primary)", margin: "4px 0" }}>
                     Sign in to Rakshak
                   </h3>
-                  <p style={{ fontSize: "0.82rem", color: "#94a3b8", margin: 0 }}>
+                  <p style={{ fontSize: "0.82rem", color: "var(--text-secondary)", margin: 0 }}>
                     Enter credentials or use 1-click demo autofill, then continue.
                   </p>
                 </div>
@@ -498,9 +458,9 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                     width: "100%",
                     padding: "9px 12px",
                     borderRadius: "10px",
-                    background: "rgba(16, 185, 129, 0.12)",
-                    border: "1px solid rgba(16, 185, 129, 0.3)",
-                    color: "#34d399",
+                    background: "var(--accent-subtle)",
+                    border: "1px solid rgba(5, 150, 105, 0.3)",
+                    color: "var(--accent-primary)",
                     fontWeight: 700,
                     fontSize: "0.8rem",
                     cursor: "pointer",
@@ -518,7 +478,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                 <form onSubmit={handleEmailAuth}>
                   {isRegisterMode && (
                     <div style={{ marginBottom: "0.75rem" }}>
-                      <label style={{ fontSize: "0.75rem", color: "#94a3b8", display: "block", marginBottom: 4 }}>
+                      <label style={{ fontSize: "0.75rem", color: "var(--text-secondary)", display: "block", marginBottom: 4 }}>
                         Your Full Name
                       </label>
                       <input
@@ -530,9 +490,9 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                           width: "100%",
                           padding: "10px 12px",
                           borderRadius: "10px",
-                          background: "rgba(255, 255, 255, 0.05)",
-                          border: "1px solid rgba(255, 255, 255, 0.12)",
-                          color: "#fff",
+                          background: "var(--bg-input)",
+                          border: "1px solid var(--border-strong)",
+                          color: "var(--text-primary)",
                           fontSize: "0.85rem",
                           outline: "none",
                         }}
@@ -541,7 +501,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                   )}
 
                   <div style={{ marginBottom: "0.75rem" }}>
-                    <label style={{ fontSize: "0.75rem", color: "#94a3b8", display: "block", marginBottom: 4 }}>
+                    <label style={{ fontSize: "0.75rem", color: "var(--text-secondary)", display: "block", marginBottom: 4 }}>
                       Email Address
                     </label>
                     <input
@@ -553,9 +513,9 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                         width: "100%",
                         padding: "10px 12px",
                         borderRadius: "10px",
-                        background: "rgba(255, 255, 255, 0.05)",
-                        border: "1px solid rgba(255, 255, 255, 0.12)",
-                        color: "#fff",
+                        background: "var(--bg-input)",
+                        border: "1px solid var(--border-strong)",
+                        color: "var(--text-primary)",
                         fontSize: "0.85rem",
                         outline: "none",
                       }}
@@ -564,7 +524,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
 
                   <div style={{ marginBottom: "0.85rem" }}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                      <label style={{ fontSize: "0.75rem", color: "#94a3b8" }}>Password</label>
+                      <label style={{ fontSize: "0.75rem", color: "var(--text-secondary)" }}>Password</label>
                     </div>
                     <input
                       type="password"
@@ -575,9 +535,9 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                         width: "100%",
                         padding: "10px 12px",
                         borderRadius: "10px",
-                        background: "rgba(255, 255, 255, 0.05)",
-                        border: "1px solid rgba(255, 255, 255, 0.12)",
-                        color: "#fff",
+                        background: "var(--bg-input)",
+                        border: "1px solid var(--border-strong)",
+                        color: "var(--text-primary)",
                         fontSize: "0.85rem",
                         outline: "none",
                       }}
@@ -585,7 +545,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                   </div>
 
                   {loginError && (
-                    <div style={{ padding: "8px 12px", borderRadius: 8, background: "rgba(239, 68, 68, 0.2)", color: "#fca5a5", fontSize: "0.78rem", marginBottom: "0.85rem", border: "1px solid rgba(239, 68, 68, 0.3)" }}>
+                    <div style={{ padding: "8px 12px", borderRadius: 8, background: "rgba(239, 68, 68, 0.15)", color: "#ef4444", fontSize: "0.78rem", marginBottom: "0.85rem", border: "1px solid rgba(239, 68, 68, 0.3)" }}>
                       ⚠️ {loginError}
                     </div>
                   )}
@@ -618,14 +578,14 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                     alignItems: "center",
                     gap: 12,
                     margin: "1rem 0",
-                    color: "#64748b",
+                    color: "var(--text-muted)",
                     fontSize: "0.78rem",
                     fontWeight: 700,
                   }}
                 >
-                  <div style={{ flex: 1, height: "1px", background: "rgba(255, 255, 255, 0.1)" }} />
+                  <div style={{ flex: 1, height: "1px", background: "var(--border-subtle)" }} />
                   <span>OR WITH GOOGLE</span>
-                  <div style={{ flex: 1, height: "1px", background: "rgba(255, 255, 255, 0.1)" }} />
+                  <div style={{ flex: 1, height: "1px", background: "var(--border-subtle)" }} />
                 </div>
 
                 {/* Google Official Button (BELOW) */}
@@ -635,9 +595,9 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                     width: "100%",
                     padding: "11px",
                     borderRadius: "12px",
-                    background: "#ffffff",
-                    border: "none",
-                    color: "#1f2937",
+                    background: "var(--bg-surface)",
+                    border: "1px solid var(--border-strong)",
+                    color: "var(--text-primary)",
                     fontWeight: 700,
                     fontSize: "0.9rem",
                     cursor: "pointer",
@@ -645,7 +605,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                     alignItems: "center",
                     justifyContent: "center",
                     gap: 10,
-                    boxShadow: "0 4px 14px rgba(0, 0, 0, 0.25)",
+                    boxShadow: "var(--shadow-sm)",
                   }}
                 >
                   <svg width="20" height="20" viewBox="0 0 24 24">
@@ -673,13 +633,13 @@ export function Landing({ onSignInSuccess }: LandingProps) {
               /* Step 2: Role & Purpose Selection */
               <div>
                 <div style={{ marginBottom: "1.25rem" }}>
-                  <span style={{ padding: "2px 8px", borderRadius: 6, background: "rgba(16, 185, 129, 0.15)", color: "#34d399", fontSize: "0.72rem", fontWeight: 800 }}>
+                  <span style={{ padding: "2px 8px", borderRadius: 6, background: "var(--accent-subtle)", color: "var(--accent-primary)", fontSize: "0.72rem", fontWeight: 800 }}>
                     STEP 2 OF 2 • PURPOSE SELECTION
                   </span>
-                  <h3 style={{ fontSize: "1.25rem", fontWeight: 800, color: "#f8fafc", margin: "6px 0 2px" }}>
+                  <h3 style={{ fontSize: "1.25rem", fontWeight: 800, color: "var(--text-primary)", margin: "6px 0 2px" }}>
                     Select Your Travel Persona
                   </h3>
-                  <p style={{ fontSize: "0.8rem", color: "#94a3b8", margin: 0 }}>
+                  <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)", margin: 0 }}>
                     Tailors route prioritization, risk multipliers & emergency networks.
                   </p>
                 </div>
@@ -696,16 +656,17 @@ export function Landing({ onSignInSuccess }: LandingProps) {
                         style={{
                           padding: "10px",
                           borderRadius: 12,
-                          background: isSelected ? info.bgGlow : "rgba(255, 255, 255, 0.04)",
-                          border: isSelected ? `2px solid ${info.color}` : "1px solid rgba(255, 255, 255, 0.08)",
+                          background: isSelected ? "var(--accent-subtle)" : "var(--bg-card)",
+                          border: isSelected ? `2px solid var(--accent-primary)` : "1px solid var(--border-subtle)",
                           textAlign: "left",
                           cursor: "pointer",
                           transition: "all 0.2s",
+                          boxShadow: "var(--shadow-sm)",
                         }}
                       >
                         <div style={{ fontSize: "1.25rem", marginBottom: 2 }}>{info.icon}</div>
-                        <div style={{ fontSize: "0.82rem", fontWeight: 800, color: "#fff" }}>{info.title}</div>
-                        <div style={{ fontSize: "0.7rem", color: "#94a3b8", marginTop: 2, lineHeight: 1.2 }}>{info.tagline}</div>
+                        <div style={{ fontSize: "0.82rem", fontWeight: 800, color: "var(--text-primary)" }}>{info.title}</div>
+                        <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: 2, lineHeight: 1.2 }}>{info.tagline}</div>
                       </button>
                     );
                   })}
@@ -733,7 +694,7 @@ export function Landing({ onSignInSuccess }: LandingProps) {
             )}
 
             {/* Bottom Footer Tags */}
-            <div style={{ borderTop: "1px solid rgba(255, 255, 255, 0.08)", paddingTop: "1rem", marginTop: "1rem", display: "flex", justifyContent: "space-between", fontSize: "0.72rem", color: "#64748b" }}>
+            <div style={{ borderTop: "1px solid var(--border-subtle)", paddingTop: "1rem", marginTop: "1rem", display: "flex", justifyContent: "space-between", fontSize: "0.72rem", color: "var(--text-muted)" }}>
               <span>🔒 AES-256 Encrypted</span>
               <span>DPDP Act 2023 Compliant</span>
             </div>

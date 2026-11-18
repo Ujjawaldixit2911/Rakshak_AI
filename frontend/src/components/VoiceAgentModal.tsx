@@ -23,7 +23,7 @@ export default function VoiceAgentModal({
   onClose,
   onSelectRoute,
 }: VoiceAgentModalProps) {
-  const [language, setLanguage] = useState<"en-IN" | "hi-IN">("en-IN");
+  const [language, setLanguage] = useState<"en-IN">("en-IN");
   const [isListening, setIsListening] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -247,11 +247,12 @@ export default function VoiceAgentModal({
 
       const voices = window.speechSynthesis.getVoices();
       const preferredVoice =
-        voices.find((v) => (language === "hi-IN" ? (v.lang === "hi-IN" || v.lang === "hi_IN") : v.lang.startsWith("en"))) ||
-        voices.find((v) => v.lang.startsWith("en"));
+        voices.find((v) => (v.lang === "en-IN" || v.lang.includes("India")) && (v.name.includes("Google") || v.name.includes("Natural") || v.name.includes("Rishi") || v.name.includes("Prabhat"))) ||
+        voices.find((v) => v.lang.startsWith("en-IN")) ||
+        voices.find((v) => v.lang.startsWith("en-US") || v.lang.startsWith("en-GB") || v.lang.startsWith("en"));
       if (preferredVoice) utterance.voice = preferredVoice;
 
-      utterance.lang = language;
+      utterance.lang = "en-IN";
       utterance.rate = 1.0;
       utterance.pitch = 1.0;
 
@@ -377,39 +378,8 @@ export default function VoiceAgentModal({
 
           <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             {/* Language Selector */}
-            <div style={{ display: "flex", background: "#f1f5f9", padding: "3px", borderRadius: "10px", border: "1px solid #cbd5e1" }}>
-              <button
-                onClick={() => setLanguage("en-IN")}
-                style={{
-                  padding: "6px 12px",
-                  borderRadius: "7px",
-                  border: "none",
-                  fontSize: "0.8rem",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  background: language === "en-IN" ? "#4f46e5" : "transparent",
-                  color: language === "en-IN" ? "#ffffff" : "#64748b",
-                  transition: "all 0.15s ease",
-                }}
-              >
-                🇬🇧 English
-              </button>
-              <button
-                onClick={() => setLanguage("hi-IN")}
-                style={{
-                  padding: "6px 12px",
-                  borderRadius: "7px",
-                  border: "none",
-                  fontSize: "0.8rem",
-                  fontWeight: 700,
-                  cursor: "pointer",
-                  background: language === "hi-IN" ? "#4f46e5" : "transparent",
-                  color: language === "hi-IN" ? "#ffffff" : "#64748b",
-                  transition: "all 0.15s ease",
-                }}
-              >
-                🇮🇳 Hindi
-              </button>
+            <div style={{ display: "inline-flex", alignItems: "center", background: "#f1f5f9", padding: "6px 12px", borderRadius: "10px", border: "1px solid #cbd5e1", fontSize: "0.8rem", fontWeight: 700, color: "#4f46e5" }}>
+              <span>🔊 English Audio</span>
             </div>
 
             <button
@@ -506,7 +476,7 @@ export default function VoiceAgentModal({
           <div style={{ textAlign: "center" }}>
             {isListening ? (
               <p style={{ margin: 0, fontSize: "1rem", fontWeight: 800, color: "#dc2626" }}>
-                🎙️ Listening... Speak origin and destination in English or Hindi
+                🎙️ Listening... Speak origin and destination in English
               </p>
             ) : isThinking ? (
               <p style={{ margin: 0, fontSize: "1rem", fontWeight: 800, color: "#d97706" }}>

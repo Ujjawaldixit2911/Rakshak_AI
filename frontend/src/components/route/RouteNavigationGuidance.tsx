@@ -38,7 +38,7 @@ export default function RouteNavigationGuidance({
 }: RouteNavigationGuidanceProps) {
   const [scenes, setScenes] = useState<RouteScene[]>([]);
   const [activeSceneIndex, setActiveSceneIndex] = useState(0);
-  const [language, setLanguage] = useState<"hindi" | "english">("hindi");
+  const [language, setLanguage] = useState<"hindi" | "english">("english");
   const [copied, setCopied] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
 
@@ -159,14 +159,18 @@ export default function RouteNavigationGuidance({
     const currentScene = scenes[activeSceneIndex] || scenes[0];
     if (!currentScene) return;
 
-    const speechText =
-      language === "hindi"
-        ? `Step ${currentScene.stepIndex}. ${currentScene.title}. ${currentScene.action}. Doori lagbhag ${currentScene.distanceKm} kilometer. ${currentScene.hindiInstruction.replace(/\*\*/g, "")}`
-        : `Step ${currentScene.stepIndex}. ${currentScene.title}. ${currentScene.action}. Distance approximately ${currentScene.distanceKm} kilometers. ${currentScene.englishInstruction.replace(/\*\*/g, "")}`;
+    const speechText = `Step ${currentScene.stepIndex}. ${currentScene.title}. ${currentScene.action}. Distance approximately ${currentScene.distanceKm} kilometers. ${currentScene.englishInstruction.replace(/\*\*/g, "")}`;
 
     const utterance = new SpeechSynthesisUtterance(speechText);
-    utterance.lang = language === "hindi" ? "hi-IN" : "en-US";
+    utterance.lang = "en-IN";
     utterance.rate = 0.95;
+
+    const voices = window.speechSynthesis.getVoices();
+    const naturalVoice =
+      voices.find((v) => (v.lang === "en-IN" || v.lang.includes("India")) && (v.name.includes("Google") || v.name.includes("Natural") || v.name.includes("Rishi") || v.name.includes("Prabhat"))) ||
+      voices.find((v) => v.lang.startsWith("en-IN")) ||
+      voices.find((v) => v.lang.startsWith("en-US") || v.lang.startsWith("en-GB") || v.lang.startsWith("en"));
+    if (naturalVoice) utterance.voice = naturalVoice;
 
     utterance.onend = () => setIsSpeaking(false);
     utterance.onerror = () => setIsSpeaking(false);

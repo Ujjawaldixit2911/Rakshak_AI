@@ -38,17 +38,8 @@ export default function GoogleAuthGateway() {
 
   // Avatar Speech State
   const [isPlayingVoice, setIsPlayingVoice] = useState(false);
-  const [voiceLanguage, setVoiceLanguage] = useState<"hindi" | "english">("hindi");
   const [captionIdx, setCaptionIdx] = useState(0);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
-
-  const hindiDialogue = [
-    "Namaste! Main hoon aapka Rakshak Safety Guide.",
-    "Conventional maps aapko sirf sabse chhota ya fastest rasta dikhate hain, chahe wo kitna bhi sunsaan ya khatarnak kyu na ho.",
-    "Lekin Rakshak par hum real-time crime incidents, unlit blindspots, aur accident zones ko bypass karte hain.",
-    "Chahe do minute extra lagein, par hum aapko sabse safe aur fully illuminated route provide karenge!",
-    "Now you can login and explore the live safety map. Chaliye shuru karte hain!"
-  ];
 
   const englishDialogue = [
     "Hello! I am your Rakshak Safety Guide.",
@@ -58,7 +49,7 @@ export default function GoogleAuthGateway() {
     "Now you can log in to explore the live safety platform. Let's get started!"
   ];
 
-  const activeDialogue = voiceLanguage === "hindi" ? hindiDialogue : englishDialogue;
+  const activeDialogue = englishDialogue;
 
   // Initialize Google Identity Services Script
   useEffect(() => {
@@ -147,14 +138,12 @@ export default function GoogleAuthGateway() {
 
     const voices = window.speechSynthesis.getVoices();
     const naturalVoice =
-      voices.find((v) => (v.lang === "hi-IN" || v.lang === "hi_IN") && (v.name.includes("Google") || v.name.includes("Natural") || v.name.includes("India"))) ||
-      voices.find((v) => v.lang.startsWith("hi")) ||
       voices.find((v) => (v.lang === "en-IN" || v.lang.includes("India")) && (v.name.includes("Google") || v.name.includes("Natural") || v.name.includes("Rishi") || v.name.includes("Prabhat"))) ||
       voices.find((v) => v.lang.startsWith("en-IN")) ||
-      voices.find((v) => v.lang.startsWith("en"));
+      voices.find((v) => v.lang.startsWith("en-US") || v.lang.startsWith("en-GB") || v.lang.startsWith("en"));
 
     if (naturalVoice) utterance.voice = naturalVoice;
-    utterance.lang = voiceLanguage === "hindi" ? "hi-IN" : "en-IN";
+    utterance.lang = "en-IN";
     utterance.rate = 0.92;
     utterance.pitch = 1.02;
 
@@ -280,7 +269,7 @@ export default function GoogleAuthGateway() {
     <div
       style={{
         minHeight: "100vh",
-        background: "radial-gradient(circle at 50% 15%, rgba(16, 185, 129, 0.12) 0%, #0d131a 50%, #070a0e 100%)",
+        background: "var(--bg-base)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -297,7 +286,7 @@ export default function GoogleAuthGateway() {
           left: "-100px",
           width: "500px",
           height: "500px",
-          background: "radial-gradient(circle, rgba(16, 185, 129, 0.15) 0%, transparent 70%)",
+          background: "radial-gradient(circle, var(--mesh-blob-1) 0%, transparent 70%)",
           filter: "blur(80px)",
           pointerEvents: "none",
         }}
@@ -309,7 +298,7 @@ export default function GoogleAuthGateway() {
           right: "-100px",
           width: "500px",
           height: "500px",
-          background: "radial-gradient(circle, rgba(217, 119, 6, 0.10) 0%, transparent 70%)",
+          background: "radial-gradient(circle, var(--mesh-blob-2) 0%, transparent 70%)",
           filter: "blur(80px)",
           pointerEvents: "none",
         }}
@@ -320,11 +309,11 @@ export default function GoogleAuthGateway() {
         style={{
           width: "100%",
           maxWidth: "1200px",
-          background: "rgba(18, 24, 32, 0.92)",
-          border: "1px solid rgba(255, 255, 255, 0.10)",
+          background: "var(--bg-surface)",
+          border: "1px solid var(--border-subtle)",
           backdropFilter: "blur(24px)",
           borderRadius: "28px",
-          boxShadow: "0 25px 60px rgba(0, 0, 0, 0.7), 0 0 35px rgba(16, 185, 129, 0.08)",
+          boxShadow: "var(--shadow-modal)",
           overflow: "hidden",
           position: "relative",
           zIndex: 1,
@@ -341,8 +330,8 @@ export default function GoogleAuthGateway() {
           <div
             style={{
               padding: "2.5rem 2rem",
-              background: "linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.95) 100%)",
-              borderRight: "1px solid rgba(255, 255, 255, 0.1)",
+              background: "var(--bg-card)",
+              borderRight: "1px solid var(--border-subtle)",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
@@ -370,49 +359,19 @@ export default function GoogleAuthGateway() {
 
                 <div
                   style={{
-                    display: "flex",
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: 6,
                     background: "rgba(255, 255, 255, 0.06)",
                     borderRadius: 8,
-                    padding: 2,
+                    padding: "4px 10px",
                     border: "1px solid rgba(255, 255, 255, 0.1)",
+                    color: "#94a3b8",
+                    fontSize: "0.75rem",
+                    fontWeight: 700,
                   }}
                 >
-                  <button
-                    onClick={() => {
-                      handleStopSpeech();
-                      setVoiceLanguage("hindi");
-                    }}
-                    style={{
-                      padding: "4px 10px",
-                      borderRadius: 6,
-                      border: "none",
-                      background: voiceLanguage === "hindi" ? "#059669" : "transparent",
-                      color: voiceLanguage === "hindi" ? "#fff" : "#94a3b8",
-                      fontSize: "0.75rem",
-                      fontWeight: 700,
-                      cursor: "pointer",
-                    }}
-                  >
-                    🇮🇳 हिंदी
-                  </button>
-                  <button
-                    onClick={() => {
-                      handleStopSpeech();
-                      setVoiceLanguage("english");
-                    }}
-                    style={{
-                      padding: "4px 10px",
-                      borderRadius: 6,
-                      border: "none",
-                      background: voiceLanguage === "english" ? "#059669" : "transparent",
-                      color: voiceLanguage === "english" ? "#fff" : "#94a3b8",
-                      fontSize: "0.75rem",
-                      fontWeight: 700,
-                      cursor: "pointer",
-                    }}
-                  >
-                    🇬🇧 English
-                  </button>
+                  <span>🔊 English Audio</span>
                 </div>
               </div>
 
@@ -495,7 +454,7 @@ export default function GoogleAuthGateway() {
                 <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
                   <span style={{ fontSize: "1.1rem" }}>🎙️</span>
                   <span style={{ fontSize: "0.78rem", fontWeight: 800, color: "#34d399", textTransform: "uppercase" }}>
-                    {voiceLanguage === "hindi" ? "Safety Guide ka Sandesh" : "Safety Briefing"}
+                    Safety Briefing
                   </span>
                 </div>
                 <div style={{ fontSize: "0.95rem", color: "#f1f5f9", lineHeight: 1.55, fontWeight: 500, minHeight: "75px" }}>
