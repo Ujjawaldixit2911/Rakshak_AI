@@ -30,23 +30,23 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    // Apple-inspired variant styles
+    // Apple-inspired variant styles with full light & dark mode support
     const variantStyles: Record<ButtonVariant, string> = {
       primary:
-        "bg-[#0071e3] hover:bg-[#0077ed] text-white shadow-[0_4px_14px_rgba(0,113,227,0.3)] hover:shadow-[0_6px_20px_rgba(0,113,227,0.4)] border border-[#0071e3]/40",
+        "bg-[var(--accent-primary)] hover:opacity-90 text-white shadow-[0_4px_14px_rgba(5,150,105,0.3)] border border-transparent",
       secondary:
-        "bg-white/[0.06] hover:bg-white/[0.12] text-white/90 hover:text-white border border-white/[0.12] backdrop-blur-xl shadow-[0_2px_8px_rgba(0,0,0,0.2)]",
+        "bg-[var(--bg-card)] hover:bg-[var(--bg-card-hover)] text-[var(--text-primary)] border border-[var(--border-subtle)] shadow-[var(--shadow-sm)]",
       ghost:
-        "bg-transparent hover:bg-white/[0.06] text-white/75 hover:text-white border border-transparent",
+        "bg-transparent hover:bg-[var(--bg-card-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-transparent",
       destructive:
-        "bg-[#ff3b30]/15 hover:bg-[#ff3b30]/25 text-[#ff3b30] border border-[#ff3b30]/30 shadow-[0_2px_10px_rgba(255,59,48,0.15)]",
+        "bg-[rgba(239,68,68,0.12)] hover:bg-[rgba(239,68,68,0.2)] text-[#dc2626] border border-[rgba(239,68,68,0.3)] shadow-sm",
     };
 
     // Minimum 44x44px touch targets on all breakpoints
     const sizeStyles: Record<ButtonSize, string> = {
-      sm: "min-h-[44px] min-w-[44px] px-3.5 py-2 text-[13px] font-medium tracking-tight rounded-xl gap-2",
-      md: "min-h-[44px] min-w-[44px] px-5 py-2.5 text-[15px] font-medium tracking-tight rounded-2xl gap-2.5",
-      lg: "min-h-[50px] min-w-[50px] px-6 py-3 text-[16px] font-semibold tracking-tight rounded-2xl gap-3",
+      sm: "min-h-[40px] min-w-[40px] px-3.5 py-1.5 text-[13px] font-semibold tracking-tight rounded-xl gap-2",
+      md: "min-h-[44px] min-w-[44px] px-4 py-2 text-[14px] font-semibold tracking-tight rounded-xl gap-2",
+      lg: "min-h-[48px] min-w-[48px] px-5 py-2.5 text-[15px] font-bold tracking-tight rounded-xl gap-2.5",
     };
 
     const isDisabled = disabled || loading;
@@ -58,7 +58,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         className={`
           inline-flex items-center justify-center select-none font-['Inter',-apple-system,'SF_Pro_Display',system-ui,sans-serif]
           transition-all duration-200 ease-out cursor-pointer outline-none
-          focus-visible:ring-2 focus-visible:ring-[#0071e3]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0a0a]
+          focus-visible:ring-2 focus-visible:ring-[var(--accent-primary)]
           active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100 disabled:shadow-none
           ${variantStyles[variant]}
           ${sizeStyles[size]}
@@ -71,15 +71,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ) : (
           <>
             {icon && iconPosition === "left" && (
-              <span className="inline-flex shrink-0 items-center justify-center">
-                {icon}
-              </span>
+              <span className="shrink-0 flex items-center">{icon}</span>
             )}
-            {children && <span className="truncate">{children}</span>}
+            {children}
             {icon && iconPosition === "right" && (
-              <span className="inline-flex shrink-0 items-center justify-center">
-                {icon}
-              </span>
+              <span className="shrink-0 flex items-center">{icon}</span>
             )}
           </>
         )}

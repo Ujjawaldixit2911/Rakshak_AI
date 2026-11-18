@@ -36,11 +36,22 @@ export default function PatrolRouteMap({ route = DEFAULT_PATROL_ROUTE }: Props) 
   const activeRoute = route && route.length > 0 ? route : DEFAULT_PATROL_ROUTE;
 
   useEffect(() => {
-    if (!mapRef.current || mapInstanceRef.current || !activeRoute?.length) return;
+    if (!mapRef.current || !activeRoute?.length) return;
+    let isCancelled = false;
 
     (async () => {
       const L = (await import("leaflet")).default;
       await import("leaflet/dist/leaflet.css");
+
+      if (isCancelled || !mapRef.current) return;
+
+      if ((mapRef.current as any)._leaflet_id) {
+        delete (mapRef.current as any)._leaflet_id;
+      }
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
 
       delete (L.Icon.Default.prototype as any)._getIconUrl;
       L.Icon.Default.mergeOptions({
@@ -50,7 +61,7 @@ export default function PatrolRouteMap({ route = DEFAULT_PATROL_ROUTE }: Props) 
       });
 
       const center: [number, number] = [activeRoute[0].lat, activeRoute[0].lng];
-      const map = L.map(mapRef.current!, { zoomControl: true });
+      const map = L.map(mapRef.current, { zoomControl: true });
       mapInstanceRef.current = map;
       map.setView(center, 12);
 
@@ -107,14 +118,18 @@ export default function PatrolRouteMap({ route = DEFAULT_PATROL_ROUTE }: Props) 
     })();
 
     return () => {
+      isCancelled = true;
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
+      }
+      if (mapRef.current && (mapRef.current as any)._leaflet_id) {
+        delete (mapRef.current as any)._leaflet_id;
       }
     };
   }, [activeRoute]);
 
   return (
-    <div ref={mapRef} className="h-[460px] w-full rounded-2xl overflow-hidden border border-white/[0.08]" />
+    <div ref={mapRef} className="h-[460px] w-full rounded-2xl overflow-hidden border border-[var(--border-subtle)] shadow-[var(--shadow-card)]" />
   );
 }
