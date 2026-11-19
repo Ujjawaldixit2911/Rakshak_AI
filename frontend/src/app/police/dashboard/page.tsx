@@ -445,31 +445,42 @@ export default function PoliceCommandDashboard() {
           </div>
         </section>
 
-        {/* ── Section 2: Executive KPI Metrics (Symmetrical & Equally Distributed 5-Column Grid) ── */}
-        <section className="my-8 sm:my-9">
+        {/* ── Section 2: Executive KPI Metrics (Harmonious SVG & Data Architecture) ── */}
+        <section className="my-8 sm:my-10">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 lg:gap-6 items-stretch">
             {/* KPI 1: City Safety Index */}
-            <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] hover:shadow-lg hover:border-emerald-500/40 transition-all duration-200 flex flex-col justify-between h-full min-h-[205px] space-y-4">
-              <div className="h-12 flex items-center justify-between gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 flex items-center justify-center shrink-0 shadow-sm">
-                  <ShieldCheck className="w-6 h-6" />
+            <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] hover:shadow-lg hover:border-emerald-500/40 transition-all duration-200 flex flex-col justify-between h-full min-h-[210px] space-y-4">
+              {/* Top Row: SVG Icon & Category on Left, Status Badge on Right */}
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 flex items-center justify-center shrink-0 shadow-sm">
+                    <ShieldCheck className="w-5 h-5 stroke-[2.2]" />
+                  </div>
+                  <div>
+                    <div className="text-[11px] font-black uppercase tracking-wider text-[var(--text-muted)]">
+                      Safety Rating
+                    </div>
+                    <div className="text-xs font-bold text-[var(--text-secondary)]">
+                      City Index
+                    </div>
+                  </div>
                 </div>
-                <span className="text-[11px] font-black px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/50 flex items-center gap-1 shadow-sm">
+
+                <span className="text-[11px] font-black px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/50 flex items-center gap-1 shadow-sm shrink-0">
                   <span>↗</span>
                   <span>+2.4%</span>
                 </span>
               </div>
 
-              <div className="flex-1 flex flex-col justify-center py-2 space-y-1">
-                <div className="text-[11.5px] font-black uppercase tracking-wider text-[var(--text-muted)]">
-                  City Safety Index
-                </div>
-                <div className="text-3xl lg:text-[34px] font-black text-emerald-600 tracking-tight tabular-nums">
-                  {cityMeta.safetyScore}
-                  <span className="text-sm font-bold text-[var(--text-muted)] ml-1">/ 100</span>
+              {/* Main Metric Value */}
+              <div className="my-auto py-1">
+                <div className="text-3xl lg:text-[34px] font-black text-emerald-600 tracking-tight tabular-nums flex items-baseline gap-1">
+                  <span>{cityMeta.safetyScore}</span>
+                  <span className="text-sm font-bold text-[var(--text-muted)] font-sans">/ 100</span>
                 </div>
               </div>
 
+              {/* Context Footer */}
               <div className="pt-3.5 border-t border-[var(--border-subtle)] text-[12px] text-[var(--text-secondary)] font-medium flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
                 <span className="truncate">{cityMeta.name} safety score</span>
@@ -477,108 +488,153 @@ export default function PoliceCommandDashboard() {
             </div>
 
             {/* KPI 2: Recorded Crimes */}
-            <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] hover:shadow-lg hover:border-teal-500/40 transition-all duration-200 flex flex-col justify-between h-full min-h-[205px] space-y-4">
-              <div className="h-12 flex items-center justify-between gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-600 flex items-center justify-center shrink-0 shadow-sm">
-                  <BarChart3 className="w-6 h-6" />
+            <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] hover:shadow-lg hover:border-teal-500/40 transition-all duration-200 flex flex-col justify-between h-full min-h-[210px] space-y-4">
+              {/* Top Row: SVG Icon & Category on Left, Status Badge on Right */}
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-2xl bg-teal-500/10 border border-teal-500/20 text-teal-600 flex items-center justify-center shrink-0 shadow-sm">
+                    <BarChart3 className="w-5 h-5 stroke-[2.2]" />
+                  </div>
+                  <div>
+                    <div className="text-[11px] font-black uppercase tracking-wider text-[var(--text-muted)]">
+                      Recorded Crimes
+                    </div>
+                    <div className="text-xs font-bold text-[var(--text-secondary)]">
+                      Historical FIRs
+                    </div>
+                  </div>
                 </div>
-                <span className="text-[11px] font-black px-2.5 py-1 rounded-full bg-teal-50 text-teal-700 dark:bg-teal-950/40 dark:text-teal-300 border border-teal-200 dark:border-teal-800/50 shadow-sm">
+
+                <span className="text-[11px] font-black px-2.5 py-1 rounded-full bg-teal-50 text-teal-700 dark:bg-teal-950/40 dark:text-teal-300 border border-teal-200 dark:border-teal-800/50 shadow-sm shrink-0">
                   ACTIVE
                 </span>
               </div>
 
-              <div className="flex-1 flex flex-col justify-center py-2 space-y-1">
-                <div className="text-[11.5px] font-black uppercase tracking-wider text-[var(--text-muted)]">
-                  Recorded Crimes
-                </div>
-                <div className="text-3xl lg:text-[34px] font-black text-[var(--text-primary)] tracking-tight tabular-nums">
-                  {(summary.total_crimes_recorded || Math.round(cityMeta.activeCameras * 0.95 + 2800)).toLocaleString()}
+              {/* Main Metric Value */}
+              <div className="my-auto py-1">
+                <div className="text-3xl lg:text-[34px] font-black text-[var(--text-primary)] tracking-tight tabular-nums flex items-baseline gap-1.5">
+                  <span>{(summary.total_crimes_recorded || Math.round(cityMeta.activeCameras * 0.95 + 2800)).toLocaleString()}</span>
+                  <span className="text-xs font-bold text-[var(--text-muted)] font-sans uppercase">Logs</span>
                 </div>
               </div>
 
+              {/* Context Footer */}
               <div className="pt-3.5 border-t border-[var(--border-subtle)] text-[12px] text-[var(--text-secondary)] font-medium flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-teal-500 shrink-0" />
-                <span className="truncate">Verified FIR registers</span>
+                <span className="truncate">Verified police FIR registers</span>
               </div>
             </div>
 
             {/* KPI 3: Active Hotspots */}
-            <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] hover:shadow-lg hover:border-amber-500/40 transition-all duration-200 flex flex-col justify-between h-full min-h-[205px] space-y-4">
-              <div className="h-12 flex items-center justify-between gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-600 flex items-center justify-center shrink-0 shadow-sm">
-                  <Flame className="w-6 h-6" />
+            <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] hover:shadow-lg hover:border-amber-500/40 transition-all duration-200 flex flex-col justify-between h-full min-h-[210px] space-y-4">
+              {/* Top Row: SVG Icon & Category on Left, Status Badge on Right */}
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-600 flex items-center justify-center shrink-0 shadow-sm">
+                    <Flame className="w-5 h-5 stroke-[2.2]" />
+                  </div>
+                  <div>
+                    <div className="text-[11px] font-black uppercase tracking-wider text-[var(--text-muted)]">
+                      Active Hotspots
+                    </div>
+                    <div className="text-xs font-bold text-[var(--text-secondary)]">
+                      Risk Density
+                    </div>
+                  </div>
                 </div>
-                <span className="text-[11px] font-black px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800/50 flex items-center gap-1 shadow-sm">
+
+                <span className="text-[11px] font-black px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-300 border border-amber-200 dark:border-amber-800/50 flex items-center gap-1 shadow-sm shrink-0">
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping" />
                   <span>ALERT</span>
                 </span>
               </div>
 
-              <div className="flex-1 flex flex-col justify-center py-2 space-y-1">
-                <div className="text-[11.5px] font-black uppercase tracking-wider text-[var(--text-muted)]">
-                  Active Hotspots
-                </div>
-                <div className="text-3xl lg:text-[34px] font-black text-amber-600 tracking-tight tabular-nums">
-                  {cityMeta.hotspots.length}
-                  <span className="text-sm font-bold text-[var(--text-muted)] ml-1">Zones</span>
+              {/* Main Metric Value */}
+              <div className="my-auto py-1">
+                <div className="text-3xl lg:text-[34px] font-black text-amber-600 tracking-tight tabular-nums flex items-baseline gap-1.5">
+                  <span>{cityMeta.hotspots.length}</span>
+                  <span className="text-sm font-bold text-[var(--text-muted)] font-sans">Clusters</span>
                 </div>
               </div>
 
+              {/* Context Footer */}
               <div className="pt-3.5 border-t border-[var(--border-subtle)] text-[12px] text-[var(--text-secondary)] font-medium flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />
-                <span className="truncate">DBSCAN clusters monitored</span>
+                <span className="truncate">DBSCAN risk surveillance</span>
               </div>
             </div>
 
             {/* KPI 4: Avg Response Time */}
-            <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] hover:shadow-lg hover:border-blue-500/40 transition-all duration-200 flex flex-col justify-between h-full min-h-[205px] space-y-4">
-              <div className="h-12 flex items-center justify-between gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-600 flex items-center justify-center shrink-0 shadow-sm">
-                  <Clock className="w-6 h-6" />
+            <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] hover:shadow-lg hover:border-blue-500/40 transition-all duration-200 flex flex-col justify-between h-full min-h-[210px] space-y-4">
+              {/* Top Row: SVG Icon & Category on Left, Status Badge on Right */}
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-blue-600 flex items-center justify-center shrink-0 shadow-sm">
+                    <Clock className="w-5 h-5 stroke-[2.2]" />
+                  </div>
+                  <div>
+                    <div className="text-[11px] font-black uppercase tracking-wider text-[var(--text-muted)]">
+                      Avg Response
+                    </div>
+                    <div className="text-xs font-bold text-[var(--text-secondary)]">
+                      112 Dispatch
+                    </div>
+                  </div>
                 </div>
-                <span className="text-[11px] font-black px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800/50 flex items-center gap-1 shadow-sm">
+
+                <span className="text-[11px] font-black px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 dark:bg-blue-950/40 dark:text-blue-300 border border-blue-200 dark:border-blue-800/50 flex items-center gap-1 shadow-sm shrink-0">
                   <span>↘</span>
                   <span>-1.2m</span>
                 </span>
               </div>
 
-              <div className="flex-1 flex flex-col justify-center py-2 space-y-1">
-                <div className="text-[11.5px] font-black uppercase tracking-wider text-[var(--text-muted)]">
-                  Avg Response Time
-                </div>
-                <div className="text-3xl lg:text-[34px] font-black text-[var(--text-primary)] tracking-tight tabular-nums">
-                  {cityMeta.responseMins}
-                  <span className="text-sm font-bold text-[var(--text-muted)] ml-1">mins</span>
+              {/* Main Metric Value */}
+              <div className="my-auto py-1">
+                <div className="text-3xl lg:text-[34px] font-black text-[var(--text-primary)] tracking-tight tabular-nums flex items-baseline gap-1.5">
+                  <span>{cityMeta.responseMins}</span>
+                  <span className="text-sm font-bold text-[var(--text-muted)] font-sans">mins</span>
                 </div>
               </div>
 
+              {/* Context Footer */}
               <div className="pt-3.5 border-t border-[var(--border-subtle)] text-[12px] text-[var(--text-secondary)] font-medium flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0" />
-                <span className="truncate">SOS dispatch to arrival</span>
+                <span className="truncate">Rapid emergency arrival</span>
               </div>
             </div>
 
             {/* KPI 5: Case Resolution */}
-            <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] hover:shadow-lg hover:border-indigo-500/40 transition-all duration-200 flex flex-col justify-between h-full min-h-[205px] space-y-4">
-              <div className="h-12 flex items-center justify-between gap-3">
-                <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 flex items-center justify-center shrink-0 shadow-sm">
-                  <CheckCircle2 className="w-6 h-6" />
+            <div className="p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] hover:shadow-lg hover:border-indigo-500/40 transition-all duration-200 flex flex-col justify-between h-full min-h-[210px] space-y-4">
+              {/* Top Row: SVG Icon & Category on Left, Status Badge on Right */}
+              <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-600 flex items-center justify-center shrink-0 shadow-sm">
+                    <CheckCircle2 className="w-5 h-5 stroke-[2.2]" />
+                  </div>
+                  <div>
+                    <div className="text-[11px] font-black uppercase tracking-wider text-[var(--text-muted)]">
+                      Resolution Rate
+                    </div>
+                    <div className="text-xs font-bold text-[var(--text-secondary)]">
+                      Case Status
+                    </div>
+                  </div>
                 </div>
-                <span className="text-[11px] font-black px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/50 shadow-sm">
+
+                <span className="text-[11px] font-black px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/50 shadow-sm shrink-0">
                   CLOSED
                 </span>
               </div>
 
-              <div className="flex-1 flex flex-col justify-center py-2 space-y-1">
-                <div className="text-[11.5px] font-black uppercase tracking-wider text-[var(--text-muted)]">
-                  Case Resolution
-                </div>
-                <div className="text-3xl lg:text-[34px] font-black text-emerald-600 tracking-tight tabular-nums">
-                  {cityMeta.resolutionRate}
-                  <span className="text-sm font-bold text-[var(--text-muted)] ml-1">%</span>
+              {/* Main Metric Value */}
+              <div className="my-auto py-1">
+                <div className="text-3xl lg:text-[34px] font-black text-emerald-600 tracking-tight tabular-nums flex items-baseline gap-1">
+                  <span>{cityMeta.resolutionRate}</span>
+                  <span className="text-sm font-bold text-[var(--text-muted)] font-sans">%</span>
                 </div>
               </div>
 
+              {/* Context Footer */}
               <div className="pt-3.5 border-t border-[var(--border-subtle)] text-[12px] text-[var(--text-secondary)] font-medium flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-indigo-500 shrink-0" />
                 <span className="truncate">Verified & closed cases</span>
