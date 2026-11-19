@@ -11,24 +11,17 @@ const PRIORITY_BADGE: Record<string, string> = {
 
 export default function SafetyRecommendations({ recommendations }: Props) {
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+    <div className="flex flex-col gap-2.5">
       {recommendations.map((rec, i) => (
-        <div key={i} className="fade-in-up" style={{
-          display: "flex", alignItems: "flex-start", gap: 14,
-          padding: "12px 14px", borderRadius: 10,
-          background: "rgba(255,255,255,0.03)",
-          border: "1px solid rgba(255,255,255,0.07)",
-          animationDelay: `${i * 0.06}s`,
-          transition: "background 0.2s",
-        }}
-        onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.06)")}
-        onMouseLeave={e => (e.currentTarget.style.background = "rgba(255,255,255,0.03)")}
+        <div
+          key={i}
+          className="flex items-start gap-3.5 p-3 sm:p-3.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] hover:border-[var(--accent-primary)] transition-all shadow-sm"
         >
-          <span style={{ fontSize: "1.5rem", flexShrink: 0, lineHeight: 1.2 }}>{rec.icon}</span>
-          <div style={{ flex: 1 }}>
-            <p style={{ fontSize: "0.88rem", color: "var(--color-text-primary)", lineHeight: 1.5 }}>{rec.tip}</p>
+          <span className="text-xl shrink-0 leading-tight">{rec.icon}</span>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs sm:text-[13px] text-[var(--text-primary)] font-medium leading-relaxed">{rec.tip}</p>
           </div>
-          <span className={PRIORITY_BADGE[rec.priority] || "badge"}>{rec.priority}</span>
+          <span className={`${PRIORITY_BADGE[rec.priority] || "badge"} shrink-0 text-[10px]`}>{rec.priority}</span>
         </div>
       ))}
     </div>

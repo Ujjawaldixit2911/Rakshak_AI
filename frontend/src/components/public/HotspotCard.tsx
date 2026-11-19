@@ -24,20 +24,21 @@ export default function HotspotCard({ hotspot, index }: Props) {
   const topCrimeTypes = Array.isArray(hotspot?.top_crime_types) ? hotspot.top_crime_types : [];
 
   return (
-    <div className="card fade-in-up" style={{
-      padding: "1rem 1.25rem",
-      animationDelay: `${index * 0.07}s`,
-      borderLeft: `3px solid ${color}`,
-    }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: "1.1rem" }}>{RISK_ICONS[riskLevel] || "📍"}</span>
-          <span style={{ fontWeight: 700, fontSize: "0.9rem" }}>{hotspot?.location || "Hotspot"}</span>
+    <div
+      className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-sm hover:shadow-md transition-all"
+      style={{
+        borderLeft: `4px solid ${color}`,
+      }}
+    >
+      <div className="flex justify-between items-start mb-2.5">
+        <div className="flex items-center gap-2">
+          <span className="text-base">{RISK_ICONS[riskLevel] || "📍"}</span>
+          <span className="font-extrabold text-[13px] text-[var(--text-primary)]">{hotspot?.location || "Hotspot"}</span>
         </div>
-        <span className={badgeClass}>{riskLevel}</span>
+        <span className={`${badgeClass} text-[10px]`}>{riskLevel}</span>
       </div>
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px 16px", marginBottom: 10 }}>
+      <div className="grid grid-cols-2 gap-2 text-xs mb-3">
         <Metric label="Crimes" value={crimeCount.toString()} />
         <Metric label="Intensity" value={`${Math.round(intensity * 100)}%`} />
         <Metric label="Lat" value={latStr} />
@@ -45,14 +46,16 @@ export default function HotspotCard({ hotspot, index }: Props) {
       </div>
 
       {/* Intensity bar */}
-      <div className="progress-bar" style={{ marginBottom: 8 }}>
-        <div className="progress-fill" style={{ width: `${intensity * 100}%`, background: color }} />
+      <div className="w-full h-1.5 rounded-full bg-[var(--border-subtle)] overflow-hidden mb-2.5">
+        <div className="h-full rounded-full transition-all" style={{ width: `${intensity * 100}%`, background: color }} />
       </div>
 
       {topCrimeTypes.length > 0 && (
-        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+        <div className="flex gap-1.5 flex-wrap">
           {topCrimeTypes.map((t: string) => (
-            <span key={t} style={{ fontSize: "0.72rem", padding: "2px 8px", borderRadius: 99, background: "rgba(255,255,255,0.07)", color: "var(--color-text-secondary)" }}>{t}</span>
+            <span key={t} className="text-[10px] px-2 py-0.5 rounded-full bg-[var(--bg-surface-elevated)] border border-[var(--border-subtle)] text-[var(--text-secondary)] font-medium">
+              {t}
+            </span>
           ))}
         </div>
       )}

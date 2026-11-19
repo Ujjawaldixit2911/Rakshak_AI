@@ -39,7 +39,7 @@ export default function SafetyScoreGauge({ data, size = 160 }: Props) {
           <circle
             cx={cx} cy={cy} r={r}
             fill="none"
-            stroke="rgba(255,255,255,0.06)"
+            stroke="var(--border-strong, rgba(0,0,0,0.1))"
             strokeWidth={10}
             strokeDasharray={`${arcLen} ${circ - arcLen}`}
             strokeDashoffset={-circ * 0.125}

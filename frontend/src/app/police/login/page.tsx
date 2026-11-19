@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Shield, AlertCircle, ArrowLeft, CheckCircle2, Radio, UserCheck } from "lucide-react";
+import { Shield, AlertCircle, ArrowLeft, Radio, UserCheck, Lock, Sparkles } from "lucide-react";
 import { api } from "@/lib/api";
 import { PageBackground } from "@/components/shared/PageBackground";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
@@ -14,15 +14,15 @@ export const POLICE_DEMO_CREDENTIALS = {
     pin: "1234",
     title: "Patrol Officer (PCR Alpha-9)",
     role: "OFFICER",
-    desc: "Field patrol unit, incident reporting & route safety verification"
+    desc: "Field patrol unit, incident reporting & route safety verification",
   },
   commander: {
     id: "commander01",
     pin: "5678",
     title: "Police Commander (ERSS 112)",
     role: "COMMANDER",
-    desc: "City-wide command center, live spatial heatmap & dispatch grid"
-  }
+    desc: "City-wide command center, live spatial heatmap & dispatch grid",
+  },
 };
 
 export default function PoliceLoginPage() {
@@ -72,7 +72,7 @@ export default function PoliceLoginPage() {
   return (
     <PageBackground className="min-h-screen flex flex-col justify-between items-center p-4 sm:p-6">
       {/* Top Header with Back Navigation & Theme Toggle */}
-      <header className="w-full max-w-[460px] flex justify-between items-center z-10 pt-2">
+      <header className="w-full max-w-[480px] flex justify-between items-center z-10 pt-2">
         <Link
           href="/"
           className="flex items-center gap-2 text-xs font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors no-underline"
@@ -80,10 +80,10 @@ export default function PoliceLoginPage() {
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Citizen Safety Map</span>
         </Link>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[var(--accent-subtle)] border border-[rgba(5,150,105,0.2)]">
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--accent-subtle)] border border-[rgba(5,150,105,0.25)]">
             <span className="w-2 h-2 rounded-full bg-[var(--accent-primary)] animate-pulse" />
-            <span className="text-[11px] uppercase tracking-wider text-[var(--accent-primary)] font-extrabold">
+            <span className="text-[11px] uppercase tracking-wider text-[var(--accent-primary)] font-black">
               ERSS 112 Grid
             </span>
           </div>
@@ -91,40 +91,46 @@ export default function PoliceLoginPage() {
         </div>
       </header>
 
-      <div className="w-full max-w-[460px] my-auto space-y-6 z-10 py-6">
+      <div className="w-full max-w-[480px] my-auto space-y-5 z-10 py-6">
         {/* Brand Header */}
-        <div className="text-center space-y-2">
-          <div className="w-16 h-16 rounded-3xl bg-[var(--accent-subtle)] border border-[rgba(5,150,105,0.3)] flex items-center justify-center text-[var(--accent-primary)] mx-auto shadow-sm">
+        <div className="text-center space-y-2.5">
+          <div className="w-16 h-16 rounded-3xl bg-[var(--accent-subtle)] border border-[rgba(5,150,105,0.25)] flex items-center justify-center text-[var(--accent-primary)] mx-auto shadow-sm">
             <Shield className="w-8 h-8" />
           </div>
-          <h1 className="text-[26px] sm:text-[30px] font-black tracking-[-0.03em] text-[var(--text-primary)]">
-            Police & Command Portal
-          </h1>
-          <p className="text-[13px] text-[var(--text-secondary)] max-w-sm mx-auto">
-            Authorized access for State Police PCR Patrol Units, ERSS 112 Dispatchers & Area Commanders.
+          <div>
+            <span className="inline-block px-2.5 py-0.5 rounded-full bg-[rgba(5,150,105,0.08)] border border-[rgba(5,150,105,0.2)] text-[10px] font-black uppercase tracking-wider text-[var(--accent-primary)] mb-1">
+              Law Enforcement Dispatch Portal
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[var(--text-primary)]">
+              Police Command Center
+            </h1>
+          </div>
+          <p className="text-xs text-[var(--text-secondary)] max-w-sm mx-auto font-medium">
+            Authorized state access for PCR patrol fleet units, ERSS-112 dispatchers, and area command commissioners.
           </p>
         </div>
 
         {/* 1-Click Quick Demo Launcher Card */}
-        <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-4 shadow-[var(--shadow-card)] space-y-2.5">
+        <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-3xl p-5 shadow-[var(--shadow-card)] space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-[11px] font-extrabold tracking-wider uppercase text-[var(--accent-primary)] flex items-center gap-1.5">
-              <span>⚡</span> 1-Click Instant Demo Access
+            <span className="text-[11px] font-black tracking-wider uppercase text-[var(--accent-primary)] flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>1-Click Instant Demo Access</span>
             </span>
-            <span className="text-[10px] text-[var(--text-muted)] font-medium">No signup needed</span>
+            <span className="text-[10px] text-[var(--text-muted)] font-semibold">Zero configuration</span>
           </div>
 
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-3">
             {/* 1-Click Officer */}
             <button
               type="button"
               onClick={() => handleQuickDemo("officer")}
               disabled={loading}
-              className="p-3 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card-hover)] border border-[var(--border-subtle)] hover:border-[var(--accent-primary)] text-left transition-all cursor-pointer group shadow-sm disabled:opacity-50"
+              className="p-3.5 rounded-2xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card-hover)] border border-[var(--border-subtle)] hover:border-emerald-500 text-left transition-all cursor-pointer group shadow-sm disabled:opacity-50"
             >
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-base">👮</span>
-                <span className="text-[12px] font-extrabold text-[var(--text-primary)] group-hover:text-[var(--accent-primary)]">
+                <span className="text-lg">👮</span>
+                <span className="text-xs font-black text-[var(--text-primary)] group-hover:text-emerald-600">
                   Patrol Officer
                 </span>
               </div>
@@ -138,11 +144,11 @@ export default function PoliceLoginPage() {
               type="button"
               onClick={() => handleQuickDemo("commander")}
               disabled={loading}
-              className="p-3 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card-hover)] border border-[var(--border-subtle)] hover:border-[var(--accent-primary)] text-left transition-all cursor-pointer group shadow-sm disabled:opacity-50"
+              className="p-3.5 rounded-2xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card-hover)] border border-[var(--border-subtle)] hover:border-emerald-500 text-left transition-all cursor-pointer group shadow-sm disabled:opacity-50"
             >
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-base">🏛️</span>
-                <span className="text-[12px] font-extrabold text-[var(--text-primary)] group-hover:text-[var(--accent-primary)]">
+                <span className="text-lg">🏛️</span>
+                <span className="text-xs font-black text-[var(--text-primary)] group-hover:text-emerald-600">
                   City Command
                 </span>
               </div>
@@ -154,15 +160,15 @@ export default function PoliceLoginPage() {
         </div>
 
         {/* Manual Identifier Form */}
-        <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-6 sm:p-7 space-y-5 shadow-[var(--shadow-card)]">
-          <div className="flex items-center gap-2 text-[12px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
+        <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-3xl p-6 sm:p-7 space-y-5 shadow-[var(--shadow-card)]">
+          <div className="flex items-center gap-2 text-xs font-black text-[var(--text-muted)] uppercase tracking-wider">
             <Radio className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
             <span>Enter Officer Credentials</span>
           </div>
 
           <form onSubmit={handleFormSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)]">
+              <label className="block text-[11px] font-extrabold uppercase tracking-wider text-[var(--text-secondary)]">
                 Officer / Command ID
               </label>
               <input
@@ -173,12 +179,12 @@ export default function PoliceLoginPage() {
                 onChange={(e) => setOfficerId(e.target.value)}
                 autoComplete="username"
                 required
-                className="w-full h-11 px-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[14px] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-subtle)] transition-all font-medium"
+                className="w-full h-11 px-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-subtle)] transition-all font-medium"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-[var(--text-secondary)]">
+              <label className="block text-[11px] font-extrabold uppercase tracking-wider text-[var(--text-secondary)]">
                 Security PIN
               </label>
               <input
@@ -189,12 +195,12 @@ export default function PoliceLoginPage() {
                 onChange={(e) => setPin(e.target.value)}
                 autoComplete="current-password"
                 required
-                className="w-full h-11 px-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[14px] text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-subtle)] transition-all font-mono tracking-widest"
+                className="w-full h-11 px-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-subtle)] transition-all font-mono tracking-widest"
               />
             </div>
 
             {error && (
-              <div className="rounded-xl bg-[rgba(239,68,68,0.1)] border border-[rgba(239,68,68,0.25)] p-3 flex items-center gap-2.5 text-[12px] text-[#ef4444]">
+              <div className="rounded-xl bg-[rgba(239,68,68,0.08)] border border-[rgba(239,68,68,0.25)] p-3 flex items-center gap-2.5 text-xs text-[#ef4444] font-semibold">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{error}</span>
               </div>
@@ -204,7 +210,7 @@ export default function PoliceLoginPage() {
               id="police-login-btn"
               type="submit"
               disabled={loading}
-              className="w-full h-11 rounded-xl text-white font-extrabold text-[14px] shadow-[0_4px_14px_rgba(5,150,105,0.35)] transition-all cursor-pointer disabled:opacity-50 mt-1 flex items-center justify-center gap-2"
+              className="w-full h-11 rounded-xl text-white font-extrabold text-xs tracking-wide shadow-[0_4px_14px_rgba(5,150,105,0.35)] transition-all cursor-pointer disabled:opacity-50 mt-1 flex items-center justify-center gap-2"
               style={{
                 background: "linear-gradient(135deg, #059669 0%, #047857 100%)",
               }}
@@ -221,10 +227,10 @@ export default function PoliceLoginPage() {
           </form>
 
           {/* Quick Clickable Demo Credentials Bar */}
-          <div className="pt-3 border-t border-[var(--border-subtle)] space-y-2 text-[11px] text-[var(--text-secondary)]">
-            <div className="font-bold text-[var(--text-primary)] flex justify-between items-center">
+          <div className="pt-3 border-t border-[var(--border-subtle)] space-y-2 text-xs text-[var(--text-secondary)]">
+            <div className="font-extrabold text-[var(--text-primary)] flex justify-between items-center text-[11px]">
               <span>Click to auto-fill credentials:</span>
-              <span className="text-[10px] text-[var(--text-muted)]">Tap any row below</span>
+              <span className="text-[10px] text-[var(--text-muted)] font-medium">Tap any row below</span>
             </div>
 
             <div
@@ -233,13 +239,13 @@ export default function PoliceLoginPage() {
                 setPin(POLICE_DEMO_CREDENTIALS.officer.pin);
                 setError("");
               }}
-              className="p-2 rounded-lg bg-[var(--bg-surface)] hover:bg-[var(--bg-card-hover)] border border-[var(--border-subtle)] flex items-center justify-between cursor-pointer transition-colors"
+              className="p-2.5 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card-hover)] border border-[var(--border-subtle)] hover:border-emerald-500 flex items-center justify-between cursor-pointer transition-colors"
             >
               <div className="flex items-center gap-2">
-                <span>👮</span>
-                <span className="font-medium text-[var(--text-primary)]">Patrol Officer</span>
+                <span className="text-base">👮</span>
+                <span className="font-bold text-[var(--text-primary)] text-xs">Patrol Officer</span>
               </div>
-              <div className="font-mono text-[10px]">
+              <div className="font-mono text-[11px]">
                 <code className="text-[var(--accent-primary)] font-bold">officer001</code> / <code>1234</code>
               </div>
             </div>
@@ -250,20 +256,20 @@ export default function PoliceLoginPage() {
                 setPin(POLICE_DEMO_CREDENTIALS.commander.pin);
                 setError("");
               }}
-              className="p-2 rounded-lg bg-[var(--bg-surface)] hover:bg-[var(--bg-card-hover)] border border-[var(--border-subtle)] flex items-center justify-between cursor-pointer transition-colors"
+              className="p-2.5 rounded-xl bg-[var(--bg-surface)] hover:bg-[var(--bg-card-hover)] border border-[var(--border-subtle)] hover:border-emerald-500 flex items-center justify-between cursor-pointer transition-colors"
             >
               <div className="flex items-center gap-2">
-                <span>🏛️</span>
-                <span className="font-medium text-[var(--text-primary)]">Police Commander</span>
+                <span className="text-base">🏛️</span>
+                <span className="font-bold text-[var(--text-primary)] text-xs">Police Commander</span>
               </div>
-              <div className="font-mono text-[10px]">
+              <div className="font-mono text-[11px]">
                 <code className="text-[var(--accent-primary)] font-bold">commander01</code> / <code>5678</code>
               </div>
             </div>
           </div>
         </div>
 
-        <p className="text-center text-[11px] text-[var(--text-muted)]">
+        <p className="text-center text-[11px] text-[var(--text-muted)] font-medium">
           Rakshak AI · Law Enforcement & Public Safety Architecture · DPDP Act 2023
         </p>
       </div>

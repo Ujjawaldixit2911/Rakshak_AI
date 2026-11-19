@@ -18,10 +18,10 @@ const CustomTooltip = ({ active, payload }: any) => {
   if (!active || !payload?.length) return null;
   const d = payload[0].payload as CrimeBreakdown;
   return (
-    <div className="card" style={{ padding: "10px 14px", minWidth: 140 }}>
-      <div style={{ fontWeight: 700, marginBottom: 4, color: COLORS[d.category] || "#8899bb" }}>{d.category}</div>
-      <div style={{ fontSize: "0.85rem", color: "var(--color-text-secondary)" }}>{d.count} incidents</div>
-      <div style={{ fontSize: "0.85rem", color: "var(--color-text-secondary)" }}>{d.percentage}% of total</div>
+    <div className="bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-xl shadow-lg p-3 min-w-[140px]">
+      <div style={{ fontWeight: 700, marginBottom: 4, color: COLORS[d.category] || "var(--text-primary)" }}>{d.category}</div>
+      <div className="text-xs text-[var(--text-secondary)]">{d.count} incidents</div>
+      <div className="text-xs text-[var(--text-secondary)]">{d.percentage}% of total</div>
     </div>
   );
 };
@@ -31,10 +31,10 @@ export default function CrimeTypeChart({ data }: Props) {
     <div style={{ width: "100%", height: 220 }}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={data} layout="vertical" margin={{ left: 8, right: 24, top: 4, bottom: 4 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
-          <XAxis type="number" tick={{ fill: "#4a5f82", fontSize: 11 }} axisLine={false} tickLine={false} />
-          <YAxis dataKey="category" type="category" tick={{ fill: "#8899bb", fontSize: 12 }} axisLine={false} tickLine={false} width={95} />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: "rgba(255,255,255,0.04)" }} />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle, rgba(0,0,0,0.06))" horizontal={false} />
+          <XAxis type="number" tick={{ fill: "var(--text-muted)", fontSize: 11 }} axisLine={false} tickLine={false} />
+          <YAxis dataKey="category" type="category" tick={{ fill: "var(--text-secondary)", fontSize: 12 }} axisLine={false} tickLine={false} width={110} />
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: "var(--bg-card-hover)" }} />
           <Bar dataKey="count" radius={[0, 6, 6, 0]}>
             {data.map((entry) => (
               <Cell key={entry.category} fill={COLORS[entry.category] || "#6b7280"} fillOpacity={0.85} />

@@ -27,30 +27,29 @@ export default function WeeklyPatternGrid({ data }: Props) {
 
   return (
     <div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 8 }}>
+      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-2.5">
         {(data.weekly_pattern || []).map((day: any) => (
           <div key={day.day} style={{
-            padding: "12px 8px", borderRadius: 10, textAlign: "center",
+            padding: "14px 10px", borderRadius: 14, textAlign: "center",
             background: BG[day.risk_level],
             border: `1px solid ${BORDER[day.risk_level]}`,
-            transition: "transform 0.15s",
+            transition: "all 0.2s ease",
             cursor: "default",
           }}
-          onMouseEnter={e => (e.currentTarget.style.transform = "translateY(-3px)")}
-          onMouseLeave={e => (e.currentTarget.style.transform = "translateY(0)")}
+          className="hover:-translate-y-1 hover:shadow-sm"
           >
-            <div style={{ fontSize: "0.7rem", color: "var(--color-text-secondary)", fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
+            <div className="text-[11px] font-bold text-[var(--text-secondary)] uppercase tracking-wider mb-1.5">
               {day.day.slice(0, 3)}
             </div>
-            <div style={{ fontSize: "1.3rem", marginBottom: 4 }}>{ICON[day.risk_level]}</div>
-            <div style={{ fontSize: "0.72rem", fontWeight: 700, color: TEXT[day.risk_level] }}>{day.risk_level}</div>
-            <div style={{ fontSize: "0.65rem", color: "var(--color-text-muted)", marginTop: 4 }}>{day.confidence}%</div>
+            <div className="text-xl mb-1">{ICON[day.risk_level]}</div>
+            <div className="text-xs font-black" style={{ color: TEXT[day.risk_level] }}>{day.risk_level}</div>
+            <div className="text-[10px] text-[var(--text-muted)] font-mono mt-1">{day.confidence}%</div>
           </div>
         ))}
       </div>
-      <div style={{ marginTop: 10, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ fontSize: "0.72rem", color: "var(--color-text-muted)" }}>Model: {data.model}</span>
-        <span className="chip-confidence">🧠 {data.confidence}% avg confidence</span>
+      <div className="mt-3 flex justify-between items-center text-xs">
+        <span className="text-[11px] text-[var(--text-muted)]">Model: {data.model}</span>
+        <span className="chip-confidence text-[11px] py-0.5 px-2.5">🧠 {data.confidence}% avg confidence</span>
       </div>
     </div>
   );

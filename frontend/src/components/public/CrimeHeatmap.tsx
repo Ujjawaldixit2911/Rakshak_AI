@@ -105,19 +105,20 @@ export default function CrimeHeatmap({ center, heatmap, hotspots, zoom = 13 }: P
 
   return (
     <div style={{ position: "relative" }}>
-      <div ref={mapRef} style={{ height: 380, width: "100%", borderRadius: 12, overflow: "hidden" }} />
+      <div ref={mapRef} style={{ height: 420, width: "100%", borderRadius: 16, overflow: "hidden" }} className="border border-[var(--border-subtle)] shadow-sm" />
       {/* Legend */}
       <div style={{
         position: "absolute", bottom: 16, right: 16, zIndex: 1000,
-        background: "rgba(7,13,26,0.9)", backdropFilter: "blur(12px)",
-        border: "1px solid rgba(255,255,255,0.1)",
-        borderRadius: 10, padding: "10px 14px",
+        background: "var(--bg-surface)", backdropFilter: "blur(12px)",
+        border: "1px solid var(--border-subtle)",
+        borderRadius: 12, padding: "10px 14px",
+        boxShadow: "var(--shadow-card)",
       }}>
-        <div style={{ fontSize: "0.68rem", fontWeight: 600, color: "#4a5f82", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 8 }}>Risk Level</div>
-        {[["Critical", "#ef4444"], ["High", "#f97316"], ["Medium", "#f59e0b"], ["Low", "#22c55e"]].map(([label, color]) => (
-          <div key={label} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 5 }}>
-            <div style={{ width: 10, height: 10, borderRadius: 2, background: color }} />
-            <span style={{ fontSize: "0.78rem", color: "#8899bb" }}>{label}</span>
+        <div className="text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-muted)] mb-2">Risk Level</div>
+        {[["Critical", "#ef4444"], ["High", "#f97316"], ["Moderate", "#f59e0b"], ["Low", "#10b981"]].map(([label, color]) => (
+          <div key={label} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+            <div style={{ width: 10, height: 10, borderRadius: 3, background: color }} />
+            <span className="text-xs text-[var(--text-secondary)] font-semibold">{label}</span>
           </div>
         ))}
       </div>

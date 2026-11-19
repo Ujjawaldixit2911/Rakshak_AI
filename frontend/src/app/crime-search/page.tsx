@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { api, type CrimeSearchResult, type Area } from "@/lib/api";
+import { INDIAN_CITIES, getCityMetadata, type CityMetadata } from "@/lib/cities";
 import SafetyScoreGauge from "@/components/public/SafetyScoreGauge";
 import CrimeTypeChart from "@/components/public/CrimeTypeChart";
 import PeakHoursChart from "@/components/public/PeakHoursChart";
@@ -12,28 +13,64 @@ import WeeklyPatternGrid from "@/components/public/WeeklyPatternGrid";
 import AIInsightsPanel from "@/components/public/AIInsightsPanel";
 import SafetyRecommendations from "@/components/public/SafetyRecommendations";
 import VoiceInputButton from "@/components/VoiceInputButton";
+import { PageBackground } from "@/components/shared/PageBackground";
+import { Card } from "@/components/shared/Card";
+import {
+  Shield,
+  Search,
+  AlertTriangle,
+  TrendingUp,
+  Clock,
+  MapPin,
+  Radio,
+  Check,
+  CheckCircle,
+  Navigation,
+  Sparkles,
+  Building,
+  ChevronDown,
+  Activity,
+  Layers,
+  Flame,
+} from "lucide-react";
 
 const CrimeHeatmap = dynamic(() => import("@/components/public/CrimeHeatmap"), {
   ssr: false,
-  loading: () => <div style={{ height: 380, borderRadius: 12, background: "var(--color-bg-card)" }} className="skeleton" />,
+  loading: () => (
+    <div style={{ height: 420, borderRadius: 16 }} className="skeleton w-full" />
+  ),
 });
 
-import { PageBackground } from "@/components/shared/PageBackground";
+// City to default primary areas mapping
+const CITY_AREAS_MAP: Record<string, string[]> = {
+  Delhi: ["Connaught Place", "Saket", "Rohini", "Hauz Khas", "Dwarka", "Karol Bagh", "Kashmere Gate"],
+  Mumbai: ["Bandra West", "Andheri", "Colaba", "Dadar", "Juhu", "Kurla", "Govandi"],
+  Bengaluru: ["Koramangala", "Indiranagar", "Whitefield", "HSR Layout", "MG Road", "Electronic City"],
+  Hyderabad: ["Hitec City", "Gachibowli", "Banjara Hills", "Jubilee Hills", "Charminar", "Secunderabad"],
+  Chennai: ["T Nagar", "Adyar", "Anna Nagar", "Velachery", "Marina Beach", "Mylapore"],
+  Kolkata: ["Park Street", "Salt Lake", "New Town", "Howrah", "Ballygunge", "Dum Dum"],
+  Pune: ["Koregaon Park", "Kothrud", "Viman Nagar", "Hinjewadi", "Shivaji Nagar", "Baner"],
+  Ahmedabad: ["SG Highway", "Navrangpura", "Satellite", "Maninagar", "Vastrapur", "Bopal"],
+  Jaipur: ["Malviya Nagar", "C-Scheme", "Vaishali Nagar", "Mansarovar", "Raja Park", "Amer"],
+  Lucknow: ["Hazratganj", "Gomti Nagar", "Alambagh", "Indira Nagar", "Charbagh", "Aminabad"],
+};
 
-function getFallbackCrimeSearchResult(areaName: string): CrimeSearchResult {
-  const isSafe = !["Seelampur", "Govandi", "Kashmere Gate"].includes(areaName);
-  const score = isSafe ? 82 : 48;
-  const lat = areaName.includes("Bandra") ? 19.0596 : areaName.includes("Saket") ? 28.5245 : 28.6315;
-  const lng = areaName.includes("Bandra") ? 72.8295 : areaName.includes("Saket") ? 77.2066 : 77.2167;
+function getFallbackCrimeSearchResult(areaName: string, cityMeta: CityMetadata): CrimeSearchResult {
+  const isElevated = ["Seelampur", "Govandi", "Kashmere Gate", "Kurla", "Charminar", "Charbagh"].some(v =>
+    areaName.toLowerCase().includes(v.toLowerCase())
+  );
+  const score = isElevated ? 52 : Math.max(74, cityMeta.safetyScore);
+  const baseLat = cityMeta.center[0];
+  const baseLng = cityMeta.center[1];
 
   return {
     area: areaName,
-    area_meta: { lat, lng },
+    area_meta: { lat: baseLat, lng: baseLng },
     safety_score: {
       score,
-      classification: isSafe ? "Low Risk / Safe Zone" : "Elevated Risk Zone",
-      total_crimes: isSafe ? 142 : 485,
-      color: isSafe ? "#10b981" : "#ef4444",
+      classification: isElevated ? "Elevated Risk Zone" : "Low Risk / Safe Zone",
+      total_crimes: isElevated ? 412 : 124,
+      color: isElevated ? "#ef4444" : "#10b981",
     },
     crime_breakdown: [
       { category: "Theft & Pickpocketing", count: 48, percentage: 34 },
@@ -56,34 +93,22 @@ function getFallbackCrimeSearchResult(areaName: string): CrimeSearchResult {
       peak_hour: 20,
       peak_count: 48,
     },
-    hotspots: [
-      {
-        id: "1",
-        location: `${areaName} Metro Gate 2`,
-        lat: lat + 0.003,
-        lng: lng - 0.002,
-        crime_count: 28,
-        intensity: 0.85,
-        risk_level: "High",
-        color: "#ef4444",
-        top_crime_types: ["Snatching", "Pickpocketing"],
-      },
-      {
-        id: "2",
-        location: `${areaName} Market Service Lane`,
-        lat: lat - 0.004,
-        lng: lng + 0.003,
-        crime_count: 19,
-        intensity: 0.65,
-        risk_level: "Moderate",
-        color: "#f59e0b",
-        top_crime_types: ["Vehicle Theft", "Poor Lighting"],
-      },
-    ],
+    hotspots: cityMeta.hotspots.slice(0, 3).map((h, idx) => ({
+      id: String(h.id || idx + 1),
+      location: h.location,
+      lat: h.lat,
+      lng: h.lon,
+      crime_count: h.incident_count,
+      intensity: h.risk_score / 100,
+      risk_level: h.risk_level as "Critical" | "High" | "Moderate" | "Low",
+      color: h.color || (h.risk_score > 80 ? "#ef4444" : "#f59e0b"),
+      top_crime_types: h.top_crime_types || ["Snatching", "Theft"],
+    })),
     heatmap: [
-      { lat: lat + 0.002, lng: lng + 0.001, intensity: 0.8 },
-      { lat: lat - 0.003, lng: lng - 0.002, intensity: 0.6 },
-      { lat: lat + 0.005, lng: lng - 0.004, intensity: 0.4 },
+      { lat: baseLat + 0.002, lng: baseLng + 0.001, intensity: 0.8 },
+      { lat: baseLat - 0.003, lng: baseLng - 0.002, intensity: 0.6 },
+      { lat: baseLat + 0.005, lng: baseLng - 0.004, intensity: 0.4 },
+      { lat: baseLat - 0.002, lng: baseLng + 0.003, intensity: 0.75 },
     ],
     forecast: {
       historical: [
@@ -123,7 +148,13 @@ function getFallbackCrimeSearchResult(areaName: string): CrimeSearchResult {
     },
     anomalies: {
       anomalies: [
-        { date: "Last Weekend", crime_count: 26, avg_severity: 3.8, anomaly_type: "Festival Crowd Spurt", top_crime_type: "Snatching" },
+        {
+          date: "Last Weekend",
+          crime_count: 26,
+          avg_severity: 3.8,
+          anomaly_type: "Festival Crowd Spurt",
+          top_crime_type: "Snatching",
+        },
       ],
       model: "Isolation Forest + Z-Score",
       confidence: 0.89,
@@ -140,41 +171,94 @@ function getFallbackCrimeSearchResult(areaName: string): CrimeSearchResult {
       model: "Exponential Smoothing + ARIMA",
     },
     temporal_patterns: [
-      { day: "Friday & Saturday", time_window: "21:00 - 01:00", incident_count: 32, pattern: "Weekend Late Night Activity", confidence: 0.91 },
-      { day: "Weekdays", time_window: "08:30 - 10:30", incident_count: 22, pattern: "Morning Transit Rush", confidence: 0.86 },
+      {
+        day: "Friday & Saturday",
+        time_window: "21:00 - 01:00",
+        incident_count: 32,
+        pattern: "Weekend Late Night Activity",
+        confidence: 0.91,
+      },
+      {
+        day: "Weekdays",
+        time_window: "08:30 - 10:30",
+        incident_count: 22,
+        pattern: "Morning Transit Rush",
+        confidence: 0.86,
+      },
     ],
     recommendations: [
-      { icon: "💡", tip: "Prefer main commercial boulevard over dimly-lit service lanes after 9:00 PM.", priority: "High" },
-      { icon: "👮", tip: "Stationed police PCR van available 24/7 near the main central roundabout.", priority: "Medium" },
-      { icon: "📱", tip: "Keep Rakshak AI Live Geofencing activated during solo late-night commutes.", priority: "Medium" },
+      {
+        icon: "💡",
+        tip: "Prefer illuminated commercial corridors over dimly-lit service lanes after 9:00 PM.",
+        priority: "High",
+      },
+      {
+        icon: "👮",
+        tip: `Active ${cityMeta.name} PCR mobile patrol van available on 24x7 synchronized beat.`,
+        priority: "Medium",
+      },
+      {
+        icon: "📱",
+        tip: "Keep Rakshak AI Live Geofencing & Corridor Escort active during solo late-night travel.",
+        priority: "Medium",
+      },
     ],
   };
 }
 
-const QUICK_AREAS = [
-  "Connaught Place", "Saket", "Rohini", "Hauz Khas",
-  "Karol Bagh", "Dwarka", "Andheri", "Bandra",
-];
-
-function PanelTitle({ icon, title, badge }: { icon: string; title: string; badge?: React.ReactNode }) {
+function SectionHeading({
+  icon,
+  title,
+  subtitle,
+  badge,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  subtitle?: string;
+  badge?: React.ReactNode;
+}) {
   return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-        <span style={{ fontSize: "1.1rem" }}>{icon}</span>
-        <span className="panel-title">{title}</span>
+    <div className="flex items-center justify-between gap-4 mb-5 pb-2 border-b border-[var(--border-subtle)]">
+      <div className="flex items-center gap-3">
+        <div className="w-9 h-9 rounded-xl bg-[var(--accent-subtle)] border border-[rgba(5,150,105,0.2)] flex items-center justify-center text-[var(--accent-primary)] shrink-0">
+          {icon}
+        </div>
+        <div>
+          <h3 className="text-base sm:text-[17px] font-black text-[var(--text-primary)] tracking-tight">
+            {title}
+          </h3>
+          {subtitle && (
+            <p className="text-xs text-[var(--text-muted)] font-medium">
+              {subtitle}
+            </p>
+          )}
+        </div>
       </div>
       {badge}
     </div>
   );
 }
 
-function SkeletonCard({ h = 200 }: { h?: number }) {
-  return <div className="skeleton" style={{ height: h, borderRadius: 14 }} />;
-}
-
 export default function CrimeSearchPage() {
-  const [query, setQuery] = useState("");
-  const [selectedArea, setSelectedArea] = useState("Connaught Place");
+  const [selectedCity, setSelectedCity] = useState("Delhi");
+  const [isCityDropdownOpen, setIsCityDropdownOpen] = useState(false);
+  const cityDropdownRef = useRef<HTMLDivElement>(null);
+
+  const cityMeta = useMemo(() => {
+    return getCityMetadata(selectedCity);
+  }, [selectedCity]);
+
+  const quickAreas = useMemo(() => {
+    return CITY_AREAS_MAP[selectedCity] || [
+      "City Center",
+      "Central Market",
+      "Tech Boulevard",
+      "Metro Terminal",
+    ];
+  }, [selectedCity]);
+
+  const [query, setQuery] = useState(quickAreas[0] || "Connaught Place");
+  const [selectedArea, setSelectedArea] = useState(quickAreas[0] || "Connaught Place");
   const [result, setResult] = useState<CrimeSearchResult | null>(null);
   const [allAreas, setAllAreas] = useState<Area[]>([]);
   const [suggestions, setSuggestions] = useState<Area[]>([]);
@@ -183,20 +267,88 @@ export default function CrimeSearchPage() {
   const [error, setError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Close city dropdown on outside click
   useEffect(() => {
-    api.getAreas()
-      .then((res: any) => setAllAreas(res.areas || res || []))
-      .catch(() => {});
-    doSearch("Connaught Place");
+    const handleClickOutside = (event: MouseEvent) => {
+      if (cityDropdownRef.current && !cityDropdownRef.current.contains(event.target as Node)) {
+        setIsCityDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const filterSuggestions = useCallback((val: string) => {
-    if (!val.trim()) { setSuggestions([]); return; }
-    const filtered = allAreas.filter(a =>
-      a.name.toLowerCase().includes(val.toLowerCase())
-    ).slice(0, 6);
-    setSuggestions(filtered);
-  }, [allAreas]);
+  const doSearch = useCallback(
+    async (areaName: string, activeCity: CityMetadata = cityMeta) => {
+      if (!areaName) return;
+      setLoading(true);
+      setError("");
+      setSelectedArea(areaName);
+      setQuery(areaName);
+      setShowSuggestions(false);
+      try {
+        const data = await api.crimeSearch(areaName);
+        const fallback = getFallbackCrimeSearchResult(areaName, activeCity);
+        const merged: CrimeSearchResult = {
+          ...fallback,
+          ...(data || {}),
+          area: data?.area || areaName,
+          area_meta: { ...fallback.area_meta, ...(data?.area_meta || {}) },
+          safety_score: { ...fallback.safety_score, ...(data?.safety_score || {}) },
+          crime_breakdown: data?.crime_breakdown?.length ? data.crime_breakdown : fallback.crime_breakdown,
+          peak_hours: { ...fallback.peak_hours, ...(data?.peak_hours || {}) },
+          hotspots: data?.hotspots?.length ? data.hotspots : fallback.hotspots,
+          heatmap: data?.heatmap?.length ? data.heatmap : fallback.heatmap,
+          forecast: { ...fallback.forecast, ...(data?.forecast || {}) },
+          weekly_pattern: { ...fallback.weekly_pattern, ...(data?.weekly_pattern || {}) },
+          anomalies: { ...fallback.anomalies, ...(data?.anomalies || {}) },
+          spike_prediction: { ...fallback.spike_prediction, ...(data?.spike_prediction || {}) },
+          temporal_patterns: data?.temporal_patterns?.length ? data.temporal_patterns : fallback.temporal_patterns,
+          recommendations: data?.recommendations?.length ? data.recommendations : fallback.recommendations,
+        };
+        setResult(merged);
+      } catch (e) {
+        setResult(getFallbackCrimeSearchResult(areaName, activeCity));
+      } finally {
+        setLoading(false);
+      }
+    },
+    [cityMeta]
+  );
+
+  // Initial load
+  useEffect(() => {
+    api
+      .getAreas()
+      .then((res: any) => setAllAreas(res.areas || res || []))
+      .catch(() => {});
+    doSearch(quickAreas[0] || "Connaught Place", cityMeta);
+  }, []); // eslint-disable-line
+
+  const handleCityChange = (cityName: string) => {
+    setSelectedCity(cityName);
+    setIsCityDropdownOpen(false);
+    const newMeta = getCityMetadata(cityName);
+    const newQuick = CITY_AREAS_MAP[cityName] || ["City Center"];
+    const firstArea = newQuick[0] || "City Center";
+    setSelectedArea(firstArea);
+    setQuery(firstArea);
+    doSearch(firstArea, newMeta);
+  };
+
+  const filterSuggestions = useCallback(
+    (val: string) => {
+      if (!val.trim()) {
+        setSuggestions([]);
+        return;
+      }
+      const filtered = allAreas
+        .filter((a) => a.name.toLowerCase().includes(val.toLowerCase()))
+        .slice(0, 6);
+      setSuggestions(filtered);
+    },
+    [allAreas]
+  );
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
@@ -204,273 +356,456 @@ export default function CrimeSearchPage() {
     setShowSuggestions(true);
   };
 
-  const doSearch = async (areaName: string) => {
-    if (!areaName) return;
-    setLoading(true);
-    setError("");
-    setSelectedArea(areaName);
-    setQuery(areaName);
-    setShowSuggestions(false);
-    try {
-      const data = await api.crimeSearch(areaName);
-      const fallback = getFallbackCrimeSearchResult(areaName);
-      const merged: CrimeSearchResult = {
-        ...fallback,
-        ...(data || {}),
-        area: data?.area || areaName,
-        area_meta: { ...fallback.area_meta, ...(data?.area_meta || {}) },
-        safety_score: { ...fallback.safety_score, ...(data?.safety_score || {}) },
-        crime_breakdown: data?.crime_breakdown?.length ? data.crime_breakdown : fallback.crime_breakdown,
-        peak_hours: { ...fallback.peak_hours, ...(data?.peak_hours || {}) },
-        hotspots: data?.hotspots?.length ? data.hotspots : fallback.hotspots,
-        heatmap: data?.heatmap?.length ? data.heatmap : fallback.heatmap,
-        forecast: { ...fallback.forecast, ...(data?.forecast || {}) },
-        weekly_pattern: { ...fallback.weekly_pattern, ...(data?.weekly_pattern || {}) },
-        anomalies: { ...fallback.anomalies, ...(data?.anomalies || {}) },
-        spike_prediction: { ...fallback.spike_prediction, ...(data?.spike_prediction || {}) },
-        temporal_patterns: data?.temporal_patterns?.length ? data.temporal_patterns : fallback.temporal_patterns,
-        recommendations: data?.recommendations?.length ? data.recommendations : fallback.recommendations,
-      };
-      setResult(merged);
-    } catch (e) {
-      // Graceful fallback so dashboard loads seamlessly
-      setResult(getFallbackCrimeSearchResult(areaName));
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") doSearch(query);
   };
 
   return (
-    <div style={{ maxWidth: 1100, margin: "0 auto", padding: "2rem 1.5rem 4rem" }}>
+    <PageBackground className="min-h-screen py-6 px-4 sm:px-6">
+      <div className="max-w-[1240px] mx-auto space-y-6 sm:space-y-8">
 
-      {/* ── Hero Search ────────────────────────────────────────────────────── */}
-      <div className="fade-in-up" style={{ marginBottom: "2.5rem", textAlign: "center" }}>
-        <div style={{ display: "inline-block", padding: "4px 12px", background: "rgba(16, 185, 129, 0.12)", border: "1px solid rgba(16, 185, 129, 0.3)", borderRadius: "20px", fontSize: "0.75rem", color: "#34d399", fontWeight: 700, marginBottom: "8px" }}>
-          CIVIC CRIME TELEMETRY & SPATIAL RISK FORENSICS
-        </div>
-        <h1 style={{ fontSize: "clamp(1.8rem, 4vw, 2.5rem)", fontWeight: 900, letterSpacing: "-0.02em", marginBottom: 8 }}>
-          Area Safety Intelligence ·{" "}
-          <span style={{ background: "linear-gradient(135deg, #059669, #10b981)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-            Rakshak Safety Portal
-          </span>
-        </h1>
-        <p style={{ color: "var(--color-text-secondary)", fontSize: "1rem", marginBottom: "1.75rem" }}>
-          Unified Rakshak Safety Score (0–100) · DBSCAN Hotspot Clusters · LSTM Forecasting
-        </p>
+        {/* ── Top Executive Header ────────────────────────────────────────── */}
+        <div className="space-y-4">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--accent-subtle)] border border-[rgba(5,150,105,0.25)] text-xs font-black text-[var(--accent-primary)] tracking-wide">
+                <span className="w-2 h-2 rounded-full bg-[var(--accent-primary)] animate-pulse" />
+                Civic Hazard Mapping & Safe Corridor Engine
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.2)] text-xs font-bold text-[#6366f1]">
+                AI DBSCAN • LSTM Predictive Radar • ERSS-112 Telemetry
+              </span>
+            </div>
+          </div>
 
-        {/* Search bar */}
-        <div style={{ position: "relative", maxWidth: 580, margin: "0 auto" }}>
-          <div style={{ display: "flex", gap: 10 }}>
-            <div style={{ flex: 1, position: "relative" }}>
-              <span style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", fontSize: "1rem", pointerEvents: "none" }}>🔍</span>
-              <input
-                ref={inputRef}
-                id="area-search-input"
-                className="input-dark"
-                style={{ paddingLeft: "2.5rem" }}
-                placeholder="Search any area or type query... e.g. 'Theft near Saket at night'"
-                value={query}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyDown}
-                onFocus={() => setShowSuggestions(true)}
-                onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
-              />
-              {/* Autocomplete */}
-              {showSuggestions && suggestions.length > 0 && (
-                <div style={{
-                  position: "absolute", top: "110%", left: 0, right: 0, zIndex: 50,
-                  background: "var(--color-bg-card)", border: "1px solid var(--color-border-bright)",
-                  borderRadius: 10, boxShadow: "var(--shadow-card)", overflow: "hidden",
-                }}>
-                  {suggestions.map(a => (
-                    <button key={a.name} onMouseDown={() => doSearch(a.name)} style={{
-                      width: "100%", padding: "10px 16px", textAlign: "left",
-                      background: "none", border: "none", color: "var(--color-text-primary)",
-                      fontSize: "0.9rem", cursor: "pointer", display: "flex", alignItems: "center", gap: 10,
-                    }}
-                    onMouseEnter={e => (e.currentTarget.style.background = "var(--color-bg-card-hover)")}
-                    onMouseLeave={e => (e.currentTarget.style.background = "none")}
-                    >
-                      <span style={{ fontSize: "0.75rem" }}>📍</span> {a.name}
-                    </button>
-                  ))}
+          <div>
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-[var(--text-primary)] tracking-tight">
+              Spatial Crime Heatmap & Threat Intelligence
+            </h1>
+            <p className="text-xs sm:text-sm text-[var(--text-secondary)] mt-1 max-w-3xl">
+              Predictive risk forecasting, historical FIR trend analysis, and street-level safety scoring across Indian Metropolitan Zones.
+            </p>
+          </div>
+
+          {/* City Selection Bar */}
+          <div className="flex flex-wrap items-center gap-2 pt-1">
+            {["Delhi", "Mumbai", "Bengaluru", "Hyderabad"].map((c) => {
+              const isSelected = selectedCity === c;
+              return (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => handleCityChange(c)}
+                  className={`h-9 px-4 rounded-xl text-xs font-extrabold flex items-center gap-1.5 border transition-all cursor-pointer shadow-sm ${
+                    isSelected
+                      ? "bg-emerald-600 text-white border-emerald-600 shadow-md"
+                      : "bg-[var(--bg-surface)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:border-emerald-500 hover:text-[var(--text-primary)]"
+                  }`}
+                >
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>{c}</span>
+                </button>
+              );
+            })}
+
+            {/* All 10 Cities Dropdown */}
+            <div className="relative" ref={cityDropdownRef}>
+              <button
+                type="button"
+                onClick={() => setIsCityDropdownOpen(!isCityDropdownOpen)}
+                className={`h-9 px-3.5 rounded-xl text-xs font-extrabold flex items-center gap-1.5 border transition-all cursor-pointer shadow-sm ${
+                  !["Delhi", "Mumbai", "Bengaluru", "Hyderabad"].includes(selectedCity)
+                    ? "bg-emerald-600 text-white border-emerald-600"
+                    : "bg-[var(--bg-surface)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:border-emerald-500 hover:text-[var(--text-primary)]"
+                }`}
+              >
+                <span>Select City ({INDIAN_CITIES.length})</span>
+                <ChevronDown className="w-3.5 h-3.5" />
+              </button>
+
+              {isCityDropdownOpen && (
+                <div className="absolute left-0 mt-2 w-56 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-[var(--shadow-modal)] p-2 z-50 space-y-1">
+                  <div className="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-[var(--text-muted)] border-b border-[var(--border-subtle)]">
+                    Metropolitan Zones (10)
+                  </div>
+                  <div className="max-h-60 overflow-y-auto space-y-0.5">
+                    {INDIAN_CITIES.map((c) => (
+                      <button
+                        key={c.id}
+                        type="button"
+                        onClick={() => handleCityChange(c.shortName)}
+                        className={`w-full px-3 py-2 rounded-xl text-left text-xs font-bold flex items-center justify-between transition-colors cursor-pointer ${
+                          selectedCity === c.shortName
+                            ? "bg-[var(--accent-subtle)] text-[var(--accent-primary)]"
+                            : "hover:bg-[var(--bg-card-hover)] text-[var(--text-primary)]"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <MapPin className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+                          <span>{c.name}</span>
+                        </div>
+                        {selectedCity === c.shortName && (
+                          <Check className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
-            <VoiceInputButton
-              size="md"
-              title="Speak area name with Whisper AI"
-              onResult={(text) => {
-                setQuery(text);
-                doSearch(text);
-              }}
-            />
-            <button id="crime-search-btn" className="btn-primary" onClick={() => doSearch(query)} disabled={loading}>
-              {loading ? "Analyzing…" : "Analyze"}
-            </button>
           </div>
         </div>
 
-        {/* Quick area pills */}
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginTop: 16 }}>
-          {QUICK_AREAS.map(a => (
-            <button key={a} onClick={() => doSearch(a)} style={{
-              padding: "5px 14px", borderRadius: 99,
-              background: selectedArea === a ? "var(--color-brand-dim)" : "rgba(255,255,255,0.05)",
-              border: `1px solid ${selectedArea === a ? "rgba(79,124,255,0.4)" : "rgba(255,255,255,0.09)"}`,
-              color: selectedArea === a ? "#93c5fd" : "var(--color-text-secondary)",
-              fontSize: "0.82rem", cursor: "pointer", transition: "all 0.2s",
-            }}>
-              {a}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {error && (
-        <div style={{ padding: "14px 18px", borderRadius: 10, background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.3)", color: "#f87171", marginBottom: "1.5rem" }}>
-          ⚠ {error}
-        </div>
-      )}
-
-      {/* Loading state */}
-      {loading && (
-        <div style={{ display: "grid", gap: "1.5rem" }}>
-          <SkeletonCard h={120} />
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "1.5rem" }}>
-            <SkeletonCard h={200} />
-            <SkeletonCard h={200} />
-            <SkeletonCard h={200} />
-          </div>
-          <SkeletonCard h={380} />
-        </div>
-      )}
-
-      {/* ── Results Dashboard ──────────────────────────────────────────────── */}
-      {result && !loading && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
-
-          {/* ─ Header strip ─ */}
-          <div className="card fade-in-up" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16, padding: "1.25rem 1.5rem" }}>
-            <div>
-              <div style={{ fontSize: "0.75rem", color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 4 }}>Crime Analysis for</div>
-              <h2 style={{ fontSize: "1.75rem", fontWeight: 800, letterSpacing: "-0.01em" }}>{result.area}</h2>
-            </div>
-            <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
-              <StatCard label="Total Incidents" value={result.safety_score?.total_crimes ?? 0} icon="📋" />
-              <StatCard label="Top Crime" value={result.crime_breakdown?.[0]?.category || "—"} icon="⚡" />
-              <StatCard label="Peak Window" value={result.peak_hours?.peak_window || "20:00 - 23:00 (Night)"} icon="🕐" />
-              <StatCard label="Hotspots" value={result.hotspots?.length ?? 0} icon="📍" />
-            </div>
-          </div>
-
-          {/* ─ Safety Score + Crime Breakdown + Peak Hours ─ */}
-          <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", gap: "1.5rem" }}>
-            <div className="card fade-in-up-delay-1">
-              <PanelTitle icon="🛡️" title="Safety Score" />
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <SafetyScoreGauge data={result.safety_score} size={180} />
+        {/* ── Active City Jurisdiction Box ─────────────────────────────────── */}
+        <div className="p-5 sm:p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-[var(--border-subtle)]">
+            <div className="flex items-start gap-3.5">
+              <div className="w-11 h-11 rounded-2xl bg-[var(--accent-subtle)] border border-[rgba(5,150,105,0.2)] flex items-center justify-center text-[var(--accent-primary)] shrink-0">
+                <MapPin className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex flex-wrap items-center gap-2 mb-1">
+                  <span className="text-[11px] font-extrabold uppercase tracking-wider text-[var(--accent-primary)]">
+                    ACTIVE CITY JURISDICTION • {cityMeta.zone} Zone • {cityMeta.state}
+                  </span>
+                  <span className="px-2 py-0.5 rounded-full bg-[rgba(16,185,129,0.12)] border border-[rgba(16,185,129,0.25)] text-[10px] font-bold text-[#10b981] flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
+                    Live ERSS-112 Grid Active
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight">
+                  {cityMeta.name} Safety Intelligence Corridor
+                </h2>
+                <p className="text-xs text-[var(--text-secondary)] font-medium mt-0.5">
+                  🏛️ {cityMeta.emergencyCommand} • {cityMeta.jurisdictionBadge}
+                </p>
               </div>
             </div>
-            <div className="card fade-in-up-delay-1">
-              <PanelTitle icon="📊" title="Crime Type Breakdown" />
-              <CrimeTypeChart data={result.crime_breakdown} />
+
+            <div className="flex items-center gap-2 self-start sm:self-auto">
+              <span className="text-xs text-[var(--text-muted)] font-semibold">
+                Telemetry synchronized
+              </span>
             </div>
           </div>
 
-          {/* ─ Peak Hours ─ */}
-          <div className="card fade-in-up-delay-2">
-            <PanelTitle icon="🕐" title="Peak Crime Hours" />
-            <PeakHoursChart data={result.peak_hours} />
+          {/* 4 KPI Summary Cards matching front page & police dashboard */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+            {/* KPI 1: Safety Rating */}
+            <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-sm space-y-1">
+              <div className="flex items-center gap-1.5 text-[11px] font-extrabold text-[var(--text-muted)] uppercase tracking-wider">
+                <Shield className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
+                <span>SAFETY RATING</span>
+              </div>
+              <div className="text-2xl font-black text-[var(--text-primary)] tracking-tight">
+                {result?.safety_score?.score ?? cityMeta.safetyScore}
+                <span className="text-sm font-bold text-[var(--text-muted)] ml-1">/ 100</span>
+              </div>
+              <div className="text-[11px] text-[#10b981] font-semibold flex items-center gap-1">
+                <span>✓ High civic safety index</span>
+              </div>
+            </div>
+
+            {/* KPI 2: Total Recorded Incidents */}
+            <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-sm space-y-1">
+              <div className="flex items-center gap-1.5 text-[11px] font-extrabold text-[var(--text-muted)] uppercase tracking-wider">
+                <Activity className="w-3.5 h-3.5 text-[#3b82f6]" />
+                <span>RECORDED CRIMES</span>
+              </div>
+              <div className="text-2xl font-black text-[var(--text-primary)] tracking-tight">
+                {result?.safety_score?.total_crimes ?? cityMeta.activeIncidents24h * 12}
+              </div>
+              <div className="text-[11px] text-[var(--text-secondary)] font-medium">
+                Verified FIR register
+              </div>
+            </div>
+
+            {/* KPI 3: Peak Crime Window */}
+            <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-sm space-y-1">
+              <div className="flex items-center gap-1.5 text-[11px] font-extrabold text-[var(--text-muted)] uppercase tracking-wider">
+                <Clock className="w-3.5 h-3.5 text-[#f59e0b]" />
+                <span>PEAK RISK WINDOW</span>
+              </div>
+              <div className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight truncate">
+                {result?.peak_hours?.peak_window ? result.peak_hours.peak_window.split(" ")[0] : "20:00 - 23:00"}
+              </div>
+              <div className="text-[11px] text-[#f59e0b] font-semibold">
+                High surveillance interval
+              </div>
+            </div>
+
+            {/* KPI 4: Hotspot Clusters */}
+            <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] shadow-sm space-y-1">
+              <div className="flex items-center gap-1.5 text-[11px] font-extrabold text-[var(--text-muted)] uppercase tracking-wider">
+                <Flame className="w-3.5 h-3.5 text-[#ef4444]" />
+                <span>MONITORED HOTSPOTS</span>
+              </div>
+              <div className="text-2xl font-black text-[var(--text-primary)] tracking-tight">
+                {result?.hotspots?.length || cityMeta.hotspots.length}
+                <span className="text-sm font-bold text-[var(--text-muted)] ml-1">Clusters</span>
+              </div>
+              <div className="text-[11px] text-[var(--text-secondary)] font-medium">
+                AI DBSCAN risk surveillance
+              </div>
+            </div>
           </div>
 
-          {/* ─ Heatmap ─ */}
-          <div className="card fade-in-up-delay-2">
-            <PanelTitle
-              icon="🗺️"
-              title="Crime Heatmap"
-              badge={<span style={{ fontSize: "0.78rem", color: "var(--color-text-muted)" }}>{result.heatmap.length} data points</span>}
-            />
-            <CrimeHeatmap
-              center={[result.area_meta.lat, result.area_meta.lng]}
-              heatmap={result.heatmap}
-              hotspots={result.hotspots}
-            />
+          {/* Quick Local Area Presets Bar */}
+          <div className="pt-2 border-t border-[var(--border-subtle)] space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-extrabold uppercase tracking-wider text-[var(--accent-primary)] flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>LOCAL SAFETY HUBS IN {cityMeta.name.toUpperCase()}</span>
+              </span>
+              <span className="text-[11px] text-[var(--text-muted)] font-medium">
+                Click any area to analyze instantly
+              </span>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              {quickAreas.map((a) => {
+                const isActive = selectedArea.toLowerCase() === a.toLowerCase();
+                return (
+                  <button
+                    key={a}
+                    type="button"
+                    onClick={() => doSearch(a)}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border shadow-sm ${
+                      isActive
+                        ? "bg-emerald-600 text-white border-emerald-600"
+                        : "bg-[var(--bg-surface)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:border-[var(--accent-primary)] hover:text-[var(--text-primary)]"
+                    }`}
+                  >
+                    📍 {a}
+                  </button>
+                );
+              })}
+            </div>
           </div>
 
-          {/* ─ Hotspots ─ */}
-          {result.hotspots.length > 0 && (
-            <div className="card">
-              <PanelTitle
-                icon="📍"
-                title="Crime Hotspots"
-                badge={<span className="badge badge-critical">{result.hotspots.length} clusters detected</span>}
+          {/* Interactive Search Bar & Voice Input */}
+          <div className="pt-2 border-t border-[var(--border-subtle)]">
+            <div className="flex flex-col sm:flex-row items-center gap-3">
+              <div className="flex-1 w-full relative">
+                <Search className="w-4 h-4 text-[var(--text-muted)] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+                <input
+                  ref={inputRef}
+                  id="area-search-input"
+                  className="w-full h-11 pl-11 pr-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-sm text-[var(--text-primary)] placeholder:text-[var(--text-muted)] focus:outline-none focus:border-[var(--accent-primary)] focus:ring-2 focus:ring-[var(--accent-subtle)] transition-all font-medium"
+                  placeholder={`Search any neighborhood, sector or landmark in ${cityMeta.name}...`}
+                  value={query}
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
+                  onFocus={() => setShowSuggestions(true)}
+                  onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+                />
+
+                {/* Autocomplete dropdown */}
+                {showSuggestions && suggestions.length > 0 && (
+                  <div className="absolute top-[110%] left-0 right-0 z-50 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-xl shadow-[var(--shadow-modal)] overflow-hidden">
+                    {suggestions.map((a) => (
+                      <button
+                        key={a.name}
+                        onMouseDown={() => doSearch(a.name)}
+                        className="w-full px-4 py-2.5 text-left text-xs font-bold text-[var(--text-primary)] hover:bg-[var(--bg-card-hover)] flex items-center gap-2 transition-colors cursor-pointer"
+                      >
+                        <MapPin className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
+                        <span>{a.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <VoiceInputButton
+                  size="md"
+                  title="Speak area name with Whisper AI"
+                  onResult={(text) => {
+                    setQuery(text);
+                    doSearch(text);
+                  }}
+                />
+                <button
+                  id="crime-search-btn"
+                  onClick={() => doSearch(query)}
+                  disabled={loading}
+                  className="flex-1 sm:flex-none h-11 px-6 rounded-xl text-white font-extrabold text-xs tracking-wide shadow-[0_4px_14px_rgba(5,150,105,0.35)] transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+                  style={{
+                    background: "linear-gradient(135deg, #059669 0%, #047857 100%)",
+                  }}
+                >
+                  {loading ? (
+                    <span>Analyzing...</span>
+                  ) : (
+                    <>
+                      <Search className="w-3.5 h-3.5" />
+                      <span>Analyze Risk</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {error && (
+          <div className="p-4 rounded-2xl bg-[rgba(239,68,68,0.08)] border border-[rgba(239,68,68,0.25)] text-[#ef4444] text-xs font-bold flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        {/* ── Main Analytical Dashboard Results ───────────────────────────── */}
+        {result && (
+          <div className="space-y-6 sm:space-y-8">
+
+            {/* Grid Row 1: Safety Score Gauge & Recommendations + Crime Breakdown */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+              {/* Left Column: Safety Score Gauge + Recommendations (5 cols) */}
+              <div className="lg:col-span-5 space-y-6">
+                <Card className="!p-6 sm:!p-7">
+                  <SectionHeading
+                    icon={<Shield className="w-4 h-4" />}
+                    title="Safety Score & Assessment"
+                    subtitle={`Civic evaluation for ${result.area}`}
+                  />
+                  <div className="flex justify-center py-2">
+                    <SafetyScoreGauge data={result.safety_score} size={190} />
+                  </div>
+                  <div className="mt-5 pt-4 border-t border-[var(--border-subtle)] space-y-2.5">
+                    <span className="text-[11px] font-extrabold uppercase tracking-wider text-[var(--accent-primary)] flex items-center gap-1.5">
+                      <Sparkles className="w-3 h-3" />
+                      <span>Recommended Precautions</span>
+                    </span>
+                    <SafetyRecommendations recommendations={result.recommendations} />
+                  </div>
+                </Card>
+              </div>
+
+              {/* Right Column: Crime Type Breakdown (7 cols) */}
+              <div className="lg:col-span-7">
+                <Card className="!p-6 sm:!p-7">
+                  <SectionHeading
+                    icon={<Activity className="w-4 h-4" />}
+                    title="Crime Type Breakdown"
+                    subtitle="Incident distribution by categorization"
+                    badge={
+                      <span className="text-xs font-bold text-[var(--text-muted)]">
+                        {result.crime_breakdown.reduce((acc, curr) => acc + curr.count, 0)} incidents
+                      </span>
+                    }
+                  />
+                  <CrimeTypeChart data={result.crime_breakdown} />
+                </Card>
+              </div>
+            </div>
+
+            {/* Grid Row 2: Peak Hours & 7-Day Forecast */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+              {/* Left: Peak Crime Hours (6 cols) */}
+              <div className="lg:col-span-6">
+                <Card className="!p-6 sm:!p-7">
+                  <SectionHeading
+                    icon={<Clock className="w-4 h-4" />}
+                    title="Peak Crime Hours"
+                    subtitle="Hourly incident volume & high-risk windows"
+                  />
+                  <PeakHoursChart data={result.peak_hours} />
+                </Card>
+              </div>
+
+              {/* Right: 7-Day Crime Forecast (6 cols) */}
+              <div className="lg:col-span-6">
+                <Card className="!p-6 sm:!p-7">
+                  <SectionHeading
+                    icon={<TrendingUp className="w-4 h-4" />}
+                    title="7-Day Crime Forecast"
+                    subtitle="Neural projection with 95% confidence bounds"
+                    badge={<span className="chip-confidence text-[11px] py-0.5 px-2.5">🧠 LSTM RNN</span>}
+                  />
+                  <ForecastChart data={result.forecast} />
+                </Card>
+              </div>
+            </div>
+
+            {/* Grid Row 3: Full-Width Interactive Crime Heatmap */}
+            <Card className="!p-6 sm:!p-7">
+              <SectionHeading
+                icon={<Layers className="w-4 h-4" />}
+                title="Spatial Crime Heatmap & Hotspot Overlay"
+                subtitle={`Interactive geospatial distribution across ${result.area}`}
+                badge={
+                  <span className="text-xs font-bold text-[var(--text-muted)]">
+                    {result.heatmap.length} data telemetry points
+                  </span>
+                }
               />
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 12 }}>
-                {result.hotspots.map((h: any, i: number) => <HotspotCard key={h.id || i} hotspot={h} index={i} />)}
+              <CrimeHeatmap
+                center={[result.area_meta.lat, result.area_meta.lng]}
+                heatmap={result.heatmap}
+                hotspots={result.hotspots}
+              />
+            </Card>
+
+            {/* Grid Row 4: DBSCAN Hotspots */}
+            {result.hotspots.length > 0 && (
+              <Card className="!p-6 sm:!p-7">
+                <SectionHeading
+                  icon={<Flame className="w-4 h-4 text-[#ef4444]" />}
+                  title="DBSCAN Crime Hotspot Clusters"
+                  subtitle="High-density spatial clusters flagged for enhanced patrol frequency"
+                  badge={
+                    <span className="px-2.5 py-1 rounded-full bg-[rgba(239,68,68,0.12)] border border-[rgba(239,68,68,0.25)] text-xs font-bold text-[#ef4444]">
+                      {result.hotspots.length} clusters identified
+                    </span>
+                  }
+                />
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {result.hotspots.map((h: any, i: number) => (
+                    <HotspotCard key={h.id || i} hotspot={h} index={i} />
+                  ))}
+                </div>
+              </Card>
+            )}
+
+            {/* Grid Row 5: AI / ML Insights & Weekly Pattern */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+              {/* Left: AI / ML Forensics Insights (6 cols) */}
+              <div className="lg:col-span-6">
+                <Card className="!p-6 sm:!p-7">
+                  <SectionHeading
+                    icon={<Sparkles className="w-4 h-4 text-[var(--accent-primary)]" />}
+                    title="AI & ML Forensics Insights"
+                    subtitle="Spike trajectory, anomaly detection, and temporal trends"
+                    badge={<span className="badge badge-ai">AI Evaluated</span>}
+                  />
+                  <AIInsightsPanel
+                    spike={result.spike_prediction}
+                    anomalies={result.anomalies}
+                    patterns={result.temporal_patterns}
+                  />
+                </Card>
+              </div>
+
+              {/* Right: Weekly Pattern Matrix (6 cols) */}
+              <div className="lg:col-span-6">
+                <Card className="!p-6 sm:!p-7">
+                  <SectionHeading
+                    icon={<Clock className="w-4 h-4" />}
+                    title="Weekly Crime Pattern Matrix"
+                    subtitle="Day-of-week risk stratification & model confidence"
+                    badge={<span className="chip-confidence text-[11px] py-0.5 px-2.5">🌲 Random Forest</span>}
+                  />
+                  <WeeklyPatternGrid data={result.weekly_pattern} />
+                </Card>
               </div>
             </div>
-          )}
 
-          {/* ─ AI Insights ─ */}
-          <div className="card">
-            <PanelTitle icon="🧠" title="AI / ML Insights" badge={<span className="badge badge-ai">AI-Generated</span>} />
-            <AIInsightsPanel
-              spike={result.spike_prediction}
-              anomalies={result.anomalies}
-              patterns={result.temporal_patterns}
-            />
           </div>
+        )}
 
-          {/* ─ 7-Day Forecast ─ */}
-          <div className="card">
-            <PanelTitle
-              icon="📈"
-              title="7-Day Crime Forecast"
-              badge={<span className="chip-confidence">🧠 LSTM Neural Network</span>}
-            />
-            <ForecastChart data={result.forecast} />
-          </div>
-
-          {/* ─ Weekly Pattern ─ */}
-          <div className="card">
-            <PanelTitle
-              icon="📅"
-              title="Weekly Crime Pattern"
-              badge={<span className="chip-confidence">🌲 Random Forest</span>}
-            />
-            <WeeklyPatternGrid data={result.weekly_pattern} />
-          </div>
-
-          {/* ─ Safety Recommendations ─ */}
-          <div className="card">
-            <PanelTitle icon="✅" title="AI Safety Recommendations" />
-            <SafetyRecommendations recommendations={result.recommendations} />
-          </div>
-        </div>
-      )}
-
-      {/* Empty state */}
-      {!result && !loading && !error && (
-        <div style={{ textAlign: "center", padding: "4rem 2rem", color: "var(--color-text-muted)" }}>
-          <div style={{ fontSize: "3rem", marginBottom: 16 }}>🔍</div>
-          <p style={{ fontSize: "1rem" }}>Search for a Lucknow area above to view the full crime analytics dashboard.</p>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function StatCard({ label, value, icon }: { label: string; value: string | number; icon: string }) {
-  return (
-    <div style={{ textAlign: "center", minWidth: 80 }}>
-      <div style={{ fontSize: "1.1rem", marginBottom: 2 }}>{icon}</div>
-      <div style={{ fontSize: "1.1rem", fontWeight: 800, fontVariantNumeric: "tabular-nums" }}>{value}</div>
-      <div style={{ fontSize: "0.68rem", color: "var(--color-text-muted)", textTransform: "uppercase", letterSpacing: "0.07em" }}>{label}</div>
-    </div>
+      </div>
+    </PageBackground>
   );
 }
