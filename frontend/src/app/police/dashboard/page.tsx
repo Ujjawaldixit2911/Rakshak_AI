@@ -35,6 +35,9 @@ import {
   ArrowRight,
   Eye,
   SlidersHorizontal,
+  ChevronDown,
+  Search,
+  Filter,
 } from "lucide-react";
 import { API_BASE_URL, WS_BASE_URL, safeApiFetch } from "@/lib/api";
 import { Button, Card, Badge } from "@/components/ui";
@@ -58,7 +61,10 @@ export default function PoliceCommandDashboard() {
   const router = useRouter();
   const [selectedCity, setSelectedCity] = useState("Delhi");
   const [isCityPickerOpen, setIsCityPickerOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<Tab>("analytics");
+  const [activeTab, setActiveTab] = useState<Tab>("moderation");
+  const [queueStatusFilter, setQueueStatusFilter] = useState<"all" | "pending" | "verified" | "rejected">("all");
+  const [queueSeverityFilter, setQueueSeverityFilter] = useState<"all" | "high" | "medium" | "low">("all");
+  const [queueSearch, setQueueSearch] = useState("");
   const [officerId, setOfficerId] = useState("officer001");
   const [officerRole, setOfficerRole] = useState("OFFICER");
   const [officerName, setOfficerName] = useState("Insp. Vikram Rathore");
@@ -216,6 +222,22 @@ export default function PoliceCommandDashboard() {
   const topHotspots = dashData?.top_5_hotspots || [];
 
   const pendingCount = incidentQueue.filter((i) => i.status === "pending").length;
+  const verifiedCount = incidentQueue.filter((i) => i.status === "verified").length;
+  const rejectedCount = incidentQueue.filter((i) => i.status === "rejected").length;
+
+  const filteredQueue = incidentQueue.filter((report) => {
+    if (queueStatusFilter !== "all" && report.status !== queueStatusFilter) return false;
+    const sev = Number(report.severity) || 5;
+    if (queueSeverityFilter === "high" && sev < 7) return false;
+    if (queueSeverityFilter === "medium" && (sev < 4 || sev > 6)) return false;
+    if (queueSeverityFilter === "low" && sev > 3) return false;
+    if (queueSearch.trim()) {
+      const q = queueSearch.toLowerCase();
+      const combined = `${report.id} ${report.crime_type || report.title || ""} ${report.description || ""} ${report.location || ""}`.toLowerCase();
+      if (!combined.includes(q)) return false;
+    }
+    return true;
+  });
 
   return (
     <PageBackground className="min-h-screen">
@@ -327,143 +349,175 @@ export default function PoliceCommandDashboard() {
           </div>
         )}
 
-        {/* ── Section 1: Hero Header & Quick Access ─────────────────────────── */}
-        <section className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2">
-          <div className="space-y-3 max-w-2xl">
-            <div className="flex items-center gap-2.5 flex-wrap">
-              <span className="px-3 py-1 rounded-full bg-[var(--accent-subtle)] text-[var(--accent-primary)] text-xs font-black border border-[rgba(5,150,105,0.25)] uppercase tracking-wide">
-                LAW ENFORCEMENT DISPATCH
-              </span>
-              <span className="text-xs text-[var(--text-muted)] font-bold">
-                Logged in: <strong className="text-[var(--text-primary)]">{officerName}</strong> ({officerRole})
-              </span>
-            </div>
-            <h1 className="text-[28px] sm:text-[34px] lg:text-[38px] font-black tracking-[-0.03em] leading-[1.15] text-[var(--text-primary)]">
-              Public Safety & Police Command Center
-            </h1>
-            <p className="text-[14.5px] text-[var(--text-secondary)] font-normal leading-relaxed">
-              Real-time threat evaluation, machine-learned DBSCAN hotspot surveillance, verified citizen moderation, and emergency dispatch relay across {cityMeta.name}.
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3 shrink-0">
-            <Button
-              variant="secondary"
-              size="md"
-              onClick={() => setActiveTab("sos_monitor")}
-              icon={<Radio className="w-4 h-4 text-[#ef4444]" />}
-            >
-              Live SOS Feed ({sosAlerts.length})
-            </Button>
-            <Button
-              variant="primary"
-              size="md"
-              onClick={() => setActiveTab("moderation")}
-              icon={<ShieldCheck className="w-4 h-4" />}
-            >
-              Queue ({pendingCount})
-            </Button>
-          </div>
-        </section>
-
-        {/* ── Active Jurisdiction Status Strip (Spacious, Elegant UI/UX) ───────── */}
-        <section className="p-4 sm:p-5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[var(--accent-subtle)] border border-[rgba(5,150,105,0.25)] flex items-center justify-center text-[var(--accent-primary)] font-bold shrink-0">
-              <MapPin className="w-5 h-5" />
-            </div>
-            <div>
+        {/* ── Executive Command Console Header ─────────────────────── */}
+        <section className="p-5 sm:p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] transition-all">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+            {/* Left: Command Center Title & Identity */}
+            <div className="space-y-1.5">
               <div className="flex items-center gap-2 flex-wrap">
-                <span className="text-sm font-black text-[var(--text-primary)]">
-                  {cityMeta.name} Police Command
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                  Live ERSS-112 Grid Active
                 </span>
-                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[var(--bg-surface)] text-[var(--text-secondary)] border border-[var(--border-subtle)]">
-                  {cityMeta.zone} Zone • {cityMeta.state}
+                <span className="text-xs text-[var(--text-secondary)] font-bold">
+                  Logged in: <strong className="text-[var(--text-primary)]">{officerName}</strong> ({officerRole})
                 </span>
-                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[rgba(16,185,129,0.12)] text-[#059669] border border-[rgba(16,185,129,0.25)] flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
-                  ERSS-112 Grid Active
+                <span className="text-xs text-[var(--text-muted)]">•</span>
+                <span className="text-xs text-[var(--text-secondary)] font-medium">
+                  {cityMeta.emergencyCommand}
                 </span>
               </div>
-              <p className="text-xs text-[var(--text-muted)] font-medium mt-0.5">
-                🏛️ {cityMeta.emergencyCommand} • {cityMeta.jurisdictionBadge}
-              </p>
-            </div>
-          </div>
 
-          <div className="flex items-center gap-3 self-start md:self-auto flex-wrap">
-            <div className="hidden lg:flex items-center gap-4 text-xs font-bold text-[var(--text-secondary)] px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
-              <span>🚓 {cityMeta.activePatrolUnits} PCR Vans</span>
-              <span>•</span>
-              <span>📹 {cityMeta.activeCameras.toLocaleString()} AI CCTVs</span>
-              <span>•</span>
-              <span>⏱️ {cityMeta.responseMins}m Dispatch</span>
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[var(--text-primary)]">
+                Public Safety & Police Command Center
+              </h1>
+
+              <div className="flex items-center gap-3 text-xs font-bold text-[var(--text-secondary)] flex-wrap pt-0.5">
+                <span className="flex items-center gap-1.5">
+                  <span>🚓</span>
+                  <span><strong className="text-[var(--text-primary)]">{cityMeta.activePatrolUnits}</strong> PCR Units</span>
+                </span>
+                <span className="text-[var(--text-muted)]">•</span>
+                <span className="flex items-center gap-1.5">
+                  <span>📹</span>
+                  <span><strong className="text-[var(--text-primary)]">{cityMeta.activeCameras.toLocaleString()}</strong> AI CCTVs</span>
+                </span>
+                <span className="text-[var(--text-muted)]">•</span>
+                <span className="flex items-center gap-1.5">
+                  <span>⏱️</span>
+                  <span><strong className="text-[var(--text-primary)]">{cityMeta.responseMins}m</strong> Dispatch SLA</span>
+                </span>
+              </div>
             </div>
 
-            <Button
-              variant="secondary"
-              size="sm"
-              onClick={() => setIsCityPickerOpen(true)}
-              icon={<SlidersHorizontal className="w-3.5 h-3.5 text-[var(--accent-primary)]" />}
-              className="font-bold text-xs shadow-sm"
-            >
-              Switch City ({INDIAN_CITIES.length})
-            </Button>
+            {/* Right: City Selector Dropdown & Quick Hub Buttons */}
+            <div className="flex flex-wrap items-center gap-3 self-start lg:self-auto">
+              {/* Jurisdiction Dropdown Selector */}
+              <div className="relative min-w-[210px]">
+                <label className="block text-[10px] font-black uppercase tracking-wider text-[var(--text-muted)] mb-1">
+                  Jurisdiction Command
+                </label>
+                <div className="relative">
+                  <select
+                    value={selectedCity}
+                    onChange={(e) => setSelectedCity(e.target.value)}
+                    className="w-full h-10 pl-3 pr-8 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs font-bold text-[var(--text-primary)] focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 cursor-pointer appearance-none shadow-sm transition-all"
+                  >
+                    {INDIAN_CITIES.map((c) => (
+                      <option key={c.id} value={c.shortName} className="bg-[var(--bg-card)] text-[var(--text-primary)] font-semibold">
+                        📍 {c.name} ({c.state})
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown className="w-3.5 h-3.5 text-[var(--text-muted)] absolute right-2.5 top-3 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Quick Tab Jump Buttons */}
+              <div className="flex items-end gap-2 pt-4">
+                <button
+                  onClick={() => setActiveTab("sos_monitor")}
+                  className={`h-10 px-3.5 rounded-xl text-xs font-extrabold flex items-center gap-2 border transition-all cursor-pointer shadow-sm ${
+                    sosAlerts.length > 0
+                      ? "bg-red-50 text-red-600 border-red-200 animate-pulse"
+                      : "bg-[var(--bg-surface)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-[var(--text-primary)] hover:border-emerald-500"
+                  }`}
+                  title="View Live SOS Emergency Feed"
+                >
+                  <Radio className="w-3.5 h-3.5 text-red-500" />
+                  <span>SOS ({sosAlerts.length})</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab("moderation")}
+                  className={`h-10 px-3.5 rounded-xl text-xs font-extrabold flex items-center gap-2 border transition-all cursor-pointer shadow-sm ${
+                    activeTab === "moderation"
+                      ? "bg-emerald-600 text-white border-emerald-600"
+                      : "bg-[var(--bg-surface)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:border-emerald-500"
+                  }`}
+                  title="View Citizen Incident Moderation Queue"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5" />
+                  <span>Queue ({pendingCount})</span>
+                </button>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* ── Section 2: Executive KPI Metrics (Balanced 5-Column Grid) ────────── */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4.5 sm:gap-5">
-          <KPICard
-            label="City Safety Index"
-            value={cityMeta.safetyScore}
-            suffix="/100"
-            decimals={0}
-            icon={<ShieldCheck className="w-5 h-5 text-[#059669]" />}
-            caption={`${cityMeta.name} safety score`}
-            accentColor="green"
-            delta={{ value: "+2.4% vs last week", isPositive: true }}
-          />
+        {/* ── Section 2: Executive KPI Metrics (Compact 5-Metric Ribbon) ────────── */}
+        <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+          {/* Metric 1 */}
+          <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] space-y-1">
+            <div className="text-[11px] font-black uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Safety Index</span>
+            </div>
+            <div className="text-2xl font-black text-emerald-600 tabular-nums">
+              {cityMeta.safetyScore} <span className="text-xs font-semibold text-[var(--text-muted)]">/ 100</span>
+            </div>
+            <div className="text-[11.5px] text-emerald-700 font-semibold flex items-center gap-1">
+              <span>↗</span>
+              <span>+2.4% vs last week</span>
+            </div>
+          </div>
 
-          <KPICard
-            label="Recorded Crimes"
-            value={summary.total_crimes_recorded || Math.round(cityMeta.activeCameras * 0.95 + 2800)}
-            icon={<BarChart3 className="w-5 h-5 text-[#0f766e]" />}
-            caption="Verified FIR registers"
-            accentColor="green"
-            delta={{ value: "Historical logs", isPositive: true }}
-          />
+          {/* Metric 2 */}
+          <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] space-y-1">
+            <div className="text-[11px] font-black uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
+              <BarChart3 className="w-3.5 h-3.5 text-teal-600" />
+              <span>Recorded Crimes</span>
+            </div>
+            <div className="text-2xl font-black text-[var(--text-primary)] tabular-nums">
+              {(summary.total_crimes_recorded || Math.round(cityMeta.activeCameras * 0.95 + 2800)).toLocaleString()}
+            </div>
+            <div className="text-[11.5px] text-[var(--text-secondary)] font-medium">
+              Historical FIR registers
+            </div>
+          </div>
 
-          <KPICard
-            label="Active Hotspots"
-            value={cityMeta.hotspots.length}
-            icon={<Flame className="w-5 h-5 text-[#d97706]" />}
-            caption="Patrol units alerted"
-            accentColor="amber"
-            delta={{ value: "DBSCAN clusters", isPositive: false }}
-          />
+          {/* Metric 3 */}
+          <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] space-y-1">
+            <div className="text-[11px] font-black uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
+              <Flame className="w-3.5 h-3.5 text-amber-600" />
+              <span>Active Hotspots</span>
+            </div>
+            <div className="text-2xl font-black text-amber-600 tabular-nums">
+              {cityMeta.hotspots.length} <span className="text-xs font-semibold text-[var(--text-muted)]">clusters</span>
+            </div>
+            <div className="text-[11.5px] text-amber-700 font-semibold">
+              DBSCAN risk alerted
+            </div>
+          </div>
 
-          <KPICard
-            label="Avg Response Time"
-            value={cityMeta.responseMins}
-            suffix=" min"
-            decimals={1}
-            icon={<Clock className="w-5 h-5 text-[#059669]" />}
-            caption="SOS alert to dispatch"
-            accentColor="green"
-            delta={{ value: "-1.2 min efficiency", isPositive: true }}
-          />
+          {/* Metric 4 */}
+          <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] space-y-1">
+            <div className="text-[11px] font-black uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
+              <Clock className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Avg Response</span>
+            </div>
+            <div className="text-2xl font-black text-[var(--text-primary)] tabular-nums">
+              {cityMeta.responseMins} <span className="text-xs font-semibold text-[var(--text-muted)]">mins</span>
+            </div>
+            <div className="text-[11.5px] text-emerald-700 font-semibold flex items-center gap-1">
+              <span>↘</span>
+              <span>-1.2 min SLA efficiency</span>
+            </div>
+          </div>
 
-          <KPICard
-            label="Case Resolution"
-            value={cityMeta.resolutionRate}
-            suffix="%"
-            decimals={1}
-            icon={<CheckCircle2 className="w-5 h-5 text-[#059669]" />}
-            caption="Verified & closed cases"
-            accentColor="green"
-            delta={{ value: `${summary.resolved_crimes || Math.round((cityMeta.activeCameras * 0.95 + 2800) * (cityMeta.resolutionRate / 100))} resolved`, isPositive: true }}
-          />
+          {/* Metric 5 */}
+          <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] space-y-1 col-span-2 sm:col-span-1">
+            <div className="text-[11px] font-black uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
+              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Case Resolution</span>
+            </div>
+            <div className="text-2xl font-black text-emerald-600 tabular-nums">
+              {cityMeta.resolutionRate}%
+            </div>
+            <div className="text-[11.5px] text-[var(--text-secondary)] font-medium">
+              Verified & closed cases
+            </div>
+          </div>
         </section>
 
         {/* ── Section 3: Segmented Tab Bar ────────────────────────────────────── */}
@@ -718,109 +772,200 @@ export default function PoliceCommandDashboard() {
 
           {/* ── Tab Content 3: Citizen Incident Moderation Queue ────────────────── */}
           {activeTab === "moderation" && (
-            <Card padded={false}>
-              <div className="p-6 sm:p-7 border-b border-[var(--border-subtle)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div>
-                  <h3 className="text-[18px] font-black text-[var(--text-primary)] tracking-tight">
-                    Citizen Submissions & Verification Queue
-                  </h3>
-                  <p className="text-[13px] text-[var(--text-secondary)] mt-0.5">
-                    Review crowd-sourced reports before promoting into authoritative risk dataset
-                  </p>
+            <div className="space-y-4">
+              {/* Filter & Search Toolbar */}
+              <div className="p-4 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] flex flex-col md:flex-row md:items-center justify-between gap-3">
+                {/* Status Filter Chips */}
+                <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0">
+                  {[
+                    { id: "all", label: "All Reports", count: incidentQueue.length },
+                    { id: "pending", label: "Pending Review", count: pendingCount, highlight: pendingCount > 0 },
+                    { id: "verified", label: "Verified", count: verifiedCount },
+                    { id: "rejected", label: "Rejected", count: rejectedCount },
+                  ].map((filter) => {
+                    const isSel = queueStatusFilter === filter.id;
+                    return (
+                      <button
+                        key={filter.id}
+                        onClick={() => setQueueStatusFilter(filter.id as any)}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 border ${
+                          isSel
+                            ? "bg-[var(--accent-primary)] text-white border-[var(--accent-primary)] shadow-sm"
+                            : "bg-[var(--bg-surface)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:border-[var(--accent-primary)] hover:text-[var(--text-primary)]"
+                        }`}
+                      >
+                        <span>{filter.label}</span>
+                        <span
+                          className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                            isSel
+                              ? "bg-white/20 text-white"
+                              : filter.highlight
+                              ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 font-bold"
+                              : "bg-[var(--bg-card)] text-[var(--text-muted)]"
+                          }`}
+                        >
+                          {filter.count}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
-                <div className="flex items-center gap-2">
-                  <Badge severity={pendingCount > 0 ? "high" : "low"} dot>
-                    {pendingCount} Pending Review
-                  </Badge>
+
+                {/* Severity Dropdown & Search Bar */}
+                <div className="flex items-center gap-2.5 flex-wrap sm:flex-nowrap">
+                  {/* Severity Filter Dropdown */}
+                  <div className="relative min-w-[135px]">
+                    <select
+                      value={queueSeverityFilter}
+                      onChange={(e) => setQueueSeverityFilter(e.target.value as any)}
+                      className="w-full h-9 pl-2.5 pr-7 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs font-bold text-[var(--text-primary)] focus:outline-none focus:border-emerald-500 cursor-pointer appearance-none shadow-sm"
+                    >
+                      <option value="all">All Severities</option>
+                      <option value="high">🔴 High (7-10)</option>
+                      <option value="medium">🟠 Medium (4-6)</option>
+                      <option value="low">🟢 Low (1-3)</option>
+                    </select>
+                    <ChevronDown className="w-3.5 h-3.5 text-[var(--text-muted)] absolute right-2.5 top-2.5 pointer-events-none" />
+                  </div>
+
+                  {/* Search Input */}
+                  <div className="relative flex-1 sm:w-56">
+                    <Search className="w-3.5 h-3.5 text-[var(--text-muted)] absolute left-3 top-2.5 pointer-events-none" />
+                    <input
+                      type="text"
+                      placeholder="Search incident, location..."
+                      value={queueSearch}
+                      onChange={(e) => setQueueSearch(e.target.value)}
+                      className="w-full h-9 pl-8 pr-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs font-medium text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-emerald-500 shadow-sm"
+                    />
+                  </div>
                 </div>
               </div>
 
-              <div className="divide-y divide-[var(--border-subtle)]">
-                {incidentQueue.length === 0 ? (
-                  <div className="py-16 text-center text-[var(--text-muted)] text-[15px]">
-                    No incident reports pending in moderation queue.
+              {/* Incident Cards Feed */}
+              <div className="space-y-3">
+                {filteredQueue.length === 0 ? (
+                  <div className="p-12 text-center rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)] space-y-2">
+                    <ShieldCheck className="w-10 h-10 text-[var(--text-muted)] mx-auto opacity-50" />
+                    <div className="text-sm font-bold text-[var(--text-primary)]">
+                      No incident reports matching criteria
+                    </div>
+                    <div className="text-xs text-[var(--text-muted)]">
+                      Try clearing filters or search to view all {incidentQueue.length} incident submissions.
+                    </div>
                   </div>
                 ) : (
-                  incidentQueue.map((report) => {
+                  filteredQueue.map((report) => {
                     const isPending = report.status === "pending";
                     const isVerified = report.status === "verified";
                     const isRejected = report.status === "rejected";
+                    const sev = Number(report.severity) || 5;
+                    const isCritical = sev >= 7;
 
                     return (
                       <div
                         key={report.id}
-                        className="p-6 sm:p-7 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-[var(--bg-card-hover)] transition-colors"
+                        className={`p-4 sm:p-5 rounded-2xl bg-[var(--bg-card)] border transition-all hover:shadow-md ${
+                          isPending
+                            ? isCritical
+                              ? "border-l-4 border-l-rose-500 border-[var(--border-subtle)]"
+                              : "border-l-4 border-l-amber-500 border-[var(--border-subtle)]"
+                            : isVerified
+                            ? "border-l-4 border-l-emerald-500 border-[var(--border-subtle)]"
+                            : "border-l-4 border-l-slate-400 border-[var(--border-subtle)] opacity-75"
+                        }`}
                       >
-                        <div className="space-y-2.5 max-w-3xl">
-                          <div className="flex items-center gap-3 flex-wrap">
-                            <span className="text-[15px] font-black text-[var(--text-primary)]">
-                              #{report.id} · {report.crime_type || report.title}
+                        {/* Card Header */}
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-[var(--border-subtle)]">
+                          <div className="flex items-center gap-2.5 flex-wrap">
+                            <span className="font-mono text-xs font-black px-2 py-0.5 rounded-md bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--text-secondary)]">
+                              #{report.id}
                             </span>
-                            <Badge
-                              severity={
-                                isVerified ? "low" : isRejected ? "critical" : "medium"
-                              }
+                            <h4 className="text-[15px] font-black text-[var(--text-primary)] tracking-tight">
+                              {report.crime_type || report.title}
+                            </h4>
+                            <span
+                              className={`text-[11px] font-black px-2.5 py-0.5 rounded-full ${
+                                isCritical
+                                  ? "bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400"
+                                  : "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400"
+                              }`}
                             >
-                              {report.status}
-                            </Badge>
-                            <span className="text-xs px-2.5 py-0.5 rounded-full bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--text-secondary)] font-bold">
-                              Severity: <strong className="text-[var(--text-primary)]">{report.severity || 6}/10</strong>
+                              Severity: {sev}/10
                             </span>
+                            {isPending ? (
+                              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
+                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                                Pending Review
+                              </span>
+                            ) : isVerified ? (
+                              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
+                                <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                                Verified & Ingested
+                              </span>
+                            ) : (
+                              <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 flex items-center gap-1">
+                                <XCircle className="w-3 h-3 text-slate-500" />
+                                Dismissed
+                              </span>
+                            )}
                           </div>
 
-                          <p className="text-[14px] text-[var(--text-secondary)] leading-relaxed font-normal">
-                            {report.description || "No detailed description provided."}
-                          </p>
+                          <div className="flex items-center gap-1.5 text-xs text-[var(--text-muted)] font-medium">
+                            <Clock className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+                            <span>Logged: {report.created_at || "Recently"}</span>
+                          </div>
+                        </div>
 
-                          <div className="flex flex-wrap items-center gap-4 text-[12px] text-[var(--text-muted)] pt-1">
-                            <span className="flex items-center gap-1.5 font-medium text-[var(--text-secondary)]">
+                        {/* Card Description */}
+                        <p className="text-sm text-[var(--text-secondary)] leading-relaxed font-normal py-2.5">
+                          {report.description || "No detailed description provided."}
+                        </p>
+
+                        {/* Card Footer: Metadata & Actions */}
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2.5 border-t border-[var(--border-subtle)] text-xs text-[var(--text-muted)]">
+                          <div className="flex items-center gap-3 flex-wrap">
+                            <span className="flex items-center gap-1.5 font-bold text-[var(--text-primary)]">
                               <MapPin className="w-3.5 h-3.5 text-[var(--accent-primary)] shrink-0" />
                               <span>{report.location || `[${report.lat}, ${report.lon}]`}</span>
-                            </span>
-                            <span>•</span>
-                            <span className="flex items-center gap-1.5">
-                              <Clock className="w-3.5 h-3.5 text-[var(--text-muted)]" />
-                              <span>Logged: {report.created_at || "Recently"}</span>
                             </span>
                             <span>•</span>
                             <span className="font-mono text-[11px] text-[var(--text-muted)]">
                               GPS: [{report.lat}, {report.lon}]
                             </span>
                           </div>
-                        </div>
 
-                        <div className="flex items-center gap-3 shrink-0">
-                          {isPending ? (
-                            <>
-                              <Button
-                                variant="primary"
-                                size="sm"
-                                onClick={() => handleModerate(report.id, "verified")}
-                                icon={<CheckCircle2 className="w-4 h-4 text-white" />}
-                              >
-                                Verify & Ingest
-                              </Button>
-                              <Button
-                                variant="destructive"
-                                size="sm"
-                                onClick={() => handleModerate(report.id, "rejected")}
-                                icon={<XCircle className="w-4 h-4" />}
-                              >
-                                Reject
-                              </Button>
-                            </>
-                          ) : (
-                            <span className="text-[13px] text-[var(--text-muted)] font-black uppercase tracking-wider">
-                              Decision Logged ({report.status})
-                            </span>
-                          )}
+                          <div className="flex items-center gap-2 shrink-0">
+                            {isPending ? (
+                              <>
+                                <button
+                                  onClick={() => handleModerate(report.id, "verified")}
+                                  className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+                                >
+                                  <CheckCircle2 className="w-3.5 h-3.5" />
+                                  <span>Verify & Ingest</span>
+                                </button>
+                                <button
+                                  onClick={() => handleModerate(report.id, "rejected")}
+                                  className="px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] hover:bg-rose-50 hover:text-rose-600 hover:border-rose-300 text-[var(--text-secondary)] border border-[var(--border-subtle)] text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shadow-sm"
+                                >
+                                  <XCircle className="w-3.5 h-3.5 text-rose-500" />
+                                  <span>Reject</span>
+                                </button>
+                              </>
+                            ) : (
+                              <span className="text-xs font-black uppercase tracking-wider text-[var(--text-muted)]">
+                                Decision Logged ({report.status})
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
                     );
                   })
                 )}
               </div>
-            </Card>
+            </div>
           )}
 
           {/* ── Tab Content 4: Live SOS Feed ──────────────────────────────────── */}
