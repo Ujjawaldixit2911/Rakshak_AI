@@ -327,94 +327,6 @@ export default function PoliceCommandDashboard() {
           </div>
         )}
 
-        {/* ── Active Jurisdiction Command Card ──────────────────────────────── */}
-        <section className="p-5 sm:p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] space-y-4">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 rounded-2xl bg-[var(--accent-subtle)] border border-[rgba(5,150,105,0.3)] flex items-center justify-center text-[var(--accent-primary)] shrink-0 shadow-sm">
-                <MapPin className="w-6 h-6" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-xs font-black uppercase tracking-wider text-[var(--accent-primary)]">
-                    Active Jurisdiction Command
-                  </span>
-                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[var(--bg-surface)] text-[var(--text-secondary)] border border-[var(--border-subtle)]">
-                    {cityMeta.zone} Zone • {cityMeta.state}
-                  </span>
-                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[rgba(16,185,129,0.12)] text-[#059669] border border-[rgba(16,185,129,0.25)] flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
-                    112 ERSS Grid Active
-                  </span>
-                </div>
-                <h2 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight mt-0.5">
-                  {cityMeta.name} Police Command
-                </h2>
-                <p className="text-xs sm:text-sm text-[var(--text-muted)] font-medium mt-0.5 flex items-center gap-1.5 flex-wrap">
-                  <span>🏛️ {cityMeta.emergencyCommand}</span>
-                  <span>•</span>
-                  <span>{cityMeta.jurisdictionBadge}</span>
-                </p>
-              </div>
-            </div>
-
-            {/* Change Jurisdiction CTA */}
-            <Button
-              variant="secondary"
-              size="md"
-              onClick={() => setIsCityPickerOpen(true)}
-              icon={<SlidersHorizontal className="w-4 h-4 text-[var(--accent-primary)]" />}
-              className="shadow-sm font-bold shrink-0"
-            >
-              <span>Select City / Jurisdiction ({INDIAN_CITIES.length})</span>
-              <ArrowRight className="w-4 h-4 ml-1" />
-            </Button>
-          </div>
-
-          {/* Real-time Telemetry Grid for Selected City */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-[var(--border-subtle)]">
-            <div className="p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
-              <div className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
-                Active Patrol Units
-              </div>
-              <div className="text-base sm:text-lg font-black text-[var(--text-primary)] mt-0.5 flex items-center gap-1.5">
-                <span>🚓 {cityMeta.activePatrolUnits} PCR Vans</span>
-              </div>
-              <div className="text-[11px] text-[var(--text-secondary)] mt-0.5">On active 24x7 beat</div>
-            </div>
-
-            <div className="p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
-              <div className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
-                AI CCTV Surveillance
-              </div>
-              <div className="text-base sm:text-lg font-black text-[var(--text-primary)] mt-0.5 flex items-center gap-1.5">
-                <span>📹 {cityMeta.activeCameras.toLocaleString()} Feeds</span>
-              </div>
-              <div className="text-[11px] text-[var(--text-secondary)] mt-0.5">Facial & crowd recognition</div>
-            </div>
-
-            <div className="p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
-              <div className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
-                Dispatch Response
-              </div>
-              <div className="text-base sm:text-lg font-black text-[var(--accent-primary)] mt-0.5 flex items-center gap-1.5">
-                <span>⏱️ {cityMeta.responseMins} Minutes</span>
-              </div>
-              <div className="text-[11px] text-[var(--text-secondary)] mt-0.5">Average dispatch SLA</div>
-            </div>
-
-            <div className="p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
-              <div className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
-                Safe City Score
-              </div>
-              <div className="text-base sm:text-lg font-black text-[#10b981] mt-0.5 flex items-center gap-1.5">
-                <span>🛡️ {cityMeta.safetyScore} / 100</span>
-              </div>
-              <div className="text-[11px] text-[var(--text-secondary)] mt-0.5">{cityMeta.resolutionRate}% resolution rate</div>
-            </div>
-          </div>
-        </section>
-
         {/* ── Section 1: Hero Header & Quick Access ─────────────────────────── */}
         <section className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2">
           <div className="space-y-3 max-w-2xl">
@@ -450,6 +362,52 @@ export default function PoliceCommandDashboard() {
               icon={<ShieldCheck className="w-4 h-4" />}
             >
               Queue ({pendingCount})
+            </Button>
+          </div>
+        </section>
+
+        {/* ── Active Jurisdiction Status Strip (Spacious, Elegant UI/UX) ───────── */}
+        <section className="p-4 sm:p-5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[var(--accent-subtle)] border border-[rgba(5,150,105,0.25)] flex items-center justify-center text-[var(--accent-primary)] font-bold shrink-0">
+              <MapPin className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-sm font-black text-[var(--text-primary)]">
+                  {cityMeta.name} Police Command
+                </span>
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[var(--bg-surface)] text-[var(--text-secondary)] border border-[var(--border-subtle)]">
+                  {cityMeta.zone} Zone • {cityMeta.state}
+                </span>
+                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[rgba(16,185,129,0.12)] text-[#059669] border border-[rgba(16,185,129,0.25)] flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
+                  ERSS-112 Grid Active
+                </span>
+              </div>
+              <p className="text-xs text-[var(--text-muted)] font-medium mt-0.5">
+                🏛️ {cityMeta.emergencyCommand} • {cityMeta.jurisdictionBadge}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 self-start md:self-auto flex-wrap">
+            <div className="hidden lg:flex items-center gap-4 text-xs font-bold text-[var(--text-secondary)] px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+              <span>🚓 {cityMeta.activePatrolUnits} PCR Vans</span>
+              <span>•</span>
+              <span>📹 {cityMeta.activeCameras.toLocaleString()} AI CCTVs</span>
+              <span>•</span>
+              <span>⏱️ {cityMeta.responseMins}m Dispatch</span>
+            </div>
+
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={() => setIsCityPickerOpen(true)}
+              icon={<SlidersHorizontal className="w-3.5 h-3.5 text-[var(--accent-primary)]" />}
+              className="font-bold text-xs shadow-sm"
+            >
+              Switch City ({INDIAN_CITIES.length})
             </Button>
           </div>
         </section>

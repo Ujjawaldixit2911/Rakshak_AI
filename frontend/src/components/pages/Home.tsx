@@ -18,7 +18,7 @@ import RouteNavigationGuidance from "@/components/route/RouteNavigationGuidance"
 import HeroAvatarPresenter from "@/components/HeroAvatarPresenter";
 import EmergencyHubModal from "@/components/EmergencyHubModal";
 import { HistoryCard, JourneyHistoryRecord } from "@/components/HistoryCard";
-import { Clock, ShieldCheck, MapPin, AlertTriangle, Radio, PhoneCall, Activity, CheckCircle2, SlidersHorizontal, ArrowRight, Compass } from "lucide-react";
+import { Clock, ShieldCheck, MapPin, AlertTriangle, Radio, PhoneCall, Activity, CheckCircle2, SlidersHorizontal, ArrowRight, Compass, Car, Navigation } from "lucide-react";
 import { PageBackground } from "@/components/shared/PageBackground";
 import { KPICard } from "@/components/shared/KPICard";
 import { Card } from "@/components/shared/Card";
@@ -976,108 +976,146 @@ export default function CitizenPortal() {
                   transition: "all 0.15s ease"
                 }}
               >
-                <span>🗺️ All Cities ({INDIAN_CITIES.length})</span>
-                <span style={{
-                  fontSize: "0.7rem",
-                  padding: "2px 6px",
-                  borderRadius: "9999px",
-                  background: "var(--accent-subtle)",
-                  color: "var(--accent-primary)"
-                }}>
-                  {cityMeta.name}
-                </span>
+                <span>Select City ({INDIAN_CITIES.length})</span>
                 <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>▾</span>
               </button>
             </div>
           </div>
 
-          {/* Active Operating Jurisdiction Summary Banner */}
-          <div style={{
-            background: "var(--bg-card)",
-            border: "1px solid var(--border-subtle)",
-            borderRadius: "16px",
-            padding: "0.9rem 1.25rem",
-            marginBottom: "1rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: 12,
-            boxShadow: "var(--shadow-card)"
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-              <div style={{
-                width: 38,
-                height: 38,
-                borderRadius: "12px",
-                background: "var(--accent-subtle)",
-                border: "1px solid rgba(5,150,105,0.25)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "var(--accent-primary)",
-                fontWeight: 800,
-                fontSize: "1.1rem"
-              }}>
-                📍
+          {/* ── Active City Safety Overview Card (Spacious, Polished UI/UX) ──────── */}
+          <div className="p-6 sm:p-7 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] space-y-6 my-6 transition-all duration-200">
+            {/* Top Row: Location Title, State, Live Status & Change Button */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border-subtle)]">
+              <div className="flex items-center gap-3.5">
+                <div className="w-12 h-12 rounded-2xl bg-[var(--accent-subtle)] border border-[rgba(5,150,105,0.25)] flex items-center justify-center text-[var(--accent-primary)] text-xl font-bold shrink-0 shadow-sm">
+                  📍
+                </div>
+                <div>
+                  <div className="flex items-center gap-2.5 flex-wrap">
+                    <span className="text-xs font-black uppercase tracking-wider text-[var(--accent-primary)]">
+                      Active City Jurisdiction
+                    </span>
+                    <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[var(--bg-surface)] text-[var(--text-secondary)] border border-[var(--border-subtle)]">
+                      {cityMeta.zone} Zone • {cityMeta.state}
+                    </span>
+                    <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[rgba(16,185,129,0.12)] text-[#059669] border border-[rgba(16,185,129,0.25)] flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
+                      Live ERSS-112 Grid Active
+                    </span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight mt-1">
+                    {cityMeta.name} Safety Corridor
+                  </h3>
+                  <p className="text-xs sm:text-sm text-[var(--text-muted)] font-medium mt-0.5">
+                    🏛️ {cityMeta.emergencyCommand} • {cityMeta.jurisdictionBadge}
+                  </p>
+                </div>
               </div>
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ fontSize: "0.95rem", fontWeight: 800, color: "var(--text-primary)" }}>
-                    Currently Viewing: {cityMeta.name} Safety Grid
-                  </span>
-                  <span style={{
-                    fontSize: "0.68rem",
-                    fontWeight: 700,
-                    padding: "2px 8px",
-                    borderRadius: "9999px",
-                    background: "rgba(16,185,129,0.12)",
-                    color: "#059669",
-                    border: "1px solid rgba(16,185,129,0.25)"
-                  }}>
-                    🟢 Live 112 ERSS
-                  </span>
+
+              <button
+                onClick={() => setIsCityPickerOpen(true)}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs font-extrabold text-[var(--text-primary)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] transition-all cursor-pointer shadow-sm self-start sm:self-auto"
+              >
+                <SlidersHorizontal className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
+                <span>Change City ({INDIAN_CITIES.length})</span>
+              </button>
+            </div>
+
+            {/* Metric Badges Strip (Generous spacing, clear labels, distinct colors) */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] space-y-1">
+                <div className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#10b981]" />
+                  <span>Safety Rating</span>
                 </div>
-                <div style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginTop: 2 }}>
-                  🏛️ {cityMeta.emergencyCommand} • {cityMeta.zone} Command
+                <div className="text-xl sm:text-2xl font-black text-[#10b981]">
+                  {cityMeta.safetyScore} <span className="text-xs font-semibold text-[var(--text-muted)]">/ 100</span>
                 </div>
+                <div className="text-[11.5px] text-[var(--text-secondary)] font-medium">High civic safety index</div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] space-y-1">
+                <div className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
+                  <Car className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
+                  <span>Active Patrol Fleet</span>
+                </div>
+                <div className="text-xl sm:text-2xl font-black text-[var(--text-primary)]">
+                  {cityMeta.activePatrolUnits} <span className="text-xs font-semibold text-[var(--text-muted)]">PCR Units</span>
+                </div>
+                <div className="text-[11.5px] text-[var(--text-secondary)] font-medium">On 24x7 synchronized beat</div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] space-y-1">
+                <div className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
+                  <span>Average Arrival Time</span>
+                </div>
+                <div className="text-xl sm:text-2xl font-black text-[var(--accent-primary)]">
+                  {cityMeta.responseMins} <span className="text-xs font-semibold text-[var(--text-muted)]">minutes</span>
+                </div>
+                <div className="text-[11.5px] text-[var(--text-secondary)] font-medium">Rapid 112 dispatch SLA</div>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] space-y-1">
+                <div className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
+                  <AlertTriangle className="w-3.5 h-3.5 text-[#d97706]" />
+                  <span>Monitored Hotspots</span>
+                </div>
+                <div className="text-xl sm:text-2xl font-black text-[#d97706]">
+                  {cityMeta.hotspots.length} <span className="text-xs font-semibold text-[var(--text-muted)]">Clusters</span>
+                </div>
+                <div className="text-[11.5px] text-[var(--text-secondary)] font-medium">AI DBSCAN risk surveillance</div>
               </div>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-              <div style={{ textAlign: "right" }}>
-                <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase" }}>Safety Score</div>
-                <div style={{ fontSize: "0.95rem", fontWeight: 900, color: "#10b981" }}>{cityMeta.safetyScore}/100</div>
+            {/* City Quick Route Presets Bar with generous spacing */}
+            <div className="pt-4 border-t border-[var(--border-subtle)] space-y-3">
+              <div className="flex items-center justify-between gap-3 flex-wrap">
+                <div className="text-xs font-black uppercase tracking-wider text-[var(--text-secondary)] flex items-center gap-2">
+                  <Activity className="w-4 h-4 text-[var(--accent-primary)]" />
+                  <span>Recommended Safe Corridors in {cityMeta.name}</span>
+                </div>
+                <span className="text-[11.5px] font-medium text-[var(--text-muted)]">
+                  Click any preset to route instantly
+                </span>
               </div>
-              <div style={{ width: 1, height: 28, background: "var(--border-subtle)" }} />
-              <div style={{ textAlign: "right" }}>
-                <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase" }}>Patrol Units</div>
-                <div style={{ fontSize: "0.95rem", fontWeight: 900, color: "var(--text-primary)" }}>{cityMeta.activePatrolUnits} Units</div>
+
+              <div className="flex items-center gap-2.5 flex-wrap">
+                {cityMeta.presets.map((p) => {
+                  const isCurrentPreset =
+                    startCoords[0] === p.start[0] &&
+                    startCoords[1] === p.start[1] &&
+                    destCoords[0] === p.dest[0] &&
+                    destCoords[1] === p.dest[1];
+
+                  return (
+                    <button
+                      key={p.label}
+                      onClick={() => {
+                        setStartCoords(p.start as [number, number]);
+                        setDestCoords(p.dest as [number, number]);
+                        handleFindSafeRoute();
+                      }}
+                      className={`
+                        px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 border
+                        ${
+                          isCurrentPreset
+                            ? "bg-[var(--accent-primary)] text-white border-[var(--accent-primary)] shadow-sm"
+                            : "bg-[var(--bg-surface)] border-[var(--border-subtle)] text-[var(--text-primary)] hover:border-[var(--accent-primary)] hover:bg-[var(--accent-subtle)]"
+                        }
+                      `}
+                    >
+                      <span>🛣️</span>
+                      <span>{p.label}</span>
+                      {p.distKm && (
+                        <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono ${isCurrentPreset ? "bg-white/20 text-white" : "bg-[var(--bg-card)] text-[var(--text-muted)] border border-[var(--border-subtle)]"}`}>
+                          {p.distKm}
+                        </span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
-              <div style={{ width: 1, height: 28, background: "var(--border-subtle)" }} />
-              <div style={{ textAlign: "right" }}>
-                <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase" }}>Dispatch SLA</div>
-                <div style={{ fontSize: "0.95rem", fontWeight: 900, color: "var(--accent-primary)" }}>{cityMeta.responseMins}m</div>
-              </div>
-              <button
-                onClick={() => setIsCityPickerOpen(true)}
-                style={{
-                  padding: "6px 14px",
-                  borderRadius: "10px",
-                  background: "var(--bg-surface)",
-                  border: "1px solid var(--border-subtle)",
-                  fontSize: "0.78rem",
-                  fontWeight: 700,
-                  color: "var(--text-primary)",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 4
-                }}
-              >
-                <span>Change City</span>
-                <span>→</span>
-              </button>
             </div>
           </div>
 
