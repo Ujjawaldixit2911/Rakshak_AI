@@ -18,7 +18,7 @@ import RouteNavigationGuidance from "@/components/route/RouteNavigationGuidance"
 import HeroAvatarPresenter from "@/components/HeroAvatarPresenter";
 import EmergencyHubModal from "@/components/EmergencyHubModal";
 import { HistoryCard, JourneyHistoryRecord } from "@/components/HistoryCard";
-import { Clock, ShieldCheck, MapPin, AlertTriangle, Radio, PhoneCall, Activity, CheckCircle2, SlidersHorizontal, ArrowRight, Compass, Car, Navigation } from "lucide-react";
+import { Clock, ShieldCheck, MapPin, AlertTriangle, Radio, PhoneCall, Activity, CheckCircle2, SlidersHorizontal, ArrowRight, Compass, Car, Navigation, ChevronDown } from "lucide-react";
 import { PageBackground } from "@/components/shared/PageBackground";
 import { KPICard } from "@/components/shared/KPICard";
 import { Card } from "@/components/shared/Card";
@@ -111,7 +111,7 @@ export default function CitizenPortal() {
   const [startCoords, setStartCoords] = useState<[number, number]>([28.6315, 77.2167]);
   const [destCoords, setDestCoords] = useState<[number, number]>([28.5245, 77.2066]);
   const [safetyMode, setSafetyMode] = useState<"safest" | "balanced" | "fastest">("safest");
-  const [timeOfDay, setTimeOfDay] = useState("22:00");
+  const [timeOfDay, setTimeOfDay] = useState("Night");
 
   const [routePlan, setRoutePlan] = useState<any | null>(null);
   const [hotspotsData, setHotspotsData] = useState<any | null>(null);
@@ -880,408 +880,244 @@ export default function CitizenPortal() {
           marginBottom: "2.5rem",
           boxShadow: "var(--shadow-card)",
         }}>
-          {/* Header & City Switcher Bar */}
-          <div style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: 16,
-            marginBottom: "1.5rem"
-          }}>
+          {/* ── Structured Route & Safety Control Console (4 Dropdown Architecture) ── */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 mb-5 border-b border-[var(--border-subtle)]">
             <div>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4, flexWrap: "wrap" }}>
-                <span style={{
-                  fontSize: "0.74rem",
-                  fontWeight: 800,
-                  padding: "3px 10px",
-                  borderRadius: "9999px",
-                  background: "var(--accent-dim)",
-                  color: "var(--accent-primary)",
-                  border: "1px solid var(--border-subtle)",
-                }}>
-                  🛡️ Civic Hazard Mapping & Safe Corridor Engine
+              <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                  Live ERSS-112 Corridor Active
                 </span>
-                <span style={{
-                  fontSize: "0.72rem",
-                  fontWeight: 700,
-                  padding: "3px 8px",
-                  borderRadius: "6px",
-                  background: "rgba(34, 197, 94, 0.1)",
-                  color: "#16a34a",
-                  border: "1px solid rgba(34, 197, 94, 0.25)",
-                }}>
-                  ⚛️ React • 🗺️ Leaflet • 🌐 OpenStreetMap • 🛣️ OSRM
+                <span className="text-[11.5px] font-bold text-[var(--text-secondary)]">
+                  🏛️ {cityMeta.emergencyCommand} • {cityMeta.state}
                 </span>
               </div>
-              <h2 style={{ fontSize: "1.6rem", fontWeight: 900, margin: 0, letterSpacing: "-0.03em", color: "var(--text-primary)" }}>
+              <h2 className="text-2xl font-black text-[var(--text-primary)] tracking-tight">
                 Citizen Safety Portal & Route Navigator
               </h2>
             </div>
 
-            {/* City Selector & Operating Region Controls */}
-            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-              {/* Quick Popular City Pills */}
-              <div style={{
-                display: "flex",
-                background: "var(--bg-surface)",
-                border: "1px solid var(--border-subtle)",
-                borderRadius: "9999px",
-                padding: "3px"
-              }}>
-                {INDIAN_CITIES.slice(0, 4).map((c) => {
-                  const isSel =
-                    selectedCity.toLowerCase() === c.shortName.toLowerCase() ||
-                    selectedCity.toLowerCase() === c.name.toLowerCase() ||
-                    selectedCity.toLowerCase() === c.id.toLowerCase();
-                  return (
-                    <button
-                      key={c.id}
-                      onClick={() => setSelectedCity(c.shortName)}
-                      style={{
-                        padding: "6px 14px",
-                        borderRadius: "9999px",
-                        border: "none",
-                        cursor: "pointer",
-                        fontSize: "0.82rem",
-                        fontWeight: 700,
-                        background: isSel ? "linear-gradient(135deg, #059669, #047857)" : "transparent",
-                        color: isSel ? "#fff" : "var(--text-secondary)",
-                        boxShadow: isSel ? "0 2px 8px rgba(5,150,105,0.3)" : "none",
-                        transition: "all 0.15s ease"
-                      }}
-                    >
-                      📍 {c.shortName}
-                    </button>
-                  );
-                })}
+            {/* Safety index and response SLA pills */}
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs font-extrabold text-[var(--text-primary)] shadow-sm">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <span>Safety Rating: <strong className="text-emerald-600">{cityMeta.safetyScore}/100</strong></span>
               </div>
-
-              {/* Dedicated All Cities Selector Button */}
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs font-extrabold text-[var(--text-primary)] shadow-sm">
+                <Clock className="w-4 h-4 text-emerald-600" />
+                <span>Arrival SLA: <strong className="text-[var(--text-primary)]">{cityMeta.responseMins} min</strong></span>
+              </div>
               <button
                 onClick={() => setIsCityPickerOpen(true)}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: 6,
-                  padding: "7px 14px",
-                  borderRadius: "9999px",
-                  background: "var(--bg-card)",
-                  border: "1px solid var(--border-subtle)",
-                  fontSize: "0.82rem",
-                  fontWeight: 800,
-                  color: "var(--text-primary)",
-                  cursor: "pointer",
-                  boxShadow: "var(--shadow-card)",
-                  transition: "all 0.15s ease"
-                }}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs font-bold text-[var(--text-secondary)] hover:text-emerald-600 hover:border-emerald-500 transition-all cursor-pointer shadow-sm"
+                title="Browse All 10 Indian Metropolitan Cities"
               >
-                <span>Select City ({INDIAN_CITIES.length})</span>
-                <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>▾</span>
+                <SlidersHorizontal className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Browse Cities ({INDIAN_CITIES.length})</span>
               </button>
             </div>
           </div>
 
-          {/* ── Active City Safety Overview Card (Spacious, Polished UI/UX) ──────── */}
-          <div className="p-6 sm:p-7 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] space-y-6 my-6 transition-all duration-200">
-            {/* Top Row: Location Title, State, Live Status & Change Button */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--border-subtle)]">
-              <div className="flex items-center gap-3.5">
-                <div className="w-12 h-12 rounded-2xl bg-[var(--accent-subtle)] border border-[rgba(5,150,105,0.25)] flex items-center justify-center text-[var(--accent-primary)] text-xl font-bold shrink-0 shadow-sm">
-                  📍
-                </div>
-                <div>
-                  <div className="flex items-center gap-2.5 flex-wrap">
-                    <span className="text-xs font-black uppercase tracking-wider text-[var(--accent-primary)]">
-                      Active City Jurisdiction
-                    </span>
-                    <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[var(--bg-surface)] text-[var(--text-secondary)] border border-[var(--border-subtle)]">
-                      {cityMeta.zone} Zone • {cityMeta.state}
-                    </span>
-                    <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[rgba(16,185,129,0.12)] text-[#059669] border border-[rgba(16,185,129,0.25)] flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
-                      Live ERSS-112 Grid Active
-                    </span>
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight mt-1">
-                    {cityMeta.name} Safety Corridor
-                  </h3>
-                  <p className="text-xs sm:text-sm text-[var(--text-muted)] font-medium mt-0.5">
-                    🏛️ {cityMeta.emergencyCommand} • {cityMeta.jurisdictionBadge}
-                  </p>
-                </div>
-              </div>
-
-              <button
-                onClick={() => setIsCityPickerOpen(true)}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs font-extrabold text-[var(--text-primary)] hover:border-[var(--accent-primary)] hover:text-[var(--accent-primary)] transition-all cursor-pointer shadow-sm self-start sm:self-auto"
-              >
-                <SlidersHorizontal className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
-                <span>Change City ({INDIAN_CITIES.length})</span>
-              </button>
-            </div>
-
-            {/* Metric Badges Strip (Generous spacing, clear labels, distinct colors) */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] space-y-1">
-                <div className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#10b981]" />
-                  <span>Safety Rating</span>
-                </div>
-                <div className="text-xl sm:text-2xl font-black text-[#10b981]">
-                  {cityMeta.safetyScore} <span className="text-xs font-semibold text-[var(--text-muted)]">/ 100</span>
-                </div>
-                <div className="text-[11.5px] text-[var(--text-secondary)] font-medium">High civic safety index</div>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] space-y-1">
-                <div className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
-                  <Car className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
-                  <span>Active Patrol Fleet</span>
-                </div>
-                <div className="text-xl sm:text-2xl font-black text-[var(--text-primary)]">
-                  {cityMeta.activePatrolUnits} <span className="text-xs font-semibold text-[var(--text-muted)]">PCR Units</span>
-                </div>
-                <div className="text-[11.5px] text-[var(--text-secondary)] font-medium">On 24x7 synchronized beat</div>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] space-y-1">
-                <div className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
-                  <span>Average Arrival Time</span>
-                </div>
-                <div className="text-xl sm:text-2xl font-black text-[var(--accent-primary)]">
-                  {cityMeta.responseMins} <span className="text-xs font-semibold text-[var(--text-muted)]">minutes</span>
-                </div>
-                <div className="text-[11.5px] text-[var(--text-secondary)] font-medium">Rapid 112 dispatch SLA</div>
-              </div>
-
-              <div className="p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] space-y-1">
-                <div className="text-[11px] font-bold uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
-                  <AlertTriangle className="w-3.5 h-3.5 text-[#d97706]" />
-                  <span>Monitored Hotspots</span>
-                </div>
-                <div className="text-xl sm:text-2xl font-black text-[#d97706]">
-                  {cityMeta.hotspots.length} <span className="text-xs font-semibold text-[var(--text-muted)]">Clusters</span>
-                </div>
-                <div className="text-[11.5px] text-[var(--text-secondary)] font-medium">AI DBSCAN risk surveillance</div>
-              </div>
-            </div>
-
-            {/* City Quick Route Presets Bar with generous spacing */}
-            <div className="pt-4 border-t border-[var(--border-subtle)] space-y-3">
-              <div className="flex items-center justify-between gap-3 flex-wrap">
-                <div className="text-xs font-black uppercase tracking-wider text-[var(--text-secondary)] flex items-center gap-2">
-                  <Activity className="w-4 h-4 text-[var(--accent-primary)]" />
-                  <span>Recommended Safe Corridors in {cityMeta.name}</span>
-                </div>
-                <span className="text-[11.5px] font-medium text-[var(--text-muted)]">
-                  Click any preset to route instantly
-                </span>
-              </div>
-
-              <div className="flex items-center gap-2.5 flex-wrap">
-                {cityMeta.presets.map((p) => {
-                  const isCurrentPreset =
-                    startCoords[0] === p.start[0] &&
-                    startCoords[1] === p.start[1] &&
-                    destCoords[0] === p.dest[0] &&
-                    destCoords[1] === p.dest[1];
-
-                  return (
-                    <button
-                      key={p.label}
-                      onClick={() => {
-                        setStartCoords(p.start as [number, number]);
-                        setDestCoords(p.dest as [number, number]);
-                        handleFindSafeRoute();
-                      }}
-                      className={`
-                        px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 border
-                        ${
-                          isCurrentPreset
-                            ? "bg-[var(--accent-primary)] text-white border-[var(--accent-primary)] shadow-sm"
-                            : "bg-[var(--bg-surface)] border-[var(--border-subtle)] text-[var(--text-primary)] hover:border-[var(--accent-primary)] hover:bg-[var(--accent-subtle)]"
-                        }
-                      `}
-                    >
-                      <span>🛣️</span>
-                      <span>{p.label}</span>
-                      {p.distKm && (
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-md font-mono ${isCurrentPreset ? "bg-white/20 text-white" : "bg-[var(--bg-card)] text-[var(--text-muted)] border border-[var(--border-subtle)]"}`}>
-                          {p.distKm}
-                        </span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-
-          {/* Route Control & Mode Selectors */}
-          <div style={{
-            background: "var(--bg-surface)",
-            border: "1px solid var(--border-subtle)",
-            borderRadius: "16px",
-            padding: "1.25rem",
-            marginBottom: "1.5rem"
-          }}>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
-              {/* Feature Mode Selector */}
-              <div>
-                <label style={{ fontSize: "0.72rem", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 800, letterSpacing: "0.08em", display: "block", marginBottom: 6 }}>
-                  🛡️ Routing Safety Mode
-                </label>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
-                  {/* Safest / Women Safety Button */}
-                  <button
-                    onClick={() => setSafetyMode("safest")}
-                    style={{
-                      padding: "8px 6px",
-                      borderRadius: "10px",
-                      border: `1px solid ${safetyMode === "safest" ? "#db2777" : "var(--border-subtle)"}`,
-                      background: safetyMode === "safest" ? "rgba(219, 39, 119, 0.12)" : "var(--bg-card)",
-                      color: safetyMode === "safest" ? "#db2777" : "var(--text-secondary)",
-                      fontSize: "0.78rem",
-                      fontWeight: 700,
-                      cursor: "pointer",
-                      textAlign: "center",
-                      transition: "all 0.15s ease"
-                    }}
-                  >
-                    🛡️ Safest / Women
-                  </button>
-
-                  {/* Balanced Corridor Button */}
-                  <button
-                    onClick={() => setSafetyMode("balanced")}
-                    style={{
-                      padding: "8px 6px",
-                      borderRadius: "10px",
-                      border: `1px solid ${safetyMode === "balanced" ? "#059669" : "var(--border-subtle)"}`,
-                      background: safetyMode === "balanced" ? "rgba(5, 150, 105, 0.12)" : "var(--bg-card)",
-                      color: safetyMode === "balanced" ? "#059669" : "var(--text-secondary)",
-                      fontSize: "0.78rem",
-                      fontWeight: 700,
-                      cursor: "pointer",
-                      textAlign: "center",
-                      transition: "all 0.15s ease"
-                    }}
-                  >
-                    ⚖️ Balanced
-                  </button>
-
-                  {/* Fastest / Night Transit Button */}
-                  <button
-                    onClick={() => setSafetyMode("fastest")}
-                    style={{
-                      padding: "8px 6px",
-                      borderRadius: "10px",
-                      border: `1px solid ${safetyMode === "fastest" ? "#4f46e5" : "var(--border-subtle)"}`,
-                      background: safetyMode === "fastest" ? "rgba(79, 70, 229, 0.12)" : "var(--bg-card)",
-                      color: safetyMode === "fastest" ? "#4f46e5" : "var(--text-secondary)",
-                      fontSize: "0.78rem",
-                      fontWeight: 700,
-                      cursor: "pointer",
-                      textAlign: "center",
-                      transition: "all 0.15s ease"
-                    }}
-                  >
-                    ⚡ Fastest / Night
-                  </button>
-                </div>
-              </div>
-
-              {/* Time of Day Simulation */}
-              <div>
-                <label style={{ fontSize: "0.72rem", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 800, letterSpacing: "0.08em", display: "block", marginBottom: 6 }}>
-                  🕒 Time of Day Simulation
-                </label>
-                <div style={{ display: "flex", gap: 6 }}>
-                  {["Night", "Evening", "Morning", "Afternoon"].map((t) => (
-                    <button
-                      key={t}
-                      onClick={() => setTimeOfDay(t)}
-                      style={{
-                        flex: 1,
-                        padding: "7px 4px",
-                        borderRadius: "10px",
-                        border: `1px solid ${timeOfDay === t ? "var(--accent-primary)" : "var(--border-subtle)"}`,
-                        background: timeOfDay === t ? "var(--accent-primary)" : "var(--bg-card)",
-                        color: timeOfDay === t ? "#ffffff" : "var(--text-secondary)",
-                        fontSize: "0.76rem",
-                        fontWeight: 600,
-                        cursor: "pointer"
-                      }}
-                    >
-                      {t}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Map Layer Toggles */}
-              <div>
-                <label style={{ fontSize: "0.72rem", color: "var(--text-muted)", textTransform: "uppercase", fontWeight: 800, letterSpacing: "0.08em", display: "block", marginBottom: 6 }}>
-                  🗺️ Map Intelligence Layers
-                </label>
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 4 }}>
-                  <label style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.78rem", color: "var(--text-secondary)", cursor: "pointer" }}>
-                    <input type="checkbox" checked={showHeatmap} onChange={(e) => setShowHeatmap(e.target.checked)} />
-                    🔥 Heatmap
-                  </label>
-                  <label style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.78rem", color: "var(--text-secondary)", cursor: "pointer" }}>
-                    <input type="checkbox" checked={showHotspots} onChange={(e) => setShowHotspots(e.target.checked)} />
-                    📍 Hotspots ({hotspotsData?.total_hotspots || 0})
-                  </label>
-                  <label style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.78rem", color: "var(--text-secondary)", cursor: "pointer" }}>
-                    <input type="checkbox" checked={showEmergencyPOIs} onChange={(e) => setShowEmergencyPOIs(e.target.checked)} />
-                    🚨 Emergency POIs
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Route Presets & Voice Command Bar */}
-            <div style={{ marginTop: "1rem", paddingTop: "0.8rem", borderTop: "1px solid var(--border-subtle)", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-              <span style={{ fontSize: "0.74rem", color: "var(--text-muted)", fontWeight: 700 }}>Quick routes in {selectedCity}:</span>
-              {cityMeta.presets.map((p) => (
-                <button
-                  key={p.label}
-                  onClick={() => {
-                    setStartCoords(p.start as [number, number]);
-                    setDestCoords(p.dest as [number, number]);
+          {/* ── 4-Dropdown Selection Grid ── */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] mb-4">
+            {/* Dropdown 1: Select City / Jurisdiction */}
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-black uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5 text-emerald-600" />
+                <span>1. Select City / Jurisdiction</span>
+              </label>
+              <div className="relative">
+                <select
+                  value={selectedCity}
+                  onChange={(e) => {
+                    const cityName = e.target.value;
+                    setSelectedCity(cityName);
+                    const targetCity = INDIAN_CITIES.find(
+                      (c) =>
+                        c.shortName.toLowerCase() === cityName.toLowerCase() ||
+                        c.name.toLowerCase() === cityName.toLowerCase() ||
+                        c.id.toLowerCase() === cityName.toLowerCase()
+                    );
+                    if (targetCity && targetCity.presets.length > 0) {
+                      setStartCoords(targetCity.presets[0].start as [number, number]);
+                      setDestCoords(targetCity.presets[0].dest as [number, number]);
+                    }
                   }}
-                  style={{
-                    padding: "4px 12px",
-                    borderRadius: "9999px",
-                    background: "var(--accent-dim)",
-                    border: "1px solid var(--border-subtle)",
-                    color: "var(--accent-primary)",
-                    fontSize: "0.75rem",
-                    fontWeight: 600,
-                    cursor: "pointer"
-                  }}
+                  className="w-full h-11 px-3.5 py-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-xs sm:text-sm font-bold text-[var(--text-primary)] focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 cursor-pointer appearance-none transition-all pr-8 shadow-sm"
                 >
-                  {p.label}
-                </button>
-              ))}
+                  {INDIAN_CITIES.map((c) => (
+                    <option key={c.id} value={c.shortName} className="bg-[var(--bg-card)] text-[var(--text-primary)] font-semibold">
+                      📍 {c.name} ({c.state})
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="w-4 h-4 text-[var(--text-muted)] absolute right-3 top-3.5 pointer-events-none" />
+              </div>
+            </div>
 
-              <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "6px" }}>
-                <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>🎙️ Speak route:</span>
+            {/* Dropdown 2: Safe Corridor Presets */}
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-black uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
+                <Compass className="w-3.5 h-3.5 text-emerald-600" />
+                <span>2. Safe Corridor in {cityMeta.shortName}</span>
+              </label>
+              <div className="relative">
+                <select
+                  value={(() => {
+                    const idx = cityMeta.presets.findIndex(
+                      (p) =>
+                        Math.abs(startCoords[0] - p.start[0]) < 0.001 &&
+                        Math.abs(startCoords[1] - p.start[1]) < 0.001 &&
+                        Math.abs(destCoords[0] - p.dest[0]) < 0.001 &&
+                        Math.abs(destCoords[1] - p.dest[1]) < 0.001
+                    );
+                    return idx >= 0 ? idx : 0;
+                  })()}
+                  onChange={(e) => {
+                    const idx = parseInt(e.target.value, 10);
+                    if (idx >= 0 && cityMeta.presets[idx]) {
+                      const p = cityMeta.presets[idx];
+                      setStartCoords(p.start as [number, number]);
+                      setDestCoords(p.dest as [number, number]);
+                    }
+                  }}
+                  className="w-full h-11 px-3.5 py-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-xs sm:text-sm font-bold text-[var(--text-primary)] focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 cursor-pointer appearance-none transition-all pr-8 shadow-sm"
+                >
+                  {cityMeta.presets.map((p, idx) => (
+                    <option key={p.label} value={idx} className="bg-[var(--bg-card)] text-[var(--text-primary)] font-semibold">
+                      🛣️ {p.label} {p.distKm ? `(${p.distKm})` : ""}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown className="w-4 h-4 text-[var(--text-muted)] absolute right-3 top-3.5 pointer-events-none" />
+              </div>
+            </div>
+
+            {/* Dropdown 3: Routing Safety Mode */}
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-black uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                <span>3. Routing Safety Mode</span>
+              </label>
+              <div className="relative">
+                <select
+                  value={safetyMode}
+                  onChange={(e) => setSafetyMode(e.target.value as any)}
+                  className="w-full h-11 px-3.5 py-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-xs sm:text-sm font-bold text-[var(--text-primary)] focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 cursor-pointer appearance-none transition-all pr-8 shadow-sm"
+                >
+                  <option value="safest" className="bg-[var(--bg-card)] text-[var(--text-primary)] font-semibold">
+                    🛡️ Safest / Women Safety Priority
+                  </option>
+                  <option value="balanced" className="bg-[var(--bg-card)] text-[var(--text-primary)] font-semibold">
+                    ⚖️ Balanced Corridor (Optimized)
+                  </option>
+                  <option value="fastest" className="bg-[var(--bg-card)] text-[var(--text-primary)] font-semibold">
+                    ⚡ Fastest Direct Route
+                  </option>
+                </select>
+                <ChevronDown className="w-4 h-4 text-[var(--text-muted)] absolute right-3 top-3.5 pointer-events-none" />
+              </div>
+            </div>
+
+            {/* Dropdown 4: Time of Day Simulation */}
+            <div className="space-y-1.5">
+              <label className="text-[11px] font-black uppercase tracking-wider text-[var(--text-muted)] flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-emerald-600" />
+                <span>4. Time of Day Simulation</span>
+              </label>
+              <div className="relative">
+                <select
+                  value={timeOfDay}
+                  onChange={(e) => setTimeOfDay(e.target.value)}
+                  className="w-full h-11 px-3.5 py-2 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-xs sm:text-sm font-bold text-[var(--text-primary)] focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 cursor-pointer appearance-none transition-all pr-8 shadow-sm"
+                >
+                  <option value="Night" className="bg-[var(--bg-card)] text-[var(--text-primary)] font-semibold">
+                    🌙 Night (Maximum Vigilance - 22:00)
+                  </option>
+                  <option value="Evening" className="bg-[var(--bg-card)] text-[var(--text-primary)] font-semibold">
+                    🌆 Evening (Peak Transit - 19:00)
+                  </option>
+                  <option value="Morning" className="bg-[var(--bg-card)] text-[var(--text-primary)] font-semibold">
+                    ☀️ Morning (Rush Hour - 09:00)
+                  </option>
+                  <option value="Afternoon" className="bg-[var(--bg-card)] text-[var(--text-primary)] font-semibold">
+                    🌤️ Afternoon (Normal Traffic - 14:00)
+                  </option>
+                </select>
+                <ChevronDown className="w-4 h-4 text-[var(--text-muted)] absolute right-3 top-3.5 pointer-events-none" />
+              </div>
+            </div>
+          </div>
+
+          {/* ── Map Layers & Instant Action Bar ── */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-3.5 rounded-2xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] mb-5">
+            {/* Layer Toggles */}
+            <div className="flex items-center gap-4 flex-wrap text-xs font-bold text-[var(--text-secondary)]">
+              <span className="text-[11px] uppercase tracking-wider text-[var(--text-muted)] font-black">
+                Map Layers:
+              </span>
+              <label className="inline-flex items-center gap-2 cursor-pointer select-none hover:text-[var(--text-primary)]">
+                <input
+                  type="checkbox"
+                  checked={showHeatmap}
+                  onChange={(e) => setShowHeatmap(e.target.checked)}
+                  className="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
+                />
+                <span>🔥 Crime Heatmap</span>
+              </label>
+              <label className="inline-flex items-center gap-2 cursor-pointer select-none hover:text-[var(--text-primary)]">
+                <input
+                  type="checkbox"
+                  checked={showHotspots}
+                  onChange={(e) => setShowHotspots(e.target.checked)}
+                  className="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
+                />
+                <span>📍 Risk Hotspots ({hotspotsData?.total_hotspots || cityMeta.hotspots.length})</span>
+              </label>
+              <label className="inline-flex items-center gap-2 cursor-pointer select-none hover:text-[var(--text-primary)]">
+                <input
+                  type="checkbox"
+                  checked={showEmergencyPOIs}
+                  onChange={(e) => setShowEmergencyPOIs(e.target.checked)}
+                  className="rounded text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
+                />
+                <span>🚨 Emergency POIs</span>
+              </label>
+            </div>
+
+            {/* Actions: Voice & Recalculate */}
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-xs font-semibold text-[var(--text-secondary)]">
+                <span>🎙️ Speak:</span>
                 <VoiceInputButton
                   size="sm"
-                  title="Speak to plan safe route (e.g. 'CP se Saket')"
-                  onResult={(text) => {
+                  title="Speak to plan safe route"
+                  onResult={() => {
                     const el = document.getElementById("rakshak-copilot-launcher");
                     if (el) el.click();
                   }}
                 />
               </div>
+
+              <button
+                onClick={handleFindSafeRoute}
+                disabled={loadingRoute}
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white text-xs font-black shadow-md hover:from-emerald-700 hover:to-teal-700 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-60"
+              >
+                {loadingRoute ? (
+                  <>
+                    <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <span>Computing Safe Route...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>🚀</span>
+                    <span>Plan Safe Route</span>
+                  </>
+                )}
+              </button>
             </div>
           </div>
-
           {/* Interactive Map */}
           <div style={{ borderRadius: "20px", overflow: "hidden", position: "relative", border: "1px solid var(--border-subtle)", boxShadow: "var(--shadow-card)" }}>
             <InteractiveMap
