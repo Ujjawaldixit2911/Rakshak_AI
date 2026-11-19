@@ -31,6 +31,10 @@ import {
   MapPin,
   Camera,
   Activity,
+  Layers,
+  ArrowRight,
+  Eye,
+  SlidersHorizontal,
 } from "lucide-react";
 import { API_BASE_URL, WS_BASE_URL, safeApiFetch } from "@/lib/api";
 import { Button, Card, Badge } from "@/components/ui";
@@ -41,7 +45,7 @@ import { KPICard } from "@/components/shared/KPICard";
 
 type Tab = "analytics" | "hotspots" | "moderation" | "sos_monitor" | "patrol_map";
 
-const CHART_PALETTE = ["#059669", "#0f766e", "#10b981", "#d97706", "#f59e0b", "#e11d48", "#2563eb"];
+const CHART_PALETTE = ["#059669", "#0d9488", "#10b981", "#d97706", "#f59e0b", "#e11d48", "#2563eb"];
 
 function getFallbackPoliceDashboard(cityName: string) {
   return {
@@ -67,10 +71,10 @@ function getFallbackPoliceDashboard(cityName: string) {
       { type: "Assault & Battery", name: "Assault & Battery", count: 95, value: 95 },
     ],
     crime_by_time_of_day: [
-      { time_of_day: "Morning (06:00 - 12:00)", name: "Morning (06:00 - 12:00)", count: 180, value: 180 },
-      { time_of_day: "Afternoon (12:00 - 18:00)", name: "Afternoon (12:00 - 18:00)", count: 310, value: 310 },
-      { time_of_day: "Evening (18:00 - 22:00)", name: "Evening (18:00 - 22:00)", count: 520, value: 520 },
-      { time_of_day: "Night (22:00 - 06:00)", name: "Night (22:00 - 06:00)", count: 680, value: 680 },
+      { time_of_day: "Morning (06:00 - 12:00)", name: "Morning (06:00 - 12:00)", count: 180, value: 180, pct: "10.6%" },
+      { time_of_day: "Afternoon (12:00 - 18:00)", name: "Afternoon (12:00 - 18:00)", count: 310, value: 310, pct: "18.3%" },
+      { time_of_day: "Evening (18:00 - 22:00)", name: "Evening (18:00 - 22:00)", count: 520, value: 520, pct: "30.8%" },
+      { time_of_day: "Night (22:00 - 06:00)", name: "Night (22:00 - 06:00)", count: 680, value: 680, pct: "40.3%" },
     ],
     top_5_hotspots: [
       {
@@ -143,11 +147,11 @@ function getFallbackIncidentQueue() {
       id: 101,
       crime_type: "Harassment & Stalking",
       title: "Harassment & Stalking",
-      description: "Unlit dark stretch behind market with aggressive group blocking pedestrian alley.",
+      description: "Unlit dark stretch behind commercial market with aggressive group blocking pedestrian alleyway.",
       category: "Harassment",
       severity: 8,
       status: "pending",
-      location: "Saket Block D, Metro Gate 2",
+      location: "Saket Block D, Metro Gate 2 Corridor",
       lat: 28.5245,
       lon: 77.2066,
       created_at: "10 mins ago",
@@ -156,7 +160,7 @@ function getFallbackIncidentQueue() {
       id: 102,
       crime_type: "Phone Snatching on Bike",
       title: "Phone Snatching on Bike",
-      description: "Two suspects on black Pulsar motorcycle snatched phone from pedestrian commuter.",
+      description: "Two suspects on black Pulsar motorcycle snatched phone from commuter walking towards subway entrance.",
       category: "Snatching",
       severity: 7,
       status: "pending",
@@ -169,11 +173,11 @@ function getFallbackIncidentQueue() {
       id: 103,
       crime_type: "Vehicle Break-In Attempt",
       title: "Vehicle Break-In Attempt",
-      description: "Parked car with smashed passenger glass on service corridor near district hospital.",
+      description: "Parked car with smashed passenger glass on service corridor near district hospital perimeter.",
       category: "Theft",
       severity: 6,
       status: "verified",
-      location: "Rohini Sector 14 Outer Ring",
+      location: "Rohini Sector 14 Outer Ring Service Road",
       lat: 28.7041,
       lon: 77.1025,
       created_at: "1 hour ago",
@@ -182,7 +186,7 @@ function getFallbackIncidentQueue() {
       id: 104,
       crime_type: "Municipal Street Light Failure",
       title: "Municipal Street Light Failure",
-      description: "Entire 600m arterial avenue completely pitch black with non-functioning sodium lamps.",
+      description: "Entire 600m arterial pedestrian avenue completely pitch black with non-functioning sodium vapor lamps.",
       category: "Hazard",
       severity: 5,
       status: "pending",
@@ -193,6 +197,14 @@ function getFallbackIncidentQueue() {
     },
   ];
 }
+
+const PATROL_CHECKPOINTS = [
+  { stop: 1, name: "Connaught Place Sector A", risk: "High", incidents: 12, time: "18:00 - 19:30" },
+  { stop: 2, name: "Chandni Chowk Corridor", risk: "Medium", incidents: 8, time: "19:45 - 21:00" },
+  { stop: 3, name: "Nehru Place Commercial Hub", risk: "Low", incidents: 4, time: "21:15 - 22:30" },
+  { stop: 4, name: "AIIMS Safe Transit Zone", risk: "Low", incidents: 2, time: "22:45 - 00:00" },
+  { stop: 5, name: "Pahar Ganj Outer Axis", risk: "Critical", incidents: 18, time: "00:15 - 02:00" },
+];
 
 export default function PoliceCommandDashboard() {
   const router = useRouter();
@@ -318,7 +330,6 @@ export default function PoliceCommandDashboard() {
           `Incident #${incidentId} updated to '${status}'.`
         );
       } else {
-        // Fallback local UI update
         setIncidentQueue((prev) =>
           prev.map((item) =>
             item.id === incidentId ? { ...item, status } : item
@@ -358,33 +369,35 @@ export default function PoliceCommandDashboard() {
   return (
     <PageBackground className="min-h-screen">
       {/* ── Top Navigation Bar ──────────────────────────────────────────────── */}
-      <header className="sticky top-0 z-40 w-full bg-[var(--bg-surface)] backdrop-blur-2xl border-b border-[var(--border-subtle)]">
-        <div className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
+      <header className="sticky top-0 z-40 w-full bg-[var(--bg-surface)] backdrop-blur-2xl border-b border-[var(--border-subtle)] shadow-sm">
+        <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 sm:gap-4">
-            <div className="w-10 h-10 rounded-2xl bg-[var(--accent-subtle)] border border-[rgba(5,150,105,0.3)] flex items-center justify-center text-[var(--accent-primary)] shadow-sm">
-              <Shield className="w-5 h-5" />
+            <div className="w-11 h-11 rounded-2xl bg-[var(--accent-subtle)] border border-[rgba(5,150,105,0.3)] flex items-center justify-center text-[var(--accent-primary)] shadow-sm shrink-0">
+              <Shield className="w-6 h-6" />
             </div>
             <div>
-              <div className="text-[11px] font-bold tracking-wider uppercase text-[var(--text-muted)]">
-                State ERSS 112 Control Grid
+              <div className="text-[11px] font-bold tracking-wider uppercase text-[var(--text-muted)] flex items-center gap-1.5">
+                <span>State ERSS 112 Command</span>
+                <span>•</span>
+                <span className="text-[var(--accent-primary)] font-extrabold">Active Grid</span>
               </div>
-              <div className="text-base sm:text-lg font-extrabold tracking-tight text-[var(--text-primary)] flex items-center gap-2">
+              <div className="text-base sm:text-lg font-black tracking-tight text-[var(--text-primary)] flex items-center gap-2">
                 <span>Rakshak AI</span>
                 <span className="text-[var(--text-muted)] font-light">/</span>
-                <span className="text-[var(--accent-primary)]">{selectedCity} Police</span>
+                <span className="text-[var(--accent-primary)]">{selectedCity} Command</span>
               </div>
             </div>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* City Segmented Pill */}
+            {/* City Selection Segment */}
             <div className="hidden sm:flex items-center p-1 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]">
               {["Delhi", "Mumbai", "Bengaluru"].map((c) => (
                 <button
                   key={c}
                   onClick={() => setSelectedCity(c)}
                   className={`
-                    px-3.5 py-1.5 rounded-xl text-[13px] font-semibold transition-all duration-150 cursor-pointer
+                    px-3.5 py-1.5 rounded-xl text-[12.5px] font-bold transition-all duration-150 cursor-pointer
                     ${
                       selectedCity === c
                         ? "bg-[var(--accent-primary)] text-white shadow-sm"
@@ -397,8 +410,8 @@ export default function PoliceCommandDashboard() {
               ))}
             </div>
 
-            {/* Live Socket Status Badge */}
-            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[12px] font-semibold text-[var(--text-secondary)]">
+            {/* Live Socket Feed Pill */}
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[12px] font-bold text-[var(--text-secondary)]">
               <span
                 className={`w-2 h-2 rounded-full ${
                   wsConnected ? "bg-[#10b981] shadow-[0_0_8px_#10b981]" : "bg-[#ef4444]"
@@ -407,19 +420,19 @@ export default function PoliceCommandDashboard() {
               <span>{wsConnected ? "Live Feed" : "Ready"}</span>
             </div>
 
-            {/* Link to Citizen Portal */}
+            {/* Link to Citizen Map */}
             <Link
               href="/"
-              className="text-[12px] font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)] px-3 py-1.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-card)] hidden sm:inline-flex items-center gap-1.5 no-underline transition-colors shadow-sm"
+              className="text-[12px] font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)] px-3.5 py-1.5 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-card)] hidden sm:inline-flex items-center gap-1.5 no-underline transition-colors shadow-sm"
             >
               <span>🗺️ Citizen Map</span>
             </Link>
 
             {/* Theme Toggle */}
-            <ThemeToggle />
+            <ThemeToggle size="sm" />
 
-            {/* Officer / Commander Tag */}
-            <Badge severity="brand" size="md" className="hidden lg:inline-flex items-center gap-1.5">
+            {/* Officer / Commander Role Badge */}
+            <Badge severity="brand" size="md" className="hidden lg:inline-flex items-center gap-1.5 px-3 py-1">
               <span>{officerRole === "COMMANDER" ? "🏛️ Commander" : "👮 Officer"}</span>
               <span className="font-mono text-xs">{officerId}</span>
             </Badge>
@@ -450,40 +463,40 @@ export default function PoliceCommandDashboard() {
       </header>
 
       {/* ── Main Dashboard Container ────────────────────────────────────────── */}
-      <main className="max-w-[1240px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-8 sm:space-y-10">
-        {/* Action / Alert Toast */}
+      <main className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 space-y-9 sm:space-y-11">
+        {/* Action / Alert Feedback Toast */}
         {actionMessage && (
           <div className="rounded-2xl bg-[rgba(5,150,105,0.08)] border border-[rgba(5,150,105,0.25)] p-4 sm:p-5 flex items-center justify-between gap-4 text-[14px] text-[var(--text-primary)] shadow-[var(--shadow-card)]">
             <div className="flex items-center gap-3">
               <CheckCircle2 className="w-5 h-5 text-[var(--accent-primary)] shrink-0" />
-              <span className="font-medium">{actionMessage}</span>
+              <span className="font-semibold">{actionMessage}</span>
             </div>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setActionMessage(null)}
-              className="!min-h-[36px] !min-w-[36px] !p-1 text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+              className="!min-h-[32px] !min-w-[32px] !p-1 text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
             >
               ✕
             </Button>
           </div>
         )}
 
-        {/* ── Section 1: Hero & Confident Header ────────────────────────────── */}
+        {/* ── Section 1: Hero Header & Quick Access ─────────────────────────── */}
         <section className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2">
-          <div className="space-y-2 max-w-2xl">
-            <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full bg-[var(--accent-subtle)] text-[var(--accent-primary)] text-xs font-bold border border-[rgba(5,150,105,0.25)]">
+          <div className="space-y-3 max-w-2xl">
+            <div className="flex items-center gap-2.5 flex-wrap">
+              <span className="px-3 py-1 rounded-full bg-[var(--accent-subtle)] text-[var(--accent-primary)] text-xs font-black border border-[rgba(5,150,105,0.25)] uppercase tracking-wide">
                 LAW ENFORCEMENT DISPATCH
               </span>
-              <span className="text-xs text-[var(--text-muted)] font-medium">
-                Active Session: {officerName}
+              <span className="text-xs text-[var(--text-muted)] font-bold">
+                Logged in: <strong className="text-[var(--text-primary)]">{officerName}</strong> ({officerRole})
               </span>
             </div>
-            <h1 className="text-[clamp(26px,3.5vw,40px)] font-black tracking-[-0.03em] leading-[1.15] text-[var(--text-primary)]">
-              Public Safety & Police Command
+            <h1 className="text-[28px] sm:text-[34px] lg:text-[38px] font-black tracking-[-0.03em] leading-[1.15] text-[var(--text-primary)]">
+              Public Safety & Police Command Center
             </h1>
-            <p className="text-[14px] sm:text-[15px] text-[var(--text-secondary)] font-normal leading-relaxed">
+            <p className="text-[14.5px] text-[var(--text-secondary)] font-normal leading-relaxed">
               Real-time threat evaluation, machine-learned DBSCAN hotspot surveillance, verified citizen moderation, and emergency dispatch relay.
             </p>
           </div>
@@ -508,15 +521,15 @@ export default function PoliceCommandDashboard() {
           </div>
         </section>
 
-        {/* ── Section 2: Executive KPI Overview (Auto-Fit Grid) ───────────────── */}
-        <section className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-4 sm:gap-6">
+        {/* ── Section 2: Executive KPI Metrics (Balanced 5-Column Grid) ────────── */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4.5 sm:gap-5">
           <KPICard
             label="City Safety Index"
             value={84.6}
             suffix="/100"
             decimals={1}
             icon={<ShieldCheck className="w-5 h-5 text-[#059669]" />}
-            caption={`${selectedCity} metropolitan grid`}
+            caption={`${selectedCity} grid safety`}
             accentColor="green"
             delta={{ value: "+2.4% vs last week", isPositive: true }}
           />
@@ -525,9 +538,9 @@ export default function PoliceCommandDashboard() {
             label="Recorded Crimes"
             value={summary.total_crimes_recorded || 4820}
             icon={<BarChart3 className="w-5 h-5 text-[#0f766e]" />}
-            caption="FIRs & Law Enforcement logs"
+            caption="Verified FIR registers"
             accentColor="green"
-            delta={{ value: "Historical dataset", isPositive: true }}
+            delta={{ value: "Historical logs", isPositive: true }}
           />
 
           <KPICard
@@ -536,7 +549,7 @@ export default function PoliceCommandDashboard() {
             icon={<Flame className="w-5 h-5 text-[#d97706]" />}
             caption="Patrol units alerted"
             accentColor="amber"
-            delta={{ value: "DBSCAN density zones", isPositive: false }}
+            delta={{ value: "DBSCAN clusters", isPositive: false }}
           />
 
           <KPICard
@@ -545,7 +558,7 @@ export default function PoliceCommandDashboard() {
             suffix=" min"
             decimals={1}
             icon={<Clock className="w-5 h-5 text-[#059669]" />}
-            caption="From SOS trigger to scene"
+            caption="SOS alert to dispatch"
             accentColor="green"
             delta={{ value: "-1.2 min efficiency", isPositive: true }}
           />
@@ -556,15 +569,15 @@ export default function PoliceCommandDashboard() {
             suffix="%"
             decimals={1}
             icon={<CheckCircle2 className="w-5 h-5 text-[#059669]" />}
-            caption="Verified & closed status"
+            caption="Verified & closed cases"
             accentColor="green"
-            delta={{ value: `${summary.resolved_crimes || 4260} closed cases`, isPositive: true }}
+            delta={{ value: `${summary.resolved_crimes || 4260} resolved`, isPositive: true }}
           />
         </section>
 
-        {/* ── Section 3: Segmented Tab Controls ───────────────────────────────── */}
-        <section className="space-y-6">
-          <div className="flex items-center p-1.5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)] overflow-x-auto gap-1 shadow-[var(--shadow-card)]">
+        {/* ── Section 3: Segmented Tab Bar ────────────────────────────────────── */}
+        <section className="space-y-7">
+          <div className="flex items-center p-1.5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)] overflow-x-auto gap-1.5 shadow-[var(--shadow-card)]">
             {[
               { id: "analytics", label: "Crime Analytics", icon: <BarChart3 className="w-4 h-4" /> },
               { id: "hotspots", label: "Hotspot Clusters", icon: <Flame className="w-4 h-4" /> },
@@ -578,7 +591,7 @@ export default function PoliceCommandDashboard() {
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as Tab)}
                   className={`
-                    flex items-center gap-2 px-4 py-2.5 rounded-xl text-[14px] font-bold tracking-tight whitespace-nowrap
+                    flex items-center gap-2 px-5 py-3 rounded-xl text-[13.5px] font-extrabold tracking-tight whitespace-nowrap
                     transition-all duration-150 cursor-pointer select-none
                     ${
                       isActive
@@ -596,67 +609,74 @@ export default function PoliceCommandDashboard() {
 
           {/* ── Tab Content 1: Crime Analytics & Temporal Insights ────────────── */}
           {activeTab === "analytics" && (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
-              {/* Crime by Category Bar Chart */}
-              <Card>
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h3 className="text-[17px] font-bold text-[var(--text-primary)] tracking-tight">
-                      Incidents by Category
-                    </h3>
-                    <p className="text-[13px] text-[var(--text-secondary)]">Volume breakdown by crime classification</p>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
+              {/* Crime by Category Bar Chart (7 columns) */}
+              <div className="lg:col-span-7">
+                <Card className="!p-6 sm:!p-7">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h3 className="text-[17px] font-black text-[var(--text-primary)] tracking-tight">
+                        Incidents by Crime Classification
+                      </h3>
+                      <p className="text-[13px] text-[var(--text-secondary)] mt-0.5">
+                        Volume breakdown across reported incident types in {selectedCity}
+                      </p>
+                    </div>
+                    <Badge severity="brand">Categorized</Badge>
                   </div>
-                  <Badge severity="brand">Categorized</Badge>
-                </div>
 
-                <div className="h-72 w-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <BarChart data={crimeByType} margin={{ top: 10, right: 10, left: -20, bottom: 25 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
-                      <XAxis
-                        dataKey="type"
-                        tick={{ fill: "var(--text-secondary)", fontSize: 11, fontWeight: 600 }}
-                        interval={0}
-                        angle={-20}
-                        textAnchor="end"
-                      />
-                      <YAxis tick={{ fill: "var(--text-secondary)", fontSize: 11 }} />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "var(--bg-surface)",
-                          border: "1px solid var(--border-subtle)",
-                          borderRadius: "14px",
-                          color: "var(--text-primary)",
-                          boxShadow: "var(--shadow-card)",
-                        }}
-                      />
-                      <Bar dataKey="count" name="Incidents" radius={[8, 8, 0, 0]}>
-                        {crimeByType.map((entry: any, index: number) => (
-                          <Cell
-                            key={`bar-${index}`}
-                            fill={CHART_PALETTE[index % CHART_PALETTE.length]}
-                          />
-                        ))}
-                      </Bar>
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </Card>
-
-              {/* Crime by Time of Day Pie Chart */}
-              <Card>
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h3 className="text-[17px] font-bold text-[var(--text-primary)] tracking-tight">
-                      Temporal Risk Distribution
-                    </h3>
-                    <p className="text-[13px] text-[var(--text-secondary)]">Incident frequency across diurnal windows</p>
+                  <div className="h-84 w-full pt-2">
+                    <ResponsiveContainer width="100%" height={330}>
+                      <BarChart data={crimeByType} margin={{ top: 10, right: 10, left: -20, bottom: 35 }}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="var(--border-subtle)" vertical={false} />
+                        <XAxis
+                          dataKey="type"
+                          tick={{ fill: "var(--text-secondary)", fontSize: 11, fontWeight: 700 }}
+                          interval={0}
+                          angle={-18}
+                          textAnchor="end"
+                        />
+                        <YAxis tick={{ fill: "var(--text-secondary)", fontSize: 11 }} />
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: "var(--bg-surface)",
+                            border: "1px solid var(--border-subtle)",
+                            borderRadius: "14px",
+                            color: "var(--text-primary)",
+                            boxShadow: "var(--shadow-card)",
+                            fontWeight: 600,
+                          }}
+                        />
+                        <Bar dataKey="count" name="Incidents" radius={[8, 8, 0, 0]}>
+                          {crimeByType.map((entry: any, index: number) => (
+                            <Cell
+                              key={`bar-${index}`}
+                              fill={CHART_PALETTE[index % CHART_PALETTE.length]}
+                            />
+                          ))}
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
                   </div>
-                  <Badge severity="medium">Diurnal Trend</Badge>
-                </div>
+                </Card>
+              </div>
 
-                <div className="h-72 w-full flex flex-col sm:flex-row items-center justify-between gap-6">
-                  <div className="h-full w-full sm:w-1/2">
+              {/* Crime by Time of Day Pie Chart & Breakdown (5 columns) */}
+              <div className="lg:col-span-5">
+                <Card className="!p-6 sm:!p-7">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h3 className="text-[17px] font-black text-[var(--text-primary)] tracking-tight">
+                        Temporal Risk Windows
+                      </h3>
+                      <p className="text-[13px] text-[var(--text-secondary)] mt-0.5">
+                        Incident frequency across diurnal windows
+                      </p>
+                    </div>
+                    <Badge severity="medium">Diurnal Trend</Badge>
+                  </div>
+
+                  <div className="h-56 w-full mb-4">
                     <ResponsiveContainer width="100%" height="100%">
                       <PieChart>
                         <Pie
@@ -683,64 +703,73 @@ export default function PoliceCommandDashboard() {
                             borderRadius: "14px",
                             color: "var(--text-primary)",
                             boxShadow: "var(--shadow-card)",
+                            fontWeight: 600,
                           }}
                         />
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
 
-                  <div className="w-full sm:w-1/2 space-y-2">
+                  {/* Clean Diurnal Legend Rows */}
+                  <div className="space-y-2.5 pt-2">
                     {crimeByTod.map((item: any, idx: number) => (
                       <div
                         key={item.time_of_day}
-                        className="flex items-center justify-between p-2.5 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[13px]"
+                        className="flex items-center justify-between p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[13px] hover:border-[var(--accent-primary)] transition-all"
                       >
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-2.5">
                           <span
-                            className="w-2.5 h-2.5 rounded-full shrink-0"
+                            className="w-3 h-3 rounded-full shrink-0"
                             style={{ backgroundColor: CHART_PALETTE[(idx + 2) % CHART_PALETTE.length] }}
                           />
-                          <span className="text-[var(--text-primary)] font-semibold">{item.time_of_day}</span>
+                          <span className="text-[var(--text-primary)] font-bold">{item.time_of_day}</span>
                         </div>
-                        <span className="text-[var(--text-primary)] font-bold tabular-nums">{item.count}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-[var(--text-muted)] font-mono">({item.pct || "25%"})</span>
+                          <span className="text-[var(--text-primary)] font-black tabular-nums">{item.count}</span>
+                        </div>
                       </div>
                     ))}
                   </div>
-                </div>
-              </Card>
+                </Card>
+              </div>
             </div>
           )}
 
           {/* ── Tab Content 2: Top DBSCAN Hotspots ─────────────────────────────── */}
           {activeTab === "hotspots" && (
             <Card padded={false}>
-              <div className="p-6 sm:p-7 border-b border-[var(--border-subtle)] flex items-center justify-between">
+              <div className="p-6 sm:p-7 border-b border-[var(--border-subtle)] flex flex-wrap items-center justify-between gap-4">
                 <div>
-                  <h3 className="text-[17px] font-bold text-[var(--text-primary)] tracking-tight">
-                    High-Risk Hotspot Clusters
+                  <h3 className="text-[18px] font-black text-[var(--text-primary)] tracking-tight">
+                    High-Risk Hotspot Clusters (DBSCAN Spatial Density)
                   </h3>
-                  <p className="text-[13px] text-[var(--text-secondary)]">DBSCAN spatial density zones requiring priority surveillance</p>
+                  <p className="text-[13px] text-[var(--text-secondary)] mt-0.5">
+                    Machine-learned cluster centroids requiring priority police patrol and CCTV coverage
+                  </p>
                 </div>
-                <Badge severity="critical" dot>
-                  {topHotspots.length} Active Zones
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Badge severity="critical" dot>
+                    {topHotspots.length} Active High-Density Zones
+                  </Badge>
+                </div>
               </div>
 
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
-                    <tr className="border-b border-[var(--border-subtle)] text-[12px] font-extrabold uppercase tracking-wider text-[var(--text-secondary)] bg-[var(--bg-surface)]">
-                      <th className="py-3.5 px-6">Cluster</th>
-                      <th className="py-3.5 px-6">Location</th>
-                      <th className="py-3.5 px-6">Risk Score</th>
-                      <th className="py-3.5 px-6">Category</th>
-                      <th className="py-3.5 px-6">Dominant Offense</th>
-                      <th className="py-3.5 px-6">Incidents</th>
-                      <th className="py-3.5 px-6">Peak Window</th>
-                      <th className="py-3.5 px-6">CCTV</th>
+                    <tr className="border-b border-[var(--border-subtle)] text-[12px] font-black uppercase tracking-wider text-[var(--text-secondary)] bg-[var(--bg-surface)]">
+                      <th className="py-4 px-6">Cluster</th>
+                      <th className="py-4 px-6">Location</th>
+                      <th className="py-4 px-6">Risk Score</th>
+                      <th className="py-4 px-6">Category</th>
+                      <th className="py-4 px-6">Dominant Offense</th>
+                      <th className="py-4 px-6">Incidents</th>
+                      <th className="py-4 px-6">Peak Diurnal Window</th>
+                      <th className="py-4 px-6">Surveillance</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[var(--border-subtle)] text-[13px]">
+                  <tbody className="divide-y divide-[var(--border-subtle)] text-[13.5px]">
                     {topHotspots.map((hs: any) => {
                       const isCritical = hs.risk_score >= 80;
                       return (
@@ -748,33 +777,44 @@ export default function PoliceCommandDashboard() {
                           key={hs.cluster_id || hs.id}
                           className="hover:bg-[var(--bg-card-hover)] transition-colors"
                         >
-                          <td className="py-4 px-6 font-bold text-[var(--text-primary)] font-mono">
-                            #{hs.cluster_id || hs.id}
+                          <td className="py-4.5 px-6 font-mono font-bold text-[var(--text-primary)]">
+                            <span className="px-2.5 py-1 rounded-md bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-xs">
+                              #{hs.cluster_id || hs.id}
+                            </span>
                           </td>
-                          <td className="py-4 px-6 font-bold text-[var(--text-primary)]">
-                            {hs.location}
+                          <td className="py-4.5 px-6 font-bold text-[var(--text-primary)]">
+                            <div className="flex items-center gap-2">
+                              <MapPin className="w-4 h-4 text-[var(--accent-primary)] shrink-0" />
+                              <span>{hs.location}</span>
+                            </div>
                           </td>
-                          <td className="py-4 px-6 font-extrabold tabular-nums">
-                            <span className={isCritical ? "text-[#dc2626]" : "text-[#d97706]"}>
+                          <td className="py-4.5 px-6 font-black tabular-nums">
+                            <span className={`px-2.5 py-1 rounded-lg text-xs font-black ${isCritical ? "bg-red-500/10 text-[#dc2626]" : "bg-amber-500/10 text-[#d97706]"}`}>
                               {hs.risk_score}/100
                             </span>
                           </td>
-                          <td className="py-4 px-6">
+                          <td className="py-4.5 px-6">
                             <Badge severity={isCritical ? "critical" : "medium"}>
                               {hs.risk_category || hs.risk_level}
                             </Badge>
                           </td>
-                          <td className="py-4 px-6 text-[var(--text-secondary)] font-medium">
+                          <td className="py-4.5 px-6 text-[var(--text-secondary)] font-semibold">
                             {hs.dominant_crime_type}
                           </td>
-                          <td className="py-4 px-6 tabular-nums font-bold text-[var(--text-primary)]">
+                          <td className="py-4.5 px-6 tabular-nums font-black text-[var(--text-primary)]">
                             {hs.incident_count} reports
                           </td>
-                          <td className="py-4 px-6 text-[var(--text-secondary)]">
-                            {hs.peak_time_of_day}
+                          <td className="py-4.5 px-6 text-[var(--text-secondary)] font-medium">
+                            <div className="flex items-center gap-1.5">
+                              <Clock className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+                              <span>{hs.peak_time_of_day}</span>
+                            </div>
                           </td>
-                          <td className="py-4 px-6 text-[var(--text-secondary)] font-medium">
-                            {hs.avg_cctv_coverage} cams
+                          <td className="py-4.5 px-6 text-[var(--text-secondary)] font-medium">
+                            <div className="flex items-center gap-1.5">
+                              <Camera className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
+                              <span>{hs.avg_cctv_coverage} CCTV</span>
+                            </div>
                           </td>
                         </tr>
                       );
@@ -790,10 +830,12 @@ export default function PoliceCommandDashboard() {
             <Card padded={false}>
               <div className="p-6 sm:p-7 border-b border-[var(--border-subtle)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h3 className="text-[17px] font-bold text-[var(--text-primary)] tracking-tight">
+                  <h3 className="text-[18px] font-black text-[var(--text-primary)] tracking-tight">
                     Citizen Submissions & Verification Queue
                   </h3>
-                  <p className="text-[13px] text-[var(--text-secondary)]">Review crowd-sourced reports before promoting into authoritative risk dataset</p>
+                  <p className="text-[13px] text-[var(--text-secondary)] mt-0.5">
+                    Review crowd-sourced reports before promoting into authoritative risk dataset
+                  </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge severity={pendingCount > 0 ? "high" : "low"} dot>
@@ -818,9 +860,9 @@ export default function PoliceCommandDashboard() {
                         key={report.id}
                         className="p-6 sm:p-7 flex flex-col md:flex-row md:items-center justify-between gap-6 hover:bg-[var(--bg-card-hover)] transition-colors"
                       >
-                        <div className="space-y-2 max-w-2xl">
-                          <div className="flex items-center gap-3">
-                            <span className="text-[15px] font-bold text-[var(--text-primary)]">
+                        <div className="space-y-2.5 max-w-3xl">
+                          <div className="flex items-center gap-3 flex-wrap">
+                            <span className="text-[15px] font-black text-[var(--text-primary)]">
                               #{report.id} · {report.crime_type || report.title}
                             </span>
                             <Badge
@@ -830,23 +872,33 @@ export default function PoliceCommandDashboard() {
                             >
                               {report.status}
                             </Badge>
+                            <span className="text-xs px-2.5 py-0.5 rounded-full bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--text-secondary)] font-bold">
+                              Severity: <strong className="text-[var(--text-primary)]">{report.severity || 6}/10</strong>
+                            </span>
                           </div>
-                          <p className="text-[13.5px] text-[var(--text-secondary)] leading-relaxed">
+
+                          <p className="text-[14px] text-[var(--text-secondary)] leading-relaxed font-normal">
                             {report.description || "No detailed description provided."}
                           </p>
-                          <div className="flex flex-wrap items-center gap-4 text-[12px] text-[var(--text-muted)]">
-                            <span className="flex items-center gap-1 font-mono text-[var(--text-secondary)]">
-                              <MapPin className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
-                              {report.location || `[${report.lat}, ${report.lon}]`}
+
+                          <div className="flex flex-wrap items-center gap-4 text-[12px] text-[var(--text-muted)] pt-1">
+                            <span className="flex items-center gap-1.5 font-medium text-[var(--text-secondary)]">
+                              <MapPin className="w-3.5 h-3.5 text-[var(--accent-primary)] shrink-0" />
+                              <span>{report.location || `[${report.lat}, ${report.lon}]`}</span>
                             </span>
                             <span>•</span>
-                            <span>Severity: <strong className="text-[var(--text-primary)]">{report.severity || 6}/10</strong></span>
+                            <span className="flex items-center gap-1.5">
+                              <Clock className="w-3.5 h-3.5 text-[var(--text-muted)]" />
+                              <span>Logged: {report.created_at || "Recently"}</span>
+                            </span>
                             <span>•</span>
-                            <span>Logged: {report.created_at || "Recently"}</span>
+                            <span className="font-mono text-[11px] text-[var(--text-muted)]">
+                              GPS: [{report.lat}, {report.lon}]
+                            </span>
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2.5 shrink-0">
+                        <div className="flex items-center gap-3 shrink-0">
                           {isPending ? (
                             <>
                               <Button
@@ -867,8 +919,8 @@ export default function PoliceCommandDashboard() {
                               </Button>
                             </>
                           ) : (
-                            <span className="text-[13px] text-[var(--text-muted)] font-bold">
-                              Status: {report.status.toUpperCase()}
+                            <span className="text-[13px] text-[var(--text-muted)] font-black uppercase tracking-wider">
+                              Decision Logged ({report.status})
                             </span>
                           )}
                         </div>
@@ -885,11 +937,13 @@ export default function PoliceCommandDashboard() {
             <Card padded={false}>
               <div className="p-6 sm:p-7 border-b border-[var(--border-subtle)] flex items-center justify-between">
                 <div>
-                  <h3 className="text-[17px] font-bold text-[var(--text-primary)] tracking-tight flex items-center gap-2">
+                  <h3 className="text-[18px] font-black text-[var(--text-primary)] tracking-tight flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-[#ef4444] animate-ping" />
                     Live SOS Broadcast Stream
                   </h3>
-                  <p className="text-[13px] text-[var(--text-secondary)]">Instant dispatch alerts over WebSocket channel /ws/police</p>
+                  <p className="text-[13px] text-[var(--text-secondary)] mt-0.5">
+                    Instant emergency dispatch triggers across State Police ERSS 112 network
+                  </p>
                 </div>
                 <Badge severity="critical" dot>
                   {sosAlerts.length} Active Triggers
@@ -898,33 +952,35 @@ export default function PoliceCommandDashboard() {
 
               <div className="divide-y divide-[var(--border-subtle)]">
                 {sosAlerts.length === 0 ? (
-                  <div className="py-16 text-center space-y-3">
-                    <div className="w-12 h-12 rounded-full bg-[var(--bg-surface)] border border-[var(--border-subtle)] flex items-center justify-center mx-auto text-[var(--text-muted)]">
-                      <Radio className="w-6 h-6 animate-pulse text-[var(--accent-primary)]" />
+                  <div className="py-20 text-center space-y-4">
+                    <div className="w-14 h-14 rounded-full bg-[var(--bg-surface)] border border-[var(--border-subtle)] flex items-center justify-center mx-auto text-[var(--text-muted)] shadow-sm">
+                      <Radio className="w-7 h-7 animate-pulse text-[var(--accent-primary)]" />
                     </div>
-                    <p className="text-[14px] text-[var(--text-secondary)] font-medium">
-                      Listening for incoming emergency broadcasts on WebSocket /ws/police...
-                    </p>
-                    <p className="text-[12px] text-[var(--text-muted)]">
-                      All 112 ERSS police units in {selectedCity} are actively synced.
-                    </p>
+                    <div className="space-y-1">
+                      <p className="text-[15px] text-[var(--text-primary)] font-bold">
+                        Listening for incoming emergency broadcasts on WebSocket /ws/police...
+                      </p>
+                      <p className="text-[13px] text-[var(--text-secondary)]">
+                        All 112 ERSS police patrol units in {selectedCity} are synchronized.
+                      </p>
+                    </div>
                   </div>
                 ) : (
                   sosAlerts.map((sos, i) => (
                     <div
                       key={sos.alert_id || i}
-                      className="p-6 sm:p-7 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-[rgba(239,68,68,0.04)] hover:bg-[rgba(239,68,68,0.08)] transition-colors"
+                      className="p-6 sm:p-7 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-[rgba(239,68,68,0.04)] hover:bg-[rgba(239,68,68,0.08)] transition-colors border-l-4 border-l-[#ef4444]"
                     >
                       <div className="space-y-2">
                         <div className="flex items-center gap-3">
-                          <span className="text-[15px] font-bold text-[#dc2626]">
+                          <span className="text-[16px] font-black text-[#dc2626]">
                             🚨 SOS Alert #{sos.alert_id || sos.id || i + 1}
                           </span>
                           <Badge severity="critical">
                             {sos.status || "Active Dispatch"}
                           </Badge>
                         </div>
-                        <div className="text-[13.5px] text-[var(--text-primary)]">
+                        <div className="text-[14px] text-[var(--text-primary)] font-medium">
                           Location: <span className="font-mono font-bold">[{sos.lat}, {sos.lon}]</span> · Emergency Type: {sos.emergency_type || "Immediate Alert"}
                         </div>
                         <div className="text-[12px] text-[var(--text-muted)]">
@@ -954,18 +1010,57 @@ export default function PoliceCommandDashboard() {
           {/* ── Tab Content 5: Patrol Route & Hotspot Map ─────────────────────── */}
           {activeTab === "patrol_map" && (
             <Card padded={false} className="overflow-hidden">
-              <div className="p-6 sm:p-7 border-b border-[var(--border-subtle)] flex items-center justify-between">
+              <div className="p-6 sm:p-7 border-b border-[var(--border-subtle)] flex flex-wrap items-center justify-between gap-4">
                 <div>
-                  <h3 className="text-[17px] font-bold text-[var(--text-primary)] tracking-tight">
-                    Patrol Route & Hotspot Geographic Map
+                  <h3 className="text-[18px] font-black text-[var(--text-primary)] tracking-tight">
+                    Active Patrol Route & Surveillance Heatmap
                   </h3>
-                  <p className="text-[13px] text-[var(--text-secondary)]">Active route surveillance with safe corridors and hotspot waypoints</p>
+                  <p className="text-[13px] text-[var(--text-secondary)] mt-0.5">
+                    High-density crime avoidance waypoints, safe avenues, and 24x7 patrolled checkpoints
+                  </p>
                 </div>
                 <Badge severity="brand">Geospatial Overlay</Badge>
               </div>
 
-              <div className="p-4 sm:p-6 bg-[var(--bg-surface)]">
+              <div className="p-5 sm:p-6 bg-[var(--bg-surface)]">
                 <PatrolRouteMap />
+
+                {/* Checkpoint Itinerary Cards Grid */}
+                <div className="mt-6 pt-5 border-t border-[var(--border-subtle)]">
+                  <div className="text-xs font-black uppercase tracking-wider text-[var(--text-secondary)] mb-3 flex items-center gap-2">
+                    <Activity className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
+                    <span>Patrol Checkpoint Schedule & Risk Levels</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+                    {PATROL_CHECKPOINTS.map((cp) => {
+                      const isCrit = cp.risk === "Critical";
+                      const isHigh = cp.risk === "High";
+                      return (
+                        <div
+                          key={cp.stop}
+                          className="p-3.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-primary)] transition-all shadow-sm space-y-1.5"
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-[11px] font-black font-mono text-[var(--text-muted)]">
+                              STOP {cp.stop}
+                            </span>
+                            <Badge severity={isCrit ? "critical" : isHigh ? "high" : "low"} size="sm">
+                              {cp.risk}
+                            </Badge>
+                          </div>
+                          <div className="text-[12.5px] font-bold text-[var(--text-primary)] truncate" title={cp.name}>
+                            {cp.name}
+                          </div>
+                          <div className="flex items-center justify-between text-[11px] text-[var(--text-muted)] pt-0.5">
+                            <span>{cp.time}</span>
+                            <span className="font-bold text-[var(--text-secondary)]">{cp.incidents} FIRs</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             </Card>
           )}
