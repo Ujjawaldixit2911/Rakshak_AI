@@ -42,173 +42,22 @@ import PatrolRouteMap from "@/components/police/PatrolRouteMap";
 import { ThemeToggle } from "@/components/shared/ThemeToggle";
 import { PageBackground } from "@/components/shared/PageBackground";
 import { KPICard } from "@/components/shared/KPICard";
+import {
+  INDIAN_CITIES,
+  getCityMetadata,
+  getFallbackPoliceDashboard,
+  getFallbackIncidentQueue,
+} from "@/lib/cities";
+import CityPickerModal from "@/components/shared/CityPickerModal";
 
 type Tab = "analytics" | "hotspots" | "moderation" | "sos_monitor" | "patrol_map";
 
 const CHART_PALETTE = ["#059669", "#0d9488", "#10b981", "#d97706", "#f59e0b", "#e11d48", "#2563eb"];
 
-function getFallbackPoliceDashboard(cityName: string) {
-  return {
-    city: cityName,
-    summary: {
-      total_crimes_indexed: 3840,
-      total_crimes_recorded: 4820,
-      active_hotspot_clusters: 5,
-      avg_police_response_time_minutes: 6.8,
-      resolution_rate_percent: 88.5,
-      resolved_crimes: 4260,
-      verified_incidents: 1240,
-      active_dbscan_hotspots: 14,
-      live_patrolling_units: 42,
-      pending_verification: 7,
-      average_response_mins: 6.4,
-    },
-    crime_by_type: [
-      { type: "Theft & Larceny", name: "Theft & Larceny", count: 420, value: 420 },
-      { type: "Snatching", name: "Snatching", count: 280, value: 280 },
-      { type: "Harassment", name: "Harassment", count: 190, value: 190 },
-      { type: "Vehicle Theft", name: "Vehicle Theft", count: 150, value: 150 },
-      { type: "Assault & Battery", name: "Assault & Battery", count: 95, value: 95 },
-    ],
-    crime_by_time_of_day: [
-      { time_of_day: "Morning (06:00 - 12:00)", name: "Morning (06:00 - 12:00)", count: 180, value: 180, pct: "10.6%" },
-      { time_of_day: "Afternoon (12:00 - 18:00)", name: "Afternoon (12:00 - 18:00)", count: 310, value: 310, pct: "18.3%" },
-      { time_of_day: "Evening (18:00 - 22:00)", name: "Evening (18:00 - 22:00)", count: 520, value: 520, pct: "30.8%" },
-      { time_of_day: "Night (22:00 - 06:00)", name: "Night (22:00 - 06:00)", count: 680, value: 680, pct: "40.3%" },
-    ],
-    top_5_hotspots: [
-      {
-        cluster_id: 101,
-        id: 101,
-        location: "Seelampur Market Corridor",
-        incident_count: 84,
-        risk_score: 92,
-        risk_category: "Critical",
-        risk_level: "Critical",
-        dominant_crime_type: "Snatching & Robbery",
-        peak_time_of_day: "Night (22:00 - 02:00)",
-        avg_cctv_coverage: 14,
-      },
-      {
-        cluster_id: 102,
-        id: 102,
-        location: "Kashmere Gate Subways & ISBT",
-        incident_count: 65,
-        risk_score: 84,
-        risk_category: "High",
-        risk_level: "High",
-        dominant_crime_type: "Pickpocketing & Theft",
-        peak_time_of_day: "Evening (18:00 - 21:00)",
-        avg_cctv_coverage: 22,
-      },
-      {
-        cluster_id: 103,
-        id: 103,
-        location: "Paharganj Inner Lanes",
-        incident_count: 51,
-        risk_score: 72,
-        risk_category: "Moderate",
-        risk_level: "Moderate",
-        dominant_crime_type: "Harassment & Scams",
-        peak_time_of_day: "Night (23:00 - 03:00)",
-        avg_cctv_coverage: 8,
-      },
-      {
-        cluster_id: 104,
-        id: 104,
-        location: "Uttam Nagar East Commercial Axis",
-        incident_count: 43,
-        risk_score: 68,
-        risk_category: "Moderate",
-        risk_level: "Moderate",
-        dominant_crime_type: "Vehicle Theft",
-        peak_time_of_day: "Afternoon (14:00 - 17:00)",
-        avg_cctv_coverage: 11,
-      },
-      {
-        cluster_id: 105,
-        id: 105,
-        location: "Saket Metro Corridor & Select Mall",
-        incident_count: 36,
-        risk_score: 61,
-        risk_category: "Moderate",
-        risk_level: "Moderate",
-        dominant_crime_type: "Street Harassment",
-        peak_time_of_day: "Evening (19:00 - 22:00)",
-        avg_cctv_coverage: 19,
-      },
-    ],
-  };
-}
-
-function getFallbackIncidentQueue() {
-  return [
-    {
-      id: 101,
-      crime_type: "Harassment & Stalking",
-      title: "Harassment & Stalking",
-      description: "Unlit dark stretch behind commercial market with aggressive group blocking pedestrian alleyway.",
-      category: "Harassment",
-      severity: 8,
-      status: "pending",
-      location: "Saket Block D, Metro Gate 2 Corridor",
-      lat: 28.5245,
-      lon: 77.2066,
-      created_at: "10 mins ago",
-    },
-    {
-      id: 102,
-      crime_type: "Phone Snatching on Bike",
-      title: "Phone Snatching on Bike",
-      description: "Two suspects on black Pulsar motorcycle snatched phone from commuter walking towards subway entrance.",
-      category: "Snatching",
-      severity: 7,
-      status: "pending",
-      location: "Kashmere Gate Gate 3 Subway",
-      lat: 28.6692,
-      lon: 77.2315,
-      created_at: "25 mins ago",
-    },
-    {
-      id: 103,
-      crime_type: "Vehicle Break-In Attempt",
-      title: "Vehicle Break-In Attempt",
-      description: "Parked car with smashed passenger glass on service corridor near district hospital perimeter.",
-      category: "Theft",
-      severity: 6,
-      status: "verified",
-      location: "Rohini Sector 14 Outer Ring Service Road",
-      lat: 28.7041,
-      lon: 77.1025,
-      created_at: "1 hour ago",
-    },
-    {
-      id: 104,
-      crime_type: "Municipal Street Light Failure",
-      title: "Municipal Street Light Failure",
-      description: "Entire 600m arterial pedestrian avenue completely pitch black with non-functioning sodium vapor lamps.",
-      category: "Hazard",
-      severity: 5,
-      status: "pending",
-      location: "Connaught Place Outer Circle Block B",
-      lat: 28.6315,
-      lon: 77.2167,
-      created_at: "2 hours ago",
-    },
-  ];
-}
-
-const PATROL_CHECKPOINTS = [
-  { stop: 1, name: "Connaught Place Sector A", risk: "High", incidents: 12, time: "18:00 - 19:30" },
-  { stop: 2, name: "Chandni Chowk Corridor", risk: "Medium", incidents: 8, time: "19:45 - 21:00" },
-  { stop: 3, name: "Nehru Place Commercial Hub", risk: "Low", incidents: 4, time: "21:15 - 22:30" },
-  { stop: 4, name: "AIIMS Safe Transit Zone", risk: "Low", incidents: 2, time: "22:45 - 00:00" },
-  { stop: 5, name: "Pahar Ganj Outer Axis", risk: "Critical", incidents: 18, time: "00:15 - 02:00" },
-];
-
 export default function PoliceCommandDashboard() {
   const router = useRouter();
   const [selectedCity, setSelectedCity] = useState("Delhi");
+  const [isCityPickerOpen, setIsCityPickerOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<Tab>("analytics");
   const [officerId, setOfficerId] = useState("officer001");
   const [officerRole, setOfficerRole] = useState("OFFICER");
@@ -219,6 +68,8 @@ export default function PoliceCommandDashboard() {
   const [loading, setLoading] = useState(false);
   const [actionMessage, setActionMessage] = useState<string | null>(null);
   const [wsConnected, setWsConnected] = useState(false);
+
+  const cityMeta = getCityMetadata(selectedCity);
 
   const wsRef = useRef<WebSocket | null>(null);
 
@@ -254,10 +105,10 @@ export default function PoliceCommandDashboard() {
       }
 
       setDashData(dData || getFallbackPoliceDashboard(selectedCity));
-      setIncidentQueue(qData?.reports || getFallbackIncidentQueue());
+      setIncidentQueue(qData?.reports || getFallbackIncidentQueue(selectedCity));
     } catch (e) {
       setDashData(getFallbackPoliceDashboard(selectedCity));
-      setIncidentQueue(getFallbackIncidentQueue());
+      setIncidentQueue(getFallbackIncidentQueue(selectedCity));
     } finally {
       setLoading(false);
     }
@@ -390,25 +241,19 @@ export default function PoliceCommandDashboard() {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* City Selection Segment */}
-            <div className="hidden sm:flex items-center p-1 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]">
-              {["Delhi", "Mumbai", "Bengaluru"].map((c) => (
-                <button
-                  key={c}
-                  onClick={() => setSelectedCity(c)}
-                  className={`
-                    px-3.5 py-1.5 rounded-xl text-[12.5px] font-bold transition-all duration-150 cursor-pointer
-                    ${
-                      selectedCity === c
-                        ? "bg-[var(--accent-primary)] text-white shadow-sm"
-                        : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
-                    }
-                  `}
-                >
-                  {c}
-                </button>
-              ))}
-            </div>
+            {/* Jurisdiction / City Selector Button */}
+            <button
+              onClick={() => setIsCityPickerOpen(true)}
+              className="flex items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[12.5px] font-bold text-[var(--text-primary)] hover:border-[var(--accent-primary)] hover:shadow-sm transition-all cursor-pointer"
+              title="Click to switch jurisdiction"
+            >
+              <MapPin className="w-3.5 h-3.5 text-[var(--accent-primary)] shrink-0" />
+              <span>{cityMeta.name}</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-[var(--bg-surface)] text-[var(--text-muted)] border border-[var(--border-subtle)]">
+                {cityMeta.zone}
+              </span>
+              <SlidersHorizontal className="w-3 h-3 text-[var(--text-muted)]" />
+            </button>
 
             {/* Live Socket Feed Pill */}
             <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[12px] font-bold text-[var(--text-secondary)]">
@@ -482,6 +327,94 @@ export default function PoliceCommandDashboard() {
           </div>
         )}
 
+        {/* ── Active Jurisdiction Command Card ──────────────────────────────── */}
+        <section className="p-5 sm:p-6 rounded-3xl bg-[var(--bg-card)] border border-[var(--border-subtle)] shadow-[var(--shadow-card)] space-y-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-12 h-12 rounded-2xl bg-[var(--accent-subtle)] border border-[rgba(5,150,105,0.3)] flex items-center justify-center text-[var(--accent-primary)] shrink-0 shadow-sm">
+                <MapPin className="w-6 h-6" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-xs font-black uppercase tracking-wider text-[var(--accent-primary)]">
+                    Active Jurisdiction Command
+                  </span>
+                  <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-[var(--bg-surface)] text-[var(--text-secondary)] border border-[var(--border-subtle)]">
+                    {cityMeta.zone} Zone • {cityMeta.state}
+                  </span>
+                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-[rgba(16,185,129,0.12)] text-[#059669] border border-[rgba(16,185,129,0.25)] flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse" />
+                    112 ERSS Grid Active
+                  </span>
+                </div>
+                <h2 className="text-xl sm:text-2xl font-black text-[var(--text-primary)] tracking-tight mt-0.5">
+                  {cityMeta.name} Police Command
+                </h2>
+                <p className="text-xs sm:text-sm text-[var(--text-muted)] font-medium mt-0.5 flex items-center gap-1.5 flex-wrap">
+                  <span>🏛️ {cityMeta.emergencyCommand}</span>
+                  <span>•</span>
+                  <span>{cityMeta.jurisdictionBadge}</span>
+                </p>
+              </div>
+            </div>
+
+            {/* Change Jurisdiction CTA */}
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => setIsCityPickerOpen(true)}
+              icon={<SlidersHorizontal className="w-4 h-4 text-[var(--accent-primary)]" />}
+              className="shadow-sm font-bold shrink-0"
+            >
+              <span>Select City / Jurisdiction ({INDIAN_CITIES.length})</span>
+              <ArrowRight className="w-4 h-4 ml-1" />
+            </Button>
+          </div>
+
+          {/* Real-time Telemetry Grid for Selected City */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-[var(--border-subtle)]">
+            <div className="p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+              <div className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
+                Active Patrol Units
+              </div>
+              <div className="text-base sm:text-lg font-black text-[var(--text-primary)] mt-0.5 flex items-center gap-1.5">
+                <span>🚓 {cityMeta.activePatrolUnits} PCR Vans</span>
+              </div>
+              <div className="text-[11px] text-[var(--text-secondary)] mt-0.5">On active 24x7 beat</div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+              <div className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
+                AI CCTV Surveillance
+              </div>
+              <div className="text-base sm:text-lg font-black text-[var(--text-primary)] mt-0.5 flex items-center gap-1.5">
+                <span>📹 {cityMeta.activeCameras.toLocaleString()} Feeds</span>
+              </div>
+              <div className="text-[11px] text-[var(--text-secondary)] mt-0.5">Facial & crowd recognition</div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+              <div className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
+                Dispatch Response
+              </div>
+              <div className="text-base sm:text-lg font-black text-[var(--accent-primary)] mt-0.5 flex items-center gap-1.5">
+                <span>⏱️ {cityMeta.responseMins} Minutes</span>
+              </div>
+              <div className="text-[11px] text-[var(--text-secondary)] mt-0.5">Average dispatch SLA</div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+              <div className="text-[11px] font-bold text-[var(--text-muted)] uppercase tracking-wider">
+                Safe City Score
+              </div>
+              <div className="text-base sm:text-lg font-black text-[#10b981] mt-0.5 flex items-center gap-1.5">
+                <span>🛡️ {cityMeta.safetyScore} / 100</span>
+              </div>
+              <div className="text-[11px] text-[var(--text-secondary)] mt-0.5">{cityMeta.resolutionRate}% resolution rate</div>
+            </div>
+          </div>
+        </section>
+
         {/* ── Section 1: Hero Header & Quick Access ─────────────────────────── */}
         <section className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-2">
           <div className="space-y-3 max-w-2xl">
@@ -497,7 +430,7 @@ export default function PoliceCommandDashboard() {
               Public Safety & Police Command Center
             </h1>
             <p className="text-[14.5px] text-[var(--text-secondary)] font-normal leading-relaxed">
-              Real-time threat evaluation, machine-learned DBSCAN hotspot surveillance, verified citizen moderation, and emergency dispatch relay.
+              Real-time threat evaluation, machine-learned DBSCAN hotspot surveillance, verified citizen moderation, and emergency dispatch relay across {cityMeta.name}.
             </p>
           </div>
 
@@ -525,18 +458,18 @@ export default function PoliceCommandDashboard() {
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4.5 sm:gap-5">
           <KPICard
             label="City Safety Index"
-            value={84.6}
+            value={cityMeta.safetyScore}
             suffix="/100"
-            decimals={1}
+            decimals={0}
             icon={<ShieldCheck className="w-5 h-5 text-[#059669]" />}
-            caption={`${selectedCity} grid safety`}
+            caption={`${cityMeta.name} safety score`}
             accentColor="green"
             delta={{ value: "+2.4% vs last week", isPositive: true }}
           />
 
           <KPICard
             label="Recorded Crimes"
-            value={summary.total_crimes_recorded || 4820}
+            value={summary.total_crimes_recorded || Math.round(cityMeta.activeCameras * 0.95 + 2800)}
             icon={<BarChart3 className="w-5 h-5 text-[#0f766e]" />}
             caption="Verified FIR registers"
             accentColor="green"
@@ -545,7 +478,7 @@ export default function PoliceCommandDashboard() {
 
           <KPICard
             label="Active Hotspots"
-            value={summary.active_hotspot_clusters || 5}
+            value={cityMeta.hotspots.length}
             icon={<Flame className="w-5 h-5 text-[#d97706]" />}
             caption="Patrol units alerted"
             accentColor="amber"
@@ -554,7 +487,7 @@ export default function PoliceCommandDashboard() {
 
           <KPICard
             label="Avg Response Time"
-            value={Number(summary.avg_police_response_time_minutes || 6.8)}
+            value={cityMeta.responseMins}
             suffix=" min"
             decimals={1}
             icon={<Clock className="w-5 h-5 text-[#059669]" />}
@@ -565,13 +498,13 @@ export default function PoliceCommandDashboard() {
 
           <KPICard
             label="Case Resolution"
-            value={Number(summary.resolution_rate_percent || 88.5)}
+            value={cityMeta.resolutionRate}
             suffix="%"
             decimals={1}
             icon={<CheckCircle2 className="w-5 h-5 text-[#059669]" />}
             caption="Verified & closed cases"
             accentColor="green"
-            delta={{ value: `${summary.resolved_crimes || 4260} resolved`, isPositive: true }}
+            delta={{ value: `${summary.resolved_crimes || Math.round((cityMeta.activeCameras * 0.95 + 2800) * (cityMeta.resolutionRate / 100))} resolved`, isPositive: true }}
           />
         </section>
 
@@ -1023,38 +956,43 @@ export default function PoliceCommandDashboard() {
               </div>
 
               <div className="p-5 sm:p-6 bg-[var(--bg-surface)]">
-                <PatrolRouteMap />
+                <PatrolRouteMap route={cityMeta.patrolRoute} />
 
                 {/* Checkpoint Itinerary Cards Grid */}
                 <div className="mt-6 pt-5 border-t border-[var(--border-subtle)]">
-                  <div className="text-xs font-black uppercase tracking-wider text-[var(--text-secondary)] mb-3 flex items-center gap-2">
-                    <Activity className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
-                    <span>Patrol Checkpoint Schedule & Risk Levels</span>
+                  <div className="text-xs font-black uppercase tracking-wider text-[var(--text-secondary)] mb-3 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <Activity className="w-3.5 h-3.5 text-[var(--accent-primary)]" />
+                      <span>{cityMeta.name} Patrol Checkpoint Schedule & Risk Levels</span>
+                    </div>
+                    <span className="text-[11px] font-bold text-[var(--accent-primary)]">
+                      {cityMeta.patrolRoute.length} Waypoints Active
+                    </span>
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
-                    {PATROL_CHECKPOINTS.map((cp) => {
-                      const isCrit = cp.risk === "Critical";
-                      const isHigh = cp.risk === "High";
+                    {cityMeta.patrolRoute.map((cp) => {
+                      const isCrit = cp.risk_level === "Critical";
+                      const isHigh = cp.risk_level === "High";
                       return (
                         <div
-                          key={cp.stop}
+                          key={cp.order}
                           className="p-3.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--accent-primary)] transition-all shadow-sm space-y-1.5"
                         >
                           <div className="flex items-center justify-between">
                             <span className="text-[11px] font-black font-mono text-[var(--text-muted)]">
-                              STOP {cp.stop}
+                              STOP {cp.order}
                             </span>
                             <Badge severity={isCrit ? "critical" : isHigh ? "high" : "low"} size="sm">
-                              {cp.risk}
+                              {cp.risk_level}
                             </Badge>
                           </div>
-                          <div className="text-[12.5px] font-bold text-[var(--text-primary)] truncate" title={cp.name}>
-                            {cp.name}
+                          <div className="text-[12.5px] font-bold text-[var(--text-primary)] truncate" title={cp.location}>
+                            {cp.location}
                           </div>
                           <div className="flex items-center justify-between text-[11px] text-[var(--text-muted)] pt-0.5">
-                            <span>{cp.time}</span>
-                            <span className="font-bold text-[var(--text-secondary)]">{cp.incidents} FIRs</span>
+                            <span>{cp.time || "Active"}</span>
+                            <span className="font-bold text-[var(--text-secondary)]">{cp.crime_count} FIRs</span>
                           </div>
                         </div>
                       );
@@ -1066,6 +1004,16 @@ export default function PoliceCommandDashboard() {
           )}
         </section>
       </main>
+
+      {/* ── Jurisdiction / City Selector Modal ─────────────────────────────── */}
+      <CityPickerModal
+        isOpen={isCityPickerOpen}
+        onClose={() => setIsCityPickerOpen(false)}
+        selectedCity={selectedCity}
+        onSelectCity={(c) => setSelectedCity(c)}
+        title="Police Jurisdiction Switcher"
+        subtitle="Switch active ERSS-112 command view across 10 major metropolitan police departments in India."
+      />
     </PageBackground>
   );
 }

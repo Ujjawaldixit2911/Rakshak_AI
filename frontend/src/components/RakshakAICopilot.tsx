@@ -174,6 +174,56 @@ const LOCALITY_DATASET: Record<string, { lat: number; lon: number; name: string;
   "mg road": { lat: 12.9756, lon: 77.6066, name: "MG Road", city: "Bengaluru" },
   "electronic city": { lat: 12.8399, lon: 77.6770, name: "Electronic City", city: "Bengaluru" },
   hsr: { lat: 12.9121, lon: 77.6446, name: "HSR Layout", city: "Bengaluru" },
+  // Hyderabad Localities
+  "hitec city": { lat: 17.4504, lon: 78.3808, name: "Hitec City", city: "Hyderabad" },
+  gachibowli: { lat: 17.4435, lon: 78.3489, name: "Gachibowli", city: "Hyderabad" },
+  "banjara hills": { lat: 17.4156, lon: 78.4352, name: "Banjara Hills", city: "Hyderabad" },
+  "jubilee hills": { lat: 17.4300, lon: 78.4075, name: "Jubilee Hills", city: "Hyderabad" },
+  charminar: { lat: 17.3616, lon: 78.4747, name: "Charminar", city: "Hyderabad" },
+  secunderabad: { lat: 17.4399, lon: 78.4983, name: "Secunderabad", city: "Hyderabad" },
+  begumpet: { lat: 17.4447, lon: 78.4664, name: "Begumpet", city: "Hyderabad" },
+  // Chennai Localities
+  "t nagar": { lat: 13.0418, lon: 80.2341, name: "T. Nagar", city: "Chennai" },
+  "t. nagar": { lat: 13.0418, lon: 80.2341, name: "T. Nagar", city: "Chennai" },
+  "marina beach": { lat: 13.0500, lon: 80.2824, name: "Marina Beach", city: "Chennai" },
+  marina: { lat: 13.0500, lon: 80.2824, name: "Marina Beach", city: "Chennai" },
+  "anna nagar": { lat: 13.0850, lon: 80.2100, name: "Anna Nagar", city: "Chennai" },
+  guindy: { lat: 13.0067, lon: 80.2024, name: "Guindy", city: "Chennai" },
+  koyambedu: { lat: 13.0694, lon: 80.1948, name: "Koyambedu", city: "Chennai" },
+  velachery: { lat: 12.9750, lon: 80.2200, name: "Velachery", city: "Chennai" },
+  // Kolkata Localities
+  "park street": { lat: 22.5510, lon: 88.3524, name: "Park Street", city: "Kolkata" },
+  howrah: { lat: 22.5830, lon: 88.3426, name: "Howrah Station", city: "Kolkata" },
+  "salt lake": { lat: 22.5800, lon: 88.4373, name: "Salt Lake Sector V", city: "Kolkata" },
+  sealdah: { lat: 22.5670, lon: 88.3712, name: "Sealdah", city: "Kolkata" },
+  esplanade: { lat: 22.5645, lon: 88.3518, name: "Esplanade", city: "Kolkata" },
+  // Pune Localities
+  "shivaji nagar": { lat: 18.5314, lon: 73.8553, name: "Shivaji Nagar", city: "Pune" },
+  hinjewadi: { lat: 18.5913, lon: 73.7389, name: "Hinjewadi", city: "Pune" },
+  "fc road": { lat: 18.5246, lon: 73.8415, name: "FC Road Deccan", city: "Pune" },
+  swargate: { lat: 18.4988, lon: 73.8583, name: "Swargate", city: "Pune" },
+  "koregaon park": { lat: 18.5362, lon: 73.8940, name: "Koregaon Park", city: "Pune" },
+  kothrud: { lat: 18.5074, lon: 73.8077, name: "Kothrud", city: "Pune" },
+  // Jaipur Localities
+  "mi road": { lat: 26.9180, lon: 75.8010, name: "MI Road", city: "Jaipur" },
+  "sindhi camp": { lat: 26.9238, lon: 75.7972, name: "Sindhi Camp", city: "Jaipur" },
+  "hawa mahal": { lat: 26.9242, lon: 75.8306, name: "Hawa Mahal", city: "Jaipur" },
+  "badi choupad": { lat: 26.9242, lon: 75.8306, name: "Badi Choupad", city: "Jaipur" },
+  "c-scheme": { lat: 26.9100, lon: 75.8000, name: "C-Scheme", city: "Jaipur" },
+  "malviya nagar": { lat: 26.8530, lon: 75.8050, name: "Malviya Nagar", city: "Jaipur" },
+  // Lucknow Localities
+  hazratganj: { lat: 26.8500, lon: 80.9440, name: "Hazratganj", city: "Lucknow" },
+  charbagh: { lat: 26.8322, lon: 80.9238, name: "Charbagh Station", city: "Lucknow" },
+  aminabad: { lat: 26.8440, lon: 80.9280, name: "Aminabad", city: "Lucknow" },
+  "gomti nagar": { lat: 26.8550, lon: 80.9750, name: "Gomti Nagar", city: "Lucknow" },
+  chowk: { lat: 26.8670, lon: 80.9020, name: "Chowk Heritage", city: "Lucknow" },
+  // Ahmedabad Localities
+  "sg highway": { lat: 23.0120, lon: 72.5080, name: "SG Highway", city: "Ahmedabad" },
+  "sabarmati riverfront": { lat: 23.0300, lon: 72.5800, name: "Sabarmati Riverfront", city: "Ahmedabad" },
+  sabarmati: { lat: 23.0300, lon: 72.5800, name: "Sabarmati", city: "Ahmedabad" },
+  kalupur: { lat: 23.0280, lon: 72.6005, name: "Kalupur Station", city: "Ahmedabad" },
+  "cg road": { lat: 23.0330, lon: 72.5580, name: "CG Road", city: "Ahmedabad" },
+  vastrapur: { lat: 23.0360, lon: 72.5290, name: "Vastrapur", city: "Ahmedabad" },
 };
 
 function parseRouteQuery(query: string, currentCity: string) {

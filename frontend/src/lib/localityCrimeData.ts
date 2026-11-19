@@ -345,7 +345,255 @@ export function getLocalityCrimeScenes(
     ];
   }
 
-  // 9. Generic / Custom Fallback for any other location
+  // 9. Hyderabad
+  if (
+    city === "Hyderabad" ||
+    origLower.includes("hitec") ||
+    destLower.includes("gachi") ||
+    origLower.includes("charminar") ||
+    destLower.includes("banjara") ||
+    origLower.includes("secunderabad")
+  ) {
+    return [
+      {
+        spot: "Charminar Laad Bazaar Narrow Unmonitored Alleyways",
+        crimeType: "Organized Pickpocketing & Eve-Teasing",
+        incidents: "15 incidents in dense evening crowd",
+        lighting: "35% (Dim Overhead Halogens)",
+        cctv: "Crowd Blindspot Behind Heritage Shops",
+        riskTag: "HIGH RISK",
+        whyAvoided: "AI routes via high-visibility Nayapul main boulevard with active police post.",
+      },
+      {
+        spot: "Gachibowli Outer Ring Slipway Desolate Stretch",
+        crimeType: "Late-Night Vehicle Interception & Darkspot",
+        incidents: "8 distress calls registered past 11 PM",
+        lighting: "30% (Dark Highway Verge)",
+        cctv: "Surveillance Gap between Flyovers",
+        riskTag: "CRITICAL DANGER",
+        whyAvoided: "Route stays on illuminated Cyberabad expressway with 24x7 HawkEye patrol.",
+      },
+      {
+        spot: "Secunderabad Railway North Subway Cut",
+        crimeType: "Mobile Snatching & Baggage Theft",
+        incidents: "11 cases recorded in off-peak hours",
+        lighting: "40% (Intermittent Tube Lighting)",
+        cctv: "Low Police Booth Visibility",
+        riskTag: "HIGH RISK",
+        whyAvoided: "Direct arterial road via Begumpet with constant transit footfall.",
+      },
+    ];
+  }
+
+  // 10. Chennai
+  if (
+    city === "Chennai" ||
+    origLower.includes("nagar") ||
+    destLower.includes("marina") ||
+    origLower.includes("guindy") ||
+    destLower.includes("koyambedu") ||
+    origLower.includes("velachery")
+  ) {
+    return [
+      {
+        spot: "Koyambedu Wholesale Loading Yard Perimeter",
+        crimeType: "Cargo Pilferage & Cash Robbery Gang",
+        incidents: "14 cases recorded between 3 AM - 6 AM",
+        lighting: "32% (Heavy Truck Shadow Darkspots)",
+        cctv: "Loading Dock Surveillance Blindspot",
+        riskTag: "CRITICAL DANGER",
+        whyAvoided: "Safest route navigates Poonamallee High Road commercial corridor.",
+      },
+      {
+        spot: "Marina Beach Unlit Rear Service Boardwalk",
+        crimeType: "Late-Night Eve-Teasing & Intimidation",
+        incidents: "7 distress alerts registered",
+        lighting: "25% (Extremely Dark Promenade Stretches)",
+        cctv: "Coastal Blindspot past 10:30 PM",
+        riskTag: "HIGH RISK",
+        whyAvoided: "AI keeps you along Kamarajar Salai main lighted boulevard with Kaaval PCR units.",
+      },
+      {
+        spot: "T. Nagar Ranganathan Rear Siding Alleys",
+        crimeType: "Bag Snatching & Pickpocketing",
+        incidents: "9 incidents during evening rush",
+        lighting: "45% (Narrow Market Shading)",
+        cctv: "Commercial Congestion Gap",
+        riskTag: "MODERATE RISK",
+        whyAvoided: "Transit via Panagal Park arterial avenue with continuous police kiosk presence.",
+      },
+    ];
+  }
+
+  // 11. Kolkata
+  if (
+    city === "Kolkata" ||
+    origLower.includes("howrah") ||
+    destLower.includes("park street") ||
+    origLower.includes("sealdah") ||
+    destLower.includes("salt lake")
+  ) {
+    return [
+      {
+        spot: "Howrah Bridge Approach & Burrabazar Transit Alleys",
+        crimeType: "Crowd Snatching & Baggage Slitting",
+        incidents: "18 incidents recorded past 8 PM",
+        lighting: "34% (Overhead Wire Shadow Darkspots)",
+        cctv: "No Municipal High-Res Cameras",
+        riskTag: "CRITICAL DANGER",
+        whyAvoided: "AI route sticks to Strand Road riverfront corridor with regular patrol beats.",
+      },
+      {
+        spot: "Sealdah Flyover Underbelly & Tram Tracks",
+        crimeType: "Harassment & Late-Night Stalking",
+        incidents: "10 distress alerts recorded",
+        lighting: "28% (Defective Streetlights)",
+        cctv: "Overpass Pier Structural Blindspots",
+        riskTag: "HIGH RISK",
+        whyAvoided: "Arterial route via APC Road maintains 92% illumination and active tram transit.",
+      },
+      {
+        spot: "Park Circus 7-Point Slum Border Lane",
+        crimeType: "Two-Wheeler Theft & Snatching",
+        incidents: "8 cases logged last month",
+        lighting: "38% (Intermittent Lighting)",
+        cctv: "Low Footfall Zone after 11 PM",
+        riskTag: "HIGH RISK",
+        whyAvoided: "Direct transit through Park Street boulevard with Lalbazar Police presence.",
+      },
+    ];
+  }
+
+  // 12. Pune
+  if (
+    city === "Pune" ||
+    origLower.includes("hinjewadi") ||
+    destLower.includes("swargate") ||
+    origLower.includes("shivaji") ||
+    destLower.includes("kothrud")
+  ) {
+    return [
+      {
+        spot: "Swargate Bus Terminal Rear Unlit Slipway",
+        crimeType: "Mobile Snatching & Extortion",
+        incidents: "13 incidents in off-peak night hours",
+        lighting: "30% (Dense Tree Canopy Darkspots)",
+        cctv: "Terminal Blindspot Behind Depot",
+        riskTag: "HIGH RISK",
+        whyAvoided: "Route navigates Tilak Road arterial commercial avenue with Damini squad patrol.",
+      },
+      {
+        spot: "Hinjewadi Phase 3 Isolated Tech Bypass",
+        crimeType: "Late-Night Cab Route Stalking & Darkspot",
+        incidents: "7 distress alerts registered",
+        lighting: "35% (Industrial Dark Stretches)",
+        cctv: "Perimeter Surveillance Gap",
+        riskTag: "HIGH RISK",
+        whyAvoided: "AI routes via Phase 1 & 2 Main Spine Road with 24x7 IT security kiosks.",
+      },
+      {
+        spot: "Katraj Tunnel Bypass Service Cut",
+        crimeType: "Vehicle Tampering & Snatching Hotspot",
+        incidents: "6 night cases recorded",
+        lighting: "28% (Flickering Sodium Lamps)",
+        cctv: "Highway Slip Blindspot",
+        riskTag: "MODERATE RISK",
+        whyAvoided: "Elevated bypass expressway followed with emergency SOS call points.",
+      },
+    ];
+  }
+
+  // 13. Jaipur
+  if (
+    city === "Jaipur" ||
+    origLower.includes("sindhi camp") ||
+    destLower.includes("hawa mahal") ||
+    origLower.includes("choupad") ||
+    destLower.includes("mansarovar")
+  ) {
+    return [
+      {
+        spot: "Sindhi Camp Bus Station Rear Alleyways",
+        crimeType: "Tourist Scams, Extortion & Pickpocketing",
+        incidents: "16 complaints registered",
+        lighting: "32% (Dim Alleyway Shading)",
+        cctv: "Depot Rear Boundary Blindspot",
+        riskTag: "HIGH RISK",
+        whyAvoided: "Arterial transit via Station Road with Abhay 112 rapid response presence.",
+      },
+      {
+        spot: "Badi Choupad Walled City Dark Corridor",
+        crimeType: "Jewelry Snatching & Midnight Thefts",
+        incidents: "11 cases in old haveli lanes",
+        lighting: "36% (Historic Archway Shadows)",
+        cctv: "Zero Government CCTV in Rear Bylanes",
+        riskTag: "HIGH RISK",
+        whyAvoided: "Direct avenue via Johari Bazaar main wide boulevard with active lighting.",
+      },
+    ];
+  }
+
+  // 14. Lucknow
+  if (
+    city === "Lucknow" ||
+    origLower.includes("charbagh") ||
+    destLower.includes("hazratganj") ||
+    origLower.includes("aminabad") ||
+    destLower.includes("gomti")
+  ) {
+    return [
+      {
+        spot: "Charbagh Railway Station South Subway Underpass",
+        crimeType: "Organized Pickpocketing & Mob Thefts",
+        incidents: "17 incidents recorded past 9 PM",
+        lighting: "30% (Defective Subsurface Tubes)",
+        cctv: "Subway Concourse Blindspot",
+        riskTag: "CRITICAL DANGER",
+        whyAvoided: "Route takes elevated Hazratganj boulevard with UP 112 interceptor presence.",
+      },
+      {
+        spot: "Aminabad Gadbadjhala Congested Rear Corridors",
+        crimeType: "Phone Snatching on Bike & Eve-Teasing",
+        incidents: "12 distress calls logged",
+        lighting: "38% (Dense Market Canopy)",
+        cctv: "Narrow Lane Low Coverage",
+        riskTag: "HIGH RISK",
+        whyAvoided: "AI routes via Kaiserbagh main arterial corridor with wide carriage illumination.",
+      },
+    ];
+  }
+
+  // 15. Ahmedabad
+  if (
+    city === "Ahmedabad" ||
+    origLower.includes("kalupur") ||
+    destLower.includes("sabarmati") ||
+    origLower.includes("prahlad") ||
+    destLower.includes("manek")
+  ) {
+    return [
+      {
+        spot: "Kalupur Railway Station Outer East Slipway",
+        crimeType: "Mobile Snatching & Baggage Theft",
+        incidents: "12 cases in night hours",
+        lighting: "34% (Station Yard Shadow)",
+        cctv: "Slip Road Blindspot",
+        riskTag: "HIGH RISK",
+        whyAvoided: "Route takes Relief Road main commercial avenue with continuous SHE Team patrolling.",
+      },
+      {
+        spot: "Geeta Mandir Central Bus Stand Rear Cut",
+        crimeType: "Pickpocketing & Late-Night Stalking",
+        incidents: "9 complaints logged",
+        lighting: "36% (Intermittent Streetlights)",
+        cctv: "Low Footfall Zone past 11 PM",
+        riskTag: "MODERATE RISK",
+        whyAvoided: "Riverfront East Promenade boulevard used with 95% LED illumination.",
+      },
+    ];
+  }
+
+  // 16. Generic / Custom Fallback for any other location
   const safeOrigin = origin || "Origin Location";
   const safeDest = dest || "Destination Location";
 

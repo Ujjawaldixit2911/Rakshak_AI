@@ -18,53 +18,18 @@ import RouteNavigationGuidance from "@/components/route/RouteNavigationGuidance"
 import HeroAvatarPresenter from "@/components/HeroAvatarPresenter";
 import EmergencyHubModal from "@/components/EmergencyHubModal";
 import { HistoryCard, JourneyHistoryRecord } from "@/components/HistoryCard";
-import { Clock, ShieldCheck, MapPin, AlertTriangle, Radio, PhoneCall, Activity, CheckCircle2 } from "lucide-react";
+import { Clock, ShieldCheck, MapPin, AlertTriangle, Radio, PhoneCall, Activity, CheckCircle2, SlidersHorizontal, ArrowRight, Compass } from "lucide-react";
 import { PageBackground } from "@/components/shared/PageBackground";
 import { KPICard } from "@/components/shared/KPICard";
 import { Card } from "@/components/shared/Card";
 import { SectionHeader } from "@/components/shared/SectionHeader";
-
-// ── Fallback Dataset Generators (Guarantees 0-crash offline resilience) ─────
-function getFallbackCityHotspots(cityName: string) {
-  if (cityName === "Mumbai") {
-    return {
-      hotspots: [
-        { id: 1, location: "Kurla West Station", lat: 19.0650, lon: 72.8790, risk_score: 88, risk_level: "High", top_crime_types: ["Theft", "Pickpocketing"], color: "#ef4444" },
-        { id: 2, location: "Govandi Junction", lat: 19.0550, lon: 72.9150, risk_score: 79, risk_level: "High", top_crime_types: ["Assault", "Theft"], color: "#ef4444" },
-        { id: 3, location: "Dharavi Transit Point", lat: 19.0400, lon: 72.8550, risk_score: 65, risk_level: "Moderate", top_crime_types: ["Vehicle Theft"], color: "#f59e0b" }
-      ]
-    };
-  }
-  if (cityName === "Bengaluru") {
-    return {
-      hotspots: [
-        { id: 1, location: "Shivajinagar Bus Stand", lat: 12.9850, lon: 77.6050, risk_score: 82, risk_level: "High", top_crime_types: ["Theft", "Harassment"], color: "#ef4444" },
-        { id: 2, location: "Majestic Junction", lat: 12.9780, lon: 77.5720, risk_score: 86, risk_level: "High", top_crime_types: ["Pickpocketing", "Snatching"], color: "#ef4444" },
-        { id: 3, location: "Silk Board Underpass", lat: 12.9170, lon: 77.6230, risk_score: 64, risk_level: "Moderate", top_crime_types: ["Poor Lighting"], color: "#f59e0b" }
-      ]
-    };
-  }
-  return {
-    hotspots: [
-      { id: 1, location: "Seelampur Market Corridor", lat: 28.6692, lon: 77.2680, risk_score: 92, risk_level: "Critical", top_crime_types: ["Snatching", "Theft"], color: "#ef4444" },
-      { id: 2, location: "Kashmere Gate Subways", lat: 28.6675, lon: 77.2280, risk_score: 84, risk_level: "High", top_crime_types: ["Pickpocketing"], color: "#ef4444" },
-      { id: 3, location: "Paharganj Inner Lanes", lat: 28.6430, lon: 77.2150, risk_score: 72, risk_level: "Moderate", top_crime_types: ["Harassment"], color: "#f59e0b" },
-      { id: 4, location: "Uttam Nagar East", lat: 28.6210, lon: 77.0580, risk_score: 68, risk_level: "Moderate", top_crime_types: ["Vehicle Theft"], color: "#f59e0b" }
-    ]
-  };
-}
-
-function getFallbackHeatmapPoints(cityName: string) {
-  const centerLat = cityName === "Mumbai" ? 19.0760 : cityName === "Bengaluru" ? 12.9716 : 28.6139;
-  const centerLon = cityName === "Mumbai" ? 72.8777 : cityName === "Bengaluru" ? 77.5946 : 77.2090;
-  return [
-    { lat: centerLat + 0.02, lon: centerLon + 0.01, intensity: 0.8 },
-    { lat: centerLat - 0.02, lon: centerLon - 0.01, intensity: 0.6 },
-    { lat: centerLat + 0.01, lon: centerLon - 0.03, intensity: 0.9 },
-    { lat: centerLat - 0.03, lon: centerLon + 0.02, intensity: 0.4 },
-    { lat: centerLat + 0.04, lon: centerLon + 0.03, intensity: 0.7 }
-  ];
-}
+import {
+  INDIAN_CITIES,
+  getCityMetadata,
+  getFallbackCityHotspots,
+  getFallbackHeatmapPoints,
+} from "@/lib/cities";
+import CityPickerModal from "@/components/shared/CityPickerModal";
 
 function generateFallbackRoutePlan(
   cityName: string,
@@ -136,45 +101,13 @@ const InteractiveMap = dynamic(() => import("@/components/Map"), {
   ),
 });
 
-const CITY_OPTIONS = [
-  {
-    name: "Delhi",
-    center: [28.6139, 77.2090] as [number, number],
-    zoom: 12,
-    presets: [
-      { label: "Connaught Place → Saket", start: [28.6315, 77.2167], dest: [28.5245, 77.2066] },
-      { label: "Rohini → Hauz Khas", start: [28.7495, 77.0565], dest: [28.5494, 77.2001] },
-      { label: "Dwarka → India Gate", start: [28.5921, 77.0460], dest: [28.6129, 77.2295] },
-      { label: "Karol Bagh → Lajpat Nagar", start: [28.6514, 77.1907], dest: [28.5700, 77.2373] },
-      { label: "Noida Sec 18 → CP", start: [28.5708, 77.3261], dest: [28.6315, 77.2167] },
-    ],
-  },
-  {
-    name: "Mumbai",
-    center: [19.0760, 72.8777] as [number, number],
-    zoom: 12,
-    presets: [
-      { label: "Bandra → BKC", start: [19.0596, 72.8295], dest: [19.0657, 72.8687] },
-      { label: "Andheri → Juhu", start: [19.1197, 72.8464], dest: [19.1075, 72.8263] },
-      { label: "Colaba → Nariman Point", start: [18.9067, 72.8147], dest: [18.9256, 72.8242] },
-    ],
-  },
-  {
-    name: "Bengaluru",
-    center: [12.9716, 77.5946] as [number, number],
-    zoom: 12,
-    presets: [
-      { label: "Indiranagar → Koramangala", start: [12.9784, 77.6408], dest: [12.9352, 77.6245] },
-      { label: "Whitefield → MG Road", start: [12.9698, 77.7500], dest: [12.9756, 77.6066] },
-      { label: "Electronic City → HSR", start: [12.8399, 77.6770], dest: [12.9121, 77.6446] },
-    ],
-  },
-];
+const CITY_OPTIONS = INDIAN_CITIES;
 
 export default function CitizenPortal() {
   const { isAuthenticated, isLoading, user, currentFieldInfo, openFieldModal, openHistoryModal } = useAuth();
 
   const [selectedCity, setSelectedCity] = useState("Delhi");
+  const [isCityPickerOpen, setIsCityPickerOpen] = useState(false);
   const [startCoords, setStartCoords] = useState<[number, number]>([28.6315, 77.2167]);
   const [destCoords, setDestCoords] = useState<[number, number]>([28.5245, 77.2066]);
   const [safetyMode, setSafetyMode] = useState<"safest" | "balanced" | "fastest">("safest");
@@ -202,7 +135,7 @@ export default function CitizenPortal() {
     setIsEmergencyModalOpen(true);
   };
 
-  const cityMeta = CITY_OPTIONS.find((c) => c.name === selectedCity) || CITY_OPTIONS[0];
+  const cityMeta = getCityMetadata(selectedCity);
 
   // Fetch Hotspots and Heatmap for active city on mount or city change
   useEffect(() => {
@@ -986,34 +919,165 @@ export default function CitizenPortal() {
               </h2>
             </div>
 
-            {/* City Selector Tabs */}
-            <div style={{
-              display: "flex",
-              background: "var(--bg-surface)",
-              border: "1px solid var(--border-subtle)",
-              borderRadius: "9999px",
-              padding: "3px"
-            }}>
-              {CITY_OPTIONS.map((c) => (
-                <button
-                  key={c.name}
-                  onClick={() => setSelectedCity(c.name)}
-                  style={{
-                    padding: "6px 16px",
-                    borderRadius: "9999px",
-                    border: "none",
-                    cursor: "pointer",
-                    fontSize: "0.85rem",
+            {/* City Selector & Operating Region Controls */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+              {/* Quick Popular City Pills */}
+              <div style={{
+                display: "flex",
+                background: "var(--bg-surface)",
+                border: "1px solid var(--border-subtle)",
+                borderRadius: "9999px",
+                padding: "3px"
+              }}>
+                {INDIAN_CITIES.slice(0, 4).map((c) => {
+                  const isSel =
+                    selectedCity.toLowerCase() === c.shortName.toLowerCase() ||
+                    selectedCity.toLowerCase() === c.name.toLowerCase() ||
+                    selectedCity.toLowerCase() === c.id.toLowerCase();
+                  return (
+                    <button
+                      key={c.id}
+                      onClick={() => setSelectedCity(c.shortName)}
+                      style={{
+                        padding: "6px 14px",
+                        borderRadius: "9999px",
+                        border: "none",
+                        cursor: "pointer",
+                        fontSize: "0.82rem",
+                        fontWeight: 700,
+                        background: isSel ? "linear-gradient(135deg, #059669, #047857)" : "transparent",
+                        color: isSel ? "#fff" : "var(--text-secondary)",
+                        boxShadow: isSel ? "0 2px 8px rgba(5,150,105,0.3)" : "none",
+                        transition: "all 0.15s ease"
+                      }}
+                    >
+                      📍 {c.shortName}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Dedicated All Cities Selector Button */}
+              <button
+                onClick={() => setIsCityPickerOpen(true)}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 6,
+                  padding: "7px 14px",
+                  borderRadius: "9999px",
+                  background: "var(--bg-card)",
+                  border: "1px solid var(--border-subtle)",
+                  fontSize: "0.82rem",
+                  fontWeight: 800,
+                  color: "var(--text-primary)",
+                  cursor: "pointer",
+                  boxShadow: "var(--shadow-card)",
+                  transition: "all 0.15s ease"
+                }}
+              >
+                <span>🗺️ All Cities ({INDIAN_CITIES.length})</span>
+                <span style={{
+                  fontSize: "0.7rem",
+                  padding: "2px 6px",
+                  borderRadius: "9999px",
+                  background: "var(--accent-subtle)",
+                  color: "var(--accent-primary)"
+                }}>
+                  {cityMeta.name}
+                </span>
+                <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>▾</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Active Operating Jurisdiction Summary Banner */}
+          <div style={{
+            background: "var(--bg-card)",
+            border: "1px solid var(--border-subtle)",
+            borderRadius: "16px",
+            padding: "0.9rem 1.25rem",
+            marginBottom: "1rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: 12,
+            boxShadow: "var(--shadow-card)"
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+              <div style={{
+                width: 38,
+                height: 38,
+                borderRadius: "12px",
+                background: "var(--accent-subtle)",
+                border: "1px solid rgba(5,150,105,0.25)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                color: "var(--accent-primary)",
+                fontWeight: 800,
+                fontSize: "1.1rem"
+              }}>
+                📍
+              </div>
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: "0.95rem", fontWeight: 800, color: "var(--text-primary)" }}>
+                    Currently Viewing: {cityMeta.name} Safety Grid
+                  </span>
+                  <span style={{
+                    fontSize: "0.68rem",
                     fontWeight: 700,
-                    background: selectedCity === c.name ? "linear-gradient(135deg, #059669, #047857)" : "transparent",
-                    color: selectedCity === c.name ? "#fff" : "var(--text-secondary)",
-                    boxShadow: selectedCity === c.name ? "0 2px 8px rgba(5,150,105,0.3)" : "none",
-                    transition: "all 0.15s ease"
-                  }}
-                >
-                  📍 {c.name}
-                </button>
-              ))}
+                    padding: "2px 8px",
+                    borderRadius: "9999px",
+                    background: "rgba(16,185,129,0.12)",
+                    color: "#059669",
+                    border: "1px solid rgba(16,185,129,0.25)"
+                  }}>
+                    🟢 Live 112 ERSS
+                  </span>
+                </div>
+                <div style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginTop: 2 }}>
+                  🏛️ {cityMeta.emergencyCommand} • {cityMeta.zone} Command
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+              <div style={{ textAlign: "right" }}>
+                <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase" }}>Safety Score</div>
+                <div style={{ fontSize: "0.95rem", fontWeight: 900, color: "#10b981" }}>{cityMeta.safetyScore}/100</div>
+              </div>
+              <div style={{ width: 1, height: 28, background: "var(--border-subtle)" }} />
+              <div style={{ textAlign: "right" }}>
+                <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase" }}>Patrol Units</div>
+                <div style={{ fontSize: "0.95rem", fontWeight: 900, color: "var(--text-primary)" }}>{cityMeta.activePatrolUnits} Units</div>
+              </div>
+              <div style={{ width: 1, height: 28, background: "var(--border-subtle)" }} />
+              <div style={{ textAlign: "right" }}>
+                <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 700, textTransform: "uppercase" }}>Dispatch SLA</div>
+                <div style={{ fontSize: "0.95rem", fontWeight: 900, color: "var(--accent-primary)" }}>{cityMeta.responseMins}m</div>
+              </div>
+              <button
+                onClick={() => setIsCityPickerOpen(true)}
+                style={{
+                  padding: "6px 14px",
+                  borderRadius: "10px",
+                  background: "var(--bg-surface)",
+                  border: "1px solid var(--border-subtle)",
+                  fontSize: "0.78rem",
+                  fontWeight: 700,
+                  color: "var(--text-primary)",
+                  cursor: "pointer",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 4
+                }}
+              >
+                <span>Change City</span>
+                <span>→</span>
+              </button>
             </div>
           </div>
 
@@ -1941,6 +2005,16 @@ export default function CitizenPortal() {
             setRoutePlan(routes);
           }
         }}
+      />
+
+      {/* Citizen Operating Region & City Picker Modal */}
+      <CityPickerModal
+        isOpen={isCityPickerOpen}
+        onClose={() => setIsCityPickerOpen(false)}
+        selectedCity={selectedCity}
+        onSelectCity={(cityName) => setSelectedCity(cityName)}
+        title="Select Citizen Safety City & Operating Region"
+        subtitle="Choose from 10 major metropolitan safe corridors, live hazard clusters, and ERSS-112 networks across India."
       />
     </PageBackground>
   );
